@@ -1,0 +1,1260 @@
+:root {
+  --bg: #f4f6f8;
+  --panel: #ffffff;
+  --text: #17212b;
+  --muted: #65717e;
+  --line: #dfe5ea;
+  --accent: #157347;
+  --accent-dark: #0f5a37;
+  --danger: #b42318;
+  --warning-bg: #fff7e6;
+  --success-bg: #eaf8f0;
+  --error-bg: #fff0ef;
+  --shadow: 0 12px 30px rgba(25, 40, 55, .08);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.site-header {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 32px 20px 18px;
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.site-header h1 { margin: 6px 0 8px; }
+.site-header p { margin: 0; color: var(--muted); }
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 12px 20px 40px;
+  display: grid;
+  gap: 20px;
+}
+
+.admin-page { max-width: 1180px; }
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.narrow { max-width: 480px; margin: 0 auto; width: 100%; }
+
+.step-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.step-title h2, .panel h2 { margin: 0 0 5px; }
+.step-title p, .panel p { margin: 0; color: var(--muted); }
+
+.step-number {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--accent);
+  color: white;
+  font-weight: 700;
+  flex: 0 0 auto;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+label {
+  display: grid;
+  gap: 7px;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+input, select, textarea {
+  width: 100%;
+  border: 1px solid #cfd7df;
+  border-radius: 11px;
+  padding: 12px 13px;
+  font: inherit;
+  color: var(--text);
+  background: white;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: 3px solid rgba(21, 115, 71, .15);
+  border-color: var(--accent);
+}
+
+button, .link-button {
+  border-radius: 11px;
+  padding: 11px 15px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button:disabled { opacity: .55; cursor: not-allowed; }
+
+.primary {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: white;
+}
+
+.primary:hover { background: var(--accent-dark); }
+.secondary, .link-button {
+  border: 1px solid #cbd5dd;
+  background: white;
+  color: var(--text);
+}
+.danger-outline {
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  background: white;
+}
+.full { width: 100%; }
+
+.slots-header, .table-header, .actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.slots {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.slot {
+  border: 1px solid #cad4dc;
+  background: white;
+  color: var(--text);
+}
+
+.slot.selected {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: white;
+}
+
+.slot.occupied {
+  background: #edf0f2;
+  color: #8b949d;
+  text-decoration: line-through;
+}
+
+.selected-slot {
+  margin-top: 14px !important;
+  font-weight: 700;
+}
+
+.check-row {
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  font-weight: 400;
+}
+.check-row input { width: auto; margin-top: 3px; }
+
+.message {
+  display: none;
+  margin-top: 14px;
+  border-radius: 11px;
+  padding: 12px 14px;
+}
+
+.message.show { display: block; }
+.message.success { background: var(--success-bg); color: #0b5b32; }
+.message.error { background: var(--error-bg); color: #8d1d16; }
+.message.warning { background: var(--warning-bg); color: #7a4a00; }
+
+.hidden { display: none !important; }
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 14px;
+}
+
+.metric {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+}
+.metric span { display: block; color: var(--muted); margin-bottom: 7px; }
+.metric strong { font-size: 28px; }
+
+.toolbar .actions { justify-content: flex-end; }
+
+.table-wrap { overflow-x: auto; margin-top: 18px; }
+table { width: 100%; border-collapse: collapse; min-width: 900px; }
+th, td {
+  text-align: left;
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+th { font-size: 13px; color: var(--muted); }
+.status {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 5px 9px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.status.confermata { background: var(--success-bg); color: #0b5b32; }
+.status.annullata { background: var(--error-bg); color: #8d1d16; }
+
+.mini-button {
+  padding: 7px 9px;
+  border: 1px solid #cbd5dd;
+  background: white;
+  font-size: 13px;
+}
+
+
+@media (max-width: 720px) {
+  .site-header { flex-direction: column; }
+  .grid.two, .grid.three, .metrics { grid-template-columns: 1fr; }
+  .slots { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .panel { padding: 18px; }
+}
+
+@media (max-width: 430px) {
+  .slots { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Planning giornaliero */
+.slot {
+  min-height: 92px;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.slot-time {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.slot-status {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.slot-customer {
+  font-size: 14px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.slot .available-label {
+  color: var(--accent);
+}
+
+.slot.occupied {
+  background: #fff0ef;
+  border-color: #e8b5b0;
+  color: var(--danger);
+  text-decoration: none;
+}
+
+.slot.occupied .slot-time {
+  text-decoration: line-through;
+}
+
+.slot.past {
+  background: #edf0f2;
+  border-color: #d7dde2;
+  color: #8b949d;
+}
+
+.slot.past .slot-time {
+  text-decoration: line-through;
+}
+
+.slot.selected .available-label {
+  color: white;
+}
+
+/* Versione 3 */
+.hidden { display: none !important; }
+.info-panel p { margin: 7px 0; }
+.closure-panel { border: 2px solid #c0392b; background: #fff2f0; }
+.disabled-area { opacity: .58; pointer-events: none; }
+.slot-price { font-size: 11px; font-weight: 700; }
+.free-slot .slot-price { color: #217a43; }
+.paid-slot .slot-price { color: #8a5a00; }
+.paid-slot:not(.occupied):not(.past) { background: #fff9e8; }
+.has-request { background: #fff8cf; }
+.request-badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #ffd95a; font-size: 12px; font-weight: 800; }
+.request-text { margin: 7px 0 0; max-width: 260px; white-space: pre-wrap; }
+.closure-admin { border-left: 5px solid var(--accent); }
+.narrow { max-width: 720px; margin-inline: auto; }
+.message a { color: inherit; }
+table { min-width: 1250px; }
+@media (max-width: 720px) { .grid.three { grid-template-columns: 1fr; } }
+
+
+/* V3 - intestazione pubblica centrata */
+.public-header {
+  position: relative;
+  display: block;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 32px 140px 18px;
+  text-align: center;
+}
+
+.public-header > div {
+  width: 100%;
+}
+
+.public-header .eyebrow {
+  display: block;
+  text-align: center;
+  letter-spacing: .14em;
+}
+
+.public-header h1 {
+  margin: 8px 0;
+  font-size: clamp(1.8rem, 3vw, 2.45rem);
+  line-height: 1.15;
+}
+
+.public-header p {
+  margin: 0;
+  text-align: center;
+}
+
+.public-header .link-button {
+  position: absolute;
+  top: 28px;
+  right: 20px;
+}
+
+@media (max-width: 720px) {
+  .public-header {
+    padding: 24px 20px 14px;
+  }
+
+  .public-header .link-button {
+    position: static;
+    margin-top: 16px;
+  }
+}
+
+/* V3.1 - intestazione Area Gestore centrata anche su desktop */
+.centered-header {
+  position: relative;
+  display: block;
+  max-width: 1120px;
+  margin: 0 auto 24px;
+  padding: 32px 140px 18px;
+  text-align: center;
+}
+
+.centered-header .eyebrow {
+  display: block;
+  text-align: center;
+}
+
+.centered-header h1 {
+  margin: 8px 0;
+  font-size: clamp(1.8rem, 3vw, 2.45rem);
+  line-height: 1.15;
+}
+
+.centered-header p {
+  margin: 0;
+  text-align: center;
+}
+
+.header-action {
+  position: absolute;
+  top: 28px;
+  right: 20px;
+}
+
+@media (max-width: 768px) {
+  .centered-header {
+    padding: 24px 20px 14px;
+  }
+
+  .header-action {
+    position: static;
+    display: inline-flex;
+    margin-bottom: 16px;
+  }
+}
+
+
+/* V3.2 - verifica dati documento */
+.field-help {
+  display: block;
+  margin-top: 1px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.35;
+}
+.field-help.field-error { color: var(--danger); font-weight: 700; }
+input:invalid:not(:placeholder-shown) { border-color: #d98b84; }
+
+/* V3.2.2 - Area Gestore, CIE e privacy */
+.admin-page { max-width: 1180px; }
+.admin-filters {
+  display: grid;
+  grid-template-columns: minmax(220px, 2fr) repeat(5, minmax(130px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+.admin-filters label { margin-bottom: 0; }
+.admin-filter-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+.centered-header { min-height: 142px; }
+.centered-header .header-action { z-index: 2; }
+.privacy-content h2 { margin-top: 28px; }
+.privacy-content h2:first-child { margin-top: 0; }
+.privacy-content p { line-height: 1.6; }
+.privacy-note { margin-top: 28px !important; padding: 14px; border-radius: 11px; background: var(--warning-bg); }
+.check-row a { color: var(--accent-dark); }
+@media (max-width: 1050px) {
+  .admin-filters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  .admin-filters { grid-template-columns: 1fr; }
+  .centered-header { min-height: auto; }
+}
+
+
+/* V3.2.3 - correzione intestazione gestore e consenso privacy */
+.centered-header {
+  min-height: 0;
+  padding: 32px 20px 18px;
+}
+.centered-header .header-action {
+  position: static;
+}
+.header-actions-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+.privacy-consent-box {
+  margin: 18px 0;
+  padding: 16px;
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  background: #f1faf5;
+}
+.privacy-consent-title {
+  margin-bottom: 10px;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--accent-dark);
+}
+.privacy-check {
+  margin-bottom: 8px;
+}
+.privacy-check span {
+  line-height: 1.45;
+}
+.privacy-check a {
+  color: var(--accent-dark);
+  font-weight: 800;
+}
+.privacy-access-note {
+  margin: 8px 0 0 !important;
+  padding-left: 25px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+@media (max-width: 720px) {
+  .centered-header { padding: 24px 20px 14px; }
+  .header-actions-row { margin-top: 14px; }
+  .privacy-consent-box { padding: 14px; }
+  .privacy-access-note { padding-left: 0; }
+}
+
+
+/* V3.2.4 - filtri Area Gestore */
+.admin-filters {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.6fr) repeat(5, minmax(130px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+  align-items: end;
+}
+.admin-filters label { margin-bottom: 0; }
+.admin-filter-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+@media (max-width: 1100px) {
+  .admin-filters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .filter-search { grid-column: span 3; }
+}
+@media (max-width: 720px) {
+  .admin-filters { grid-template-columns: 1fr; }
+  .filter-search { grid-column: auto; }
+}
+
+
+/* V3.3 - autocomplete Comuni mobile e cancellazione manuale */
+.municipality-field { position: relative; }
+.municipality-suggestions {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% - 20px);
+  left: 0;
+  right: 0;
+  max-height: 260px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid #b9c6cf;
+  border-radius: 11px;
+  background: white;
+  box-shadow: 0 14px 30px rgba(25, 40, 55, .18);
+}
+.municipality-option {
+  display: block;
+  width: 100%;
+  padding: 13px 14px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: white;
+  color: var(--text);
+  text-align: left;
+  font-weight: 600;
+}
+.municipality-option:last-child { border-bottom: 0; }
+.municipality-option:hover,
+.municipality-option:focus { background: #edf8f2; outline: none; }
+.municipality-empty { padding: 13px 14px; color: var(--muted); font-weight: 400; }
+.row-actions { display: flex; flex-direction: column; gap: 7px; align-items: stretch; }
+.delete-booking { border-color: var(--danger); color: var(--danger); }
+.delete-booking:hover { background: var(--error-bg); }
+@media (max-width: 720px) {
+  .municipality-suggestions { max-height: 220px; }
+  .municipality-option { min-height: 48px; font-size: 16px; }
+}
+
+/* Firma GF e versione applicazione */
+.site-footer {
+  max-width: 900px;
+  margin: 10px auto 0;
+  padding: 0 20px 34px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.footer-contact {
+  margin-bottom: 22px;
+}
+
+.footer-contact p,
+.footer-signature p {
+  margin: 4px 0;
+}
+
+.footer-signature {
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+}
+
+.gf-logo {
+  display: block;
+  width: 110px !important;
+  max-width: 110px !important;
+  height: 110px !important;
+  max-height: 110px !important;
+  object-fit: contain;
+  margin: 0 auto 8px;
+  opacity: .88;
+}
+
+.footer-product {
+  color: var(--text);
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .gf-logo {
+    width: 46px !important;
+    max-width: 46px !important;
+    height: 46px !important;
+    max-height: 46px !important;
+  }
+}
+
+
+
+
+/* =========================================================
+   VERSIONE 4.0.0 - regole finali e non duplicate
+   ========================================================= */
+
+.admin-page {
+  width: 100%;
+  max-width: 1180px;
+}
+
+.admin-site-footer {
+  width: 100%;
+  max-width: 1180px;
+  margin: 10px auto 0;
+  padding: 0 20px 34px;
+}
+
+.footer-inline {
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 11px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.gf-logo-inline {
+  display: block;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  object-fit: contain;
+  opacity: .9;
+}
+
+.footer-inline strong {
+  color: var(--text);
+}
+
+.municipality-field {
+  position: relative;
+}
+
+.municipality-suggestions {
+  position: absolute;
+  z-index: 100;
+  top: calc(100% - 18px);
+  left: 0;
+  right: 0;
+  max-height: 260px;
+  overflow-y: auto;
+  border: 1px solid #b9c6cf;
+  border-radius: 11px;
+  background: #fff;
+  box-shadow: 0 14px 30px rgba(25, 40, 55, .18);
+}
+
+.municipality-option {
+  display: block;
+  width: 100%;
+  padding: 13px 14px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: #fff;
+  color: var(--text);
+  text-align: left;
+  font-weight: 600;
+}
+
+.municipality-option:last-child {
+  border-bottom: 0;
+}
+
+.municipality-option:hover,
+.municipality-option:focus {
+  background: #edf8f2;
+  outline: none;
+}
+
+.municipality-empty {
+  padding: 13px 14px;
+  color: var(--muted);
+}
+
+@media (max-width: 720px) {
+  .footer-inline {
+    font-size: 12px;
+    gap: 8px;
+  }
+
+  .gf-logo-inline {
+    width: 26px;
+    height: 26px;
+    flex-basis: 26px;
+  }
+
+  .municipality-suggestions {
+    max-height: 220px;
+  }
+
+  .municipality-option {
+    min-height: 48px;
+    font-size: 16px;
+  }
+}
+
+
+/* Pulsante dopo conferma prenotazione */
+#prenota.booking-completed,
+#prenota.booking-completed:disabled {
+  background: #6b7280;
+  border-color: #6b7280;
+  color: #fff;
+  opacity: 1;
+  cursor: default;
+}
+#messaggio.success.show { scroll-margin-top: 90px; }
+
+/* BETA 4.0.1 */
+#prenota.booking-completed,#prenota.booking-completed:disabled{background:#6b7280;border-color:#6b7280;color:#fff;opacity:1;cursor:default;line-height:1.25}
+#prenota.booking-completed small{font-size:12px;font-weight:700}
+#messaggio.success.show{scroll-margin-top:90px;border:2px solid #58a978;box-shadow:0 8px 20px rgba(21,115,71,.12)}
+@media(max-width:720px){}
+
+
+/* =========================================================
+   AREA GESTORE: IN CORSO E PRENOTAZIONI CONCLUSE
+   ========================================================= */
+#prenotazioni-body tr.booking-current > td {
+  background: #e6f4ff;
+  border-top: 4px solid #1d4ed8;
+  border-bottom: 4px solid #1d4ed8;
+}
+
+#prenotazioni-body tr.booking-current > td:first-child {
+  border-left: 4px solid #1d4ed8;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+#prenotazioni-body tr.booking-current > td:last-child {
+  border-right: 4px solid #1d4ed8;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.status.in-corso {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 2px 7px rgba(37, 99, 235, .28);
+  white-space: nowrap;
+}
+
+#prenotazioni-body tr.booking-concluded > td {
+  background: #f1f3f5;
+  color: #737b84;
+}
+
+#prenotazioni-body tr.booking-concluded strong,
+#prenotazioni-body tr.booking-concluded small,
+#prenotazioni-body tr.booking-concluded .request-text {
+  color: #737b84;
+}
+
+.status.conclusa {
+  background: #dfe3e7;
+  color: #555d66;
+}
+
+/* =========================================================
+   PAGINA CLIENTE: CONTROLLO DOCUMENTO
+   ========================================================= */
+.document-check-warning {
+  margin: 4px 0 18px;
+  padding: 14px 16px;
+  border: 1px solid #e3b341;
+  border-left: 5px solid #d99a00;
+  border-radius: 10px;
+  background: #fff7d6;
+  color: #654c00;
+}
+
+.document-check-warning strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.document-check-warning p {
+  margin: 0;
+  line-height: 1.45;
+}
+
+
+/* =========================================================
+   V4.1 - PRENOTAZIONE A MEZZO CAMPO
+   ========================================================= */
+.booking-mode-box {
+  margin: 18px 0;
+  padding: 16px;
+  border: 1px solid #cfd8e3;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.booking-mode-box h3 { margin-top: 0; }
+
+.booking-mode-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.booking-mode-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px;
+  border: 2px solid #cbd5e1;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.booking-mode-card:has(input:checked) {
+  border-color: #1d4ed8;
+  background: #eaf4ff;
+  box-shadow: 0 0 0 2px rgba(29, 78, 216, .10);
+}
+
+.booking-mode-card input {
+  width: auto;
+  margin-top: 3px;
+}
+
+.booking-mode-card span,
+.booking-mode-card strong,
+.booking-mode-card small {
+  display: block;
+}
+
+.booking-mode-card small {
+  margin-top: 4px;
+  color: #5f6b78;
+}
+
+.children-box {
+  margin-top: 14px;
+  padding: 14px;
+  border-left: 5px solid #1d4ed8;
+  border-radius: 9px;
+  background: #eaf4ff;
+}
+
+.children-box label {
+  max-width: 320px;
+}
+
+.half-field-notice {
+  margin-top: 12px;
+}
+
+.half-field-notice p {
+  margin: 4px 0 0;
+}
+
+.admin-settings-divider {
+  height: 1px;
+  margin: 22px 0;
+  background: #dce2e8;
+}
+
+@media (max-width: 700px) {
+  .booking-mode-options {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================================================
+   V4.2 - STAMPA PRENOTAZIONE E PLANNING PDF
+   ========================================================= */
+.print-planning-box {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) minmax(160px, 220px) auto;
+  align-items: end;
+  gap: 14px;
+  margin: 16px 0;
+  padding: 15px;
+  border: 1px solid #cdd8e5;
+  border-radius: 12px;
+  background: #f4f8fc;
+}
+.print-planning-box p { margin: 4px 0 0; color: #607083; }
+.print-planning-box label { margin: 0; }
+.print-booking { white-space: nowrap; }
+@media (max-width: 850px) {
+  .print-planning-box { grid-template-columns: 1fr; align-items: stretch; }
+}
+
+
+/* V4.2.1 - stampa archivio completo */
+#stampa-archivio-completo {
+  margin-left: 8px;
+}
+
+@media (max-width: 700px) {
+  #stampa-archivio-completo {
+    margin-left: 0;
+    margin-top: 8px;
+    width: 100%;
+  }
+}
+
+
+/* =========================================================
+   PWA 5.0.1
+   ========================================================= */
+.install-app-button {
+  cursor: pointer;
+  font: inherit;
+}
+
+.pwa-update-box {
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #143f2d;
+  color: #fff;
+  box-shadow: 0 3px 12px rgba(0,0,0,.18);
+}
+.install-app-button[hidden], .pwa-update-box[hidden], .ios-install-help[hidden] { display: none !important; }
+.pwa-update-box button {
+  border: 0;
+  border-radius: 999px;
+  padding: 7px 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.ios-install-help {
+  padding: 10px 16px;
+  text-align: center;
+  background: #fff7d6;
+  color: #533f00;
+  border-bottom: 1px solid #ead98f;
+}
+.offline-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
+.offline-card { text-align: center; }
+.offline-logo {
+  width: 96px;
+  height: 96px;
+  border-radius: 22px;
+  margin-bottom: 12px;
+}
+.offline-card .link-button { display: inline-block; margin-top: 12px; }
+
+@media (display-mode: standalone) {
+  body { padding-top: env(safe-area-inset-top); }
+  }
+
+@media (max-width: 700px) {
+  .header-actions-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .header-actions-row .link-button,
+  .header-actions-row .install-app-button {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+  .pwa-update-box {
+    align-items: stretch;
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+
+/* PWA 5.0.1 - conferma installazione */
+.pwa-installed-message {
+  position: fixed;
+  left: 50%;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  z-index: 10000;
+  width: min(92vw, 430px);
+  padding: 13px 18px;
+  border-radius: 12px;
+  background: #143f2d;
+  color: #fff;
+  text-align: center;
+  font-weight: 700;
+  box-shadow: 0 8px 28px rgba(0,0,0,.28);
+  opacity: 0;
+  transform: translate(-50%, 18px);
+  transition: opacity .25s ease, transform .25s ease;
+  pointer-events: none;
+}
+.pwa-installed-message.visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+
+/* V5.0.2 - protezione caricamento impostazioni PWA */
+.settings-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+.settings-actions button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+
+/* V5.1.0 - previsioni meteo */
+.weather-container {
+  margin-top: 12px;
+}
+.weather-card {
+  border: 1px solid #cbd5e1;
+  border-left: 6px solid #64748b;
+  border-radius: 12px;
+  padding: 13px 15px;
+  background: #f8fafc;
+  display: grid;
+  gap: 10px;
+}
+.weather-card.weather-good { border-left-color: #16803b; background: #f0fdf4; }
+.weather-card.weather-uncertain { border-left-color: #d18b00; background: #fffbeb; }
+.weather-card.weather-bad { border-left-color: #c62828; background: #fff1f2; }
+.weather-card.weather-loading { opacity: .8; }
+.weather-card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.weather-card-title > span {
+  font-size: 30px;
+}
+.weather-card-title small {
+  display: block;
+  margin-top: 2px;
+  color: #536273;
+}
+.weather-values {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(110px, 1fr));
+  gap: 8px;
+}
+.weather-values span {
+  border: 1px solid rgba(100,116,139,.24);
+  background: rgba(255,255,255,.72);
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 12px;
+}
+.weather-values strong {
+  display: block;
+  font-size: 16px;
+}
+.weather-disclaimer {
+  color: #64748b;
+}
+.weather-summary {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  border-left: 4px solid #64748b;
+  padding-left: 7px;
+  white-space: nowrap;
+  font-size: 11px;
+}
+.weather-summary.weather-good { border-left-color: #16803b; }
+.weather-summary.weather-uncertain { border-left-color: #d18b00; }
+.weather-summary.weather-bad { border-left-color: #c62828; }
+.weather-main { font-weight: 800; font-size: 13px; }
+.weather-unavailable, .weather-loading-inline {
+  color: #64748b;
+  font-size: 11px;
+}
+.weather-table-cell {
+  min-width: 105px;
+}
+@media (max-width: 700px) {
+  .weather-values {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+
+
+
+/* V5.1.2 - prezzi contestuali e pulsante gestore separato */
+.booking-option-price {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.booking-option-price.hidden {
+  display: none !important;
+}
+
+@media (max-width: 700px) {
+  }
+
+
+/* V5.1.3 - collegamento gestore separato e pulsanti utilizzo senza prezzi */
+.manager-access-row {
+  width: min(100% - 40px, 1120px);
+  margin: 0 auto 14px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  clear: both;
+}
+
+.manager-access-button {
+  position: static !important;
+  inset: auto !important;
+  transform: none !important;
+  margin: 0 !important;
+  white-space: nowrap;
+}
+
+.public-header .header-actions-row {
+  position: static !important;
+}
+
+#prezzo-intero-label,
+#prezzo-mezzo-label {
+  display: block;
+  margin-top: 3px;
+}
+
+@media (max-width: 700px) {
+  .manager-access-row {
+    width: min(100% - 24px, 1120px);
+    margin-bottom: 10px;
+  }
+}
+
+
+/* V5.1.4 - visualizzazione costi */
+.booking-cost {
+  white-space: nowrap;
+}
+.booking-cost.paid {
+  color: #8a4b00;
+}
+.booking-cost.free {
+  color: #08783e;
+}
+
+
+/* Versione 5.2.0 completa */
+.manager-access-row {
+  width: min(100% - 32px, 1120px);
+  margin: 10px auto 14px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  clear: both;
+}
+
+.manager-access-button {
+  position: static !important;
+  inset: auto !important;
+  transform: none !important;
+  margin: 0 !important;
+  white-space: nowrap;
+}
+
+.privacy-back-row {
+  width: min(100% - 32px, 1120px);
+  margin: 10px auto 14px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+@media (max-width: 700px) {
+  .manager-access-row,
+  .privacy-back-row {
+    width: min(100% - 24px, 1120px);
+  }
+}
+
+
+/* Versione 5.2.1 - descrizione leggibile della data */
+.date-description {
+  margin-top: 7px;
+  min-height: 1.35em;
+  font-size: 0.94rem;
+  font-weight: 700;
+  color: #24513a;
+}
+
+@media (max-width: 600px) {
+  .date-description {
+    font-size: 0.9rem;
+  }
+}
+
+/* Versione 6 - Parco e Bar */
+.home-services-page{min-height:55vh;display:flex;flex-direction:column;justify-content:center}.service-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.service-choice-card{display:flex;align-items:center;gap:20px;padding:30px;border-radius:22px;text-decoration:none;color:#fff;box-shadow:0 14px 34px rgba(0,0,0,.14);transition:transform .2s ease,box-shadow .2s ease}.service-choice-card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,0,0,.2)}.field-choice{background:linear-gradient(135deg,#145637,#1f8155)}.bar-choice{background:linear-gradient(135deg,#7a4522,#b66a2e)}.service-choice-icon{font-size:3.4rem}.service-choice-content{display:flex;flex-direction:column;gap:6px;flex:1}.service-choice-content strong{font-size:1.45rem}.service-choice-content small{font-size:1rem;color:inherit;opacity:.9}.service-choice-arrow{font-size:2.5rem}.bar-header{background:linear-gradient(135deg,#6d3d20,#a65d28)}.bar-products-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}.bar-product-card{overflow:hidden;border:1px solid #e2d4c8;border-radius:18px;background:#fff;box-shadow:0 8px 24px rgba(85,48,24,.1)}.bar-product-image{height:210px;background:#f3e8de;display:flex;align-items:center;justify-content:center;font-size:4rem}.bar-product-image img{width:100%;height:100%;object-fit:cover}.bar-product-body{padding:18px;display:flex;flex-direction:column;gap:10px}.bar-product-body h3,.bar-product-body p{margin:0}.bar-product-body strong{font-size:1.25rem;color:#7a4522}.bar-selected-product{padding:14px 16px;border-radius:12px;background:#fff4e8;border:1px solid #e2b98f;margin-bottom:18px}.bar-admin-products{display:grid;gap:18px;margin-top:24px}.bar-admin-card{display:grid;grid-template-columns:260px 1fr;gap:20px;padding:16px;border:1px solid #d9dee5;border-radius:16px}.bar-admin-image{min-height:180px;border:2px dashed #a9b2bd;border-radius:14px;background:#f7f9fb;display:flex;align-items:center;justify-content:center;text-align:center;cursor:pointer;overflow:hidden}.bar-admin-image.dragging{border-color:#145637;background:#eaf6ef}.bar-admin-image img{width:100%;height:100%;min-height:180px;object-fit:cover}.bar-admin-info{display:flex;flex-direction:column;gap:8px}.bar-admin-info h3,.bar-admin-info p{margin:0}.form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.danger{background:#a32626;color:#fff;border:none;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer}@media(max-width:760px){.service-choice-grid{grid-template-columns:1fr}.bar-admin-card{grid-template-columns:1fr}.bar-admin-image{min-height:220px}}

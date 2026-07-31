@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Campo Ex Velodromo — Prenotazione campo</title>
+  <link rel="stylesheet" href="./css/style.css?v=6.0.0">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <meta name="theme-color" content="#145637">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Ex Velodromo">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
+  <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+</head>
+<body>
+<div id="pwa-update-box" class="pwa-update-box" hidden>
+  <span>È disponibile un aggiornamento dell’app.</span>
+  <button id="pwa-update-now" type="button">Aggiorna ora</button>
+</div>
+<div id="ios-install-help" class="ios-install-help" hidden>
+  Su iPhone: premi <strong>Condividi</strong> e poi <strong>Aggiungi alla schermata Home</strong>.
+</div>
+<small></small>
+</div>
+<header class="site-header public-header">
+    <div>
+      <span class="eyebrow">Prenotazione campo</span>
+      <h1>Campo Ex Velodromo</h1>
+      <p>Scegli giorno e orario. La prenotazione viene confermata subito.</p>
+    </div>
+    <div class="header-actions-row">
+      <button id="install-app" class="link-button install-app-button" type="button" hidden>📲 Installa app</button>
+    </div>
+  </header>
+
+<div class="manager-access-row">
+  <a class="link-button" href="./index.html">← Parco Ex Velodromo</a><a class="link-button manager-access-button" href="./admin.html">Area gestore</a>
+</div>
+
+<main class="page">
+    <section id="chiusura-box" class="panel closure-panel hidden" aria-live="polite">
+      <h2>Prenotazioni temporaneamente sospese</h2>
+      <p id="chiusura-messaggio"></p>
+    </section>
+
+    <section class="panel info-panel">
+      <h2>Orari e costi</h2>
+      <p><strong>09:00–19:00:</strong> utilizzo gratuito.</p>
+      <p><strong>19:00–22:00:</strong> utilizzo a pagamento.</p>
+      <p>Ogni prenotazione dura un’ora. Sono consentite al massimo due prenotazioni nella stessa settimana per ogni carta d’identità. Quando abilitata dal gestore, è possibile prenotare anche mezzo campo per attività con bambini.</p>
+    </section>
+
+    <div id="booking-area">
+      <section class="panel">
+        <div class="step-title">
+          <span class="step-number">1</span>
+          <div>
+            <h2>Scegli data e campo</h2>
+            <p>Gli orari già occupati vengono disabilitati automaticamente.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <label>Data<input id="data" type="date" required>
+          <div id="data-descrizione" class="date-description" aria-live="polite"></div></label>
+          <label>Campo<select id="campo" required></select></label>
+        </div>
+
+
+        <div id="tipo-prenotazione-box" class="booking-mode-box hidden">
+          <h3>Tipo di utilizzo</h3>
+          <p class="field-help">La prenotazione a mezzo campo è riservata alle attività con bambini accompagnati da un adulto responsabile.</p>
+          <div class="booking-mode-options">
+            <label class="booking-mode-card">
+              <input type="radio" name="tipo-prenotazione" value="INTERO" checked>
+              <span>
+                <strong>Campo intero</strong>
+                <small id="prezzo-intero-label">Utilizzo dell’intero campo</small>
+              </span>
+            </label>
+            <label class="booking-mode-card">
+              <input type="radio" name="tipo-prenotazione" value="MEZZO">
+              <span>
+                <strong>Mezzo campo</strong>
+                <small id="prezzo-mezzo-label">Per attività con bambini e adulto responsabile</small>
+              </span>
+            </label>
+          </div>
+
+          <div id="bambini-box" class="children-box hidden">
+            <label>Numero di bambini
+              <input id="numero-bambini" type="number" min="1" step="1" inputmode="numeric">
+              <small id="bambini-help" class="field-help">Massimo 6 bambini per metà campo.</small>
+            </label>
+            <div class="half-field-notice">
+              <strong>Adulto responsabile</strong>
+              <p>La prenotazione deve essere intestata al papà, alla mamma o a un altro adulto presente durante l’attività.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="slots-header">
+          <h3>Planning del giorno</h3>
+          <button id="aggiorna" class="secondary" type="button">Aggiorna</button>
+        </div>
+        <div id="slots" class="slots" aria-live="polite"></div>
+        <p id="slot-selezionato" class="selected-slot">Nessun orario selezionato.</p>
+        <div id="meteo-prenotazione" class="weather-container hidden" aria-live="polite"></div>
+      </section>
+
+      <section class="panel">
+        <div class="step-title">
+          <span class="step-number">2</span>
+          <div>
+            <h2>I tuoi dati</h2>
+            <p>Dopo la conferma, l’orario risulterà subito occupato nel planning.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <label>Nome e cognome<input id="nome" type="text" maxlength="100" autocomplete="name" required></label>
+          <label>Telefono<input id="telefono" type="tel" maxlength="30" autocomplete="tel" required></label>
+        </div>
+
+        <div class="grid three">
+          <label>Numero carta d’identità
+            <input id="documento-numero" type="text" maxlength="9" autocapitalize="characters" autocomplete="off" placeholder="Es. CA12345AA" required>
+            <small class="field-help">Inserisci i dati reali del documento che presenterai al gestore al ritiro delle chiavi.</small>
+          </label>
+          <label>Data di rilascio
+            <input id="documento-data-rilascio" type="date" required>
+            <small class="field-help">Non può essere successiva alla data odierna.</small>
+          </label>
+          <label class="municipality-field">Comune di rilascio
+            <input id="documento-rilasciato-da" type="text" maxlength="100" autocomplete="off"
+                   placeholder="Inizia a scrivere il Comune" role="combobox"
+                   aria-autocomplete="list" aria-expanded="false"
+                   aria-controls="comuni-suggerimenti" required>
+            <div id="comuni-suggerimenti" class="municipality-suggestions hidden" role="listbox"></div>
+            <small id="comuni-status" class="field-help">Caricamento elenco ufficiale dei Comuni…</small>
+          </label>
+        </div>
+
+
+        <div class="document-check-warning" role="note">
+          <strong>⚠ Verifica del documento al ritiro delle chiavi</strong>
+          <p>
+            Il documento indicato nella prenotazione dovrà essere mostrato al gestore.
+            In caso di dati non corrispondenti o documento non valido, la prenotazione potrà essere annullata.
+          </p>
+        </div>
+
+        <label>Richiesta facoltativa
+          <textarea id="note" rows="3" maxlength="500" placeholder="Es. richiesta palloni o spogliatoio"></textarea>
+        </label>
+
+        <div class="privacy-consent-box">
+          <div class="privacy-consent-title">Consenso privacy obbligatorio</div>
+          <label class="check-row privacy-check">
+            <input id="privacy" type="checkbox" required>
+            <span>
+              Ho letto l’<a href="./privacy.html">informativa privacy</a>
+              e acconsento al trattamento dei miei dati esclusivamente per la gestione della prenotazione,
+              la verifica del limite settimanale e la visualizzazione del nome abbreviato nel planning.
+            </span>
+          </label>
+          <p class="privacy-access-note">
+            I dati completi sono consultabili soltanto dal gestore e dagli utenti autorizzati dell’Area Gestore.
+          </p>
+        </div>
+
+        <button id="prenota" class="primary full" type="button">Conferma prenotazione</button>
+        <div id="messaggio" class="message" aria-live="polite"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-contact">
+      <p>Per modificare o annullare una prenotazione telefona al <a href="tel:+393286739425"><strong>328 673 9425</strong></a>.</p>
+    </div>
+    <div class="footer-signature" aria-label="Firma del progetto">
+      <img src="./assets/gf-logo.png" alt="Logo GF" class="gf-logo">
+      <p class="footer-product">Prenotazione campo</p>
+      <p>Versione <strong data-app-version>6.0.0</strong></p>
+      <p>© 2026 Gabriele Facchini</p>
+    </div>
+  </footer>
+
+  <script src="./js/config.js?v=6.0.0"></script>
+  <script src="./js/supabase-client.js?v=6.0.0"></script>
+  <script src="./js/weather.js?v=6.0.0"></script><script src="./js/cliente.js?v=6.0.0"></script>
+  <script src="./js/footer.js?v=6.0.0"></script>
+  <script src="./js/pwa.js?v=6.0.0"></script>
+<script src="./js/update-manager.js?v=6.0.0"></script>
+</body>
+</html>

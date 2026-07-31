@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Bar Parco Ex Velodromo</title>
+  <link rel="stylesheet" href="./css/style.css?v=6.0.0">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <meta name="theme-color" content="#7a4522"><link rel="manifest" href="./manifest.webmanifest">
+</head>
+<body>
+<header class="site-header public-header bar-header"><div><span class="eyebrow">PRENOTAZIONE APERITIVO</span><h1>Bar Parco Ex Velodromo</h1><p>Scegli una proposta, la data e l’orario.</p></div></header>
+<div class="manager-access-row"><a class="link-button" href="./index.html">← Parco Ex Velodromo</a><a class="link-button manager-access-button" href="./bar-admin.html">Gestione bar</a></div>
+<main class="page">
+  <section class="panel"><h2>Le proposte del bar</h2><p>Le immagini e le proposte possono essere aggiornate frequentemente dal gestore.</p><div id="bar-products" class="bar-products-grid"><p>Caricamento proposte…</p></div></section>
+  <section class="panel" id="bar-booking-panel">
+    <div class="step-title"><span class="step-number">1</span><div><h2>Prenota il tuo aperitivo</h2><p>Seleziona prima una proposta dalla galleria.</p></div></div>
+    <div id="bar-selected-product" class="bar-selected-product">Nessuna proposta selezionata.</div>
+    <div class="grid three"><label>Data<input id="bar-data" type="date" required></label><label>Ora<input id="bar-ora" type="time" min="16:00" max="22:30" step="900" required></label><label>Persone<input id="bar-persone" type="number" min="1" max="30" value="2" required></label></div>
+    <div class="grid two"><label>Nome e cognome<input id="bar-nome" type="text" maxlength="100" required></label><label>Telefono<input id="bar-telefono" type="tel" maxlength="30" required></label></div>
+    <label>Note<textarea id="bar-note" rows="3" maxlength="500" placeholder="Allergie, intolleranze o richieste particolari"></textarea></label>
+    <label class="check-row"><input id="bar-privacy" type="checkbox"><span>Acconsento al trattamento dei dati per gestire la prenotazione.</span></label>
+    <button id="bar-prenota" class="primary full" type="button">Conferma prenotazione aperitivo</button><div id="bar-message" class="message"></div>
+  </section>
+</main>
+<footer class="site-footer"><div class="footer-signature"><img src="./assets/gf-logo.png" alt="Logo GF" class="gf-logo"><p class="footer-product">Bar Parco Ex Velodromo</p><p>Versione <strong>6.0.0</strong></p></div></footer>
+<script src="./js/config.js?v=6.0.0"></script><script src="./js/supabase-client.js?v=6.0.0"></script><script src="./js/bar.js?v=6.0.0"></script><script src="./js/footer.js?v=6.0.0"></script>
+</body></html>

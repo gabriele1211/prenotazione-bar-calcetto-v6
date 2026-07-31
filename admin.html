@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Area gestore - Parco Ex Velodromo</title>
+  <link rel="stylesheet" href="./css/style.css?v=6.0.0">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <meta name="theme-color" content="#145637">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Ex Velodromo">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="./assets/icon-192.png">
+  <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+</head>
+<body>
+<div id="pwa-update-box" class="pwa-update-box" hidden>
+  <span>È disponibile un aggiornamento dell’app.</span>
+  <button id="pwa-update-now" type="button">Aggiorna ora</button>
+</div>
+<div id="ios-install-help" class="ios-install-help" hidden>
+  Su iPhone: premi <strong>Condividi</strong> e poi <strong>Aggiungi alla schermata Home</strong>.
+</div>
+
+<header class="site-header centered-header">
+  <span class="eyebrow">AREA GESTORE</span>
+  <h1>Campo Sportivo Parco Ex Velodromo (BO)</h1>
+  <p>Gestione prenotazioni e configurazione</p>
+  <div class="header-actions-row">
+    <button id="install-app" class="link-button install-app-button" type="button" hidden>📲 Installa app</button>
+    <a class="link-button" href="./campo.html">Pagina campo</a><a class="link-button" href="./bar-admin.html">Gestione bar</a>
+  </div>
+</header>
+<main class="page admin-page">
+  <section id="login-box" class="panel narrow">
+    <h2>Accesso gestore</h2>
+    <div class="grid two"><label>Email<input id="login-email" type="email"></label><label>Password<input id="login-password" type="password"></label></div>
+    <button id="login" class="primary" type="button">Accedi</button><div id="login-message" class="message"></div>
+  </section>
+
+  <div id="dashboard" class="hidden">
+    <section class="panel closure-admin">
+      <div class="slots-header"><div><h2>Stato prenotazioni</h2><p>Puoi sospendere il servizio per un periodo di chiusura.</p></div><button id="logout" class="secondary" type="button">Esci</button></div>
+      <label class="check-row"><input id="prenotazioni-attive" type="checkbox"><span>Prenotazioni attive</span></label>
+      <div class="grid two"><label>Chiusura dal<input id="chiusura-dal" type="date"></label><label>Chiusura al<input id="chiusura-al" type="date"></label></div>
+      <label>Messaggio di chiusura<textarea id="messaggio-chiusura" rows="2" maxlength="300"></textarea></label>
+
+      <div class="admin-settings-divider"></div>
+      <h3>Prenotazione a mezzo campo</h3>
+      <label class="check-row">
+        <input id="mezzo-campo-attivo" type="checkbox">
+        <span>Abilita la prenotazione a mezzo campo per tutti gli orari</span>
+      </label>
+      <div id="mezzo-campo-settings" class="grid three">
+        <label>Massimo bambini per metà
+          <input id="max-bambini-mezzo-campo" type="number" min="1" max="20" step="1">
+        </label>
+        <label>Prezzo campo intero (€)
+          <input id="prezzo-campo-intero" type="number" min="0" step="0.50" inputmode="decimal">
+        </label>
+        <label>Prezzo mezzo campo (€)
+          <input id="prezzo-mezzo-campo" type="number" min="0" step="0.50" inputmode="decimal">
+        </label>
+      </div>
+      <p class="field-help">Lascia il prezzo a 0 per mostrare “Gratuito”. Il primo mezzo campo viene assegnato come A, il secondo come B.</p>
+
+      <div class="settings-actions">
+        <button id="salva-impostazioni" class="primary" type="button" disabled>Salva impostazioni</button>
+        <button id="ricarica-impostazioni" class="secondary" type="button">Ricarica impostazioni</button>
+      </div>
+      <div id="settings-message" class="message">Caricamento impostazioni…</div>
+    </section>
+
+    <section class="panel">
+      <div class="metrics"><div class="metric"><span>Totale</span><strong id="metrica-totale">0</strong></div><div class="metric"><span>Confermate</span><strong id="metrica-confermate">0</strong></div><div class="metric"><span>Annullate</span><strong id="metrica-annullate">0</strong></div></div>
+      <div class="admin-filters">
+        <label class="filter-search">Ricerca rapida
+          <input id="filtro-testo" type="search" placeholder="Nome, telefono, CIE, Comune, richiesta…">
+        </label>
+        <label>Dal<input id="filtro-da" type="date"></label>
+        <label>Al<input id="filtro-a" type="date"></label>
+        <label>Campo<select id="filtro-campo"></select></label>
+        <label>Stato
+          <select id="filtro-stato">
+            <option value="">Tutti</option>
+            <option value="confermata">Confermate</option>
+            <option value="annullata">Annullate</option>
+          </select>
+        </label>
+        <label>Ordine
+          <select id="filtro-ordine">
+            <option value="recenti">Più recenti prima</option>
+            <option value="vicine">Più vecchie prima</option>
+          </select>
+        </label>
+      </div>
+      <div class="admin-filter-actions">
+        <button id="carica" class="secondary" type="button">Aggiorna elenco</button>
+        <button id="azzera-filtri" class="secondary" type="button">Azzera ricerca</button>
+      </div>
+      <div class="print-planning-box">
+        <div>
+          <strong>Stampa planning giornaliero</strong>
+          <p>Genera il foglio con tutte le prenotazioni confermate del giorno scelto.</p>
+        </div>
+        <label>Data
+          <input id="data-planning-pdf" type="date">
+        </label>
+        <button id="stampa-planning" class="primary" type="button">📋 Stampa planning / PDF</button>
+        <button id="aggiorna-meteo" class="secondary" type="button">🌦️ Aggiorna meteo</button>
+
+        <button id="stampa-archivio-completo" class="secondary" type="button">
+          🗃️ Stampa archivio completo
+        </button>
+
+      </div>
+      <div id="meteo-planning" class="weather-container hidden" aria-live="polite"></div>
+      <p id="admin-message"></p>
+      <div class="table-wrap"><table><thead><tr><th>Data</th><th>Orario</th><th>Campo</th><th>Utilizzo</th><th>Costo</th><th>Cliente</th><th>Contatto</th><th>Documento</th><th>Richiesta</th><th>Meteo</th><th>Stato</th><th>Azione</th></tr></thead><tbody id="prenotazioni-body"></tbody></table></div>
+    </section>
+  </div>
+</main>
+  <footer class="site-footer admin-site-footer">
+    <div class="footer-inline" aria-label="Firma del progetto">
+      <img src="./assets/gf-logo.png" alt="Logo GF" class="gf-logo-inline">
+      <span><strong>Prenotazione campo</strong> · Versione <strong data-app-version>6.0.0</strong> · © 2026 Gabriele Facchini</span>
+    </div>
+  </footer>
+<script src="./js/config.js?v=6.0.0"></script><script src="./js/supabase-client.js?v=6.0.0"></script><script src="./js/weather.js?v=6.0.0"></script><script src="./js/admin.js?v=6.0.0"></script><script src="./js/footer.js?v=6.0.0"></script>
+  <script src="./js/pwa.js?v=6.0.0"></script>
+<script src="./js/update-manager.js?v=6.0.0"></script>
+</body></html>

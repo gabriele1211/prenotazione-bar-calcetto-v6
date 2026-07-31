@@ -1,0 +1,33 @@
+CAMPO EX VELODROMO — VERSIONE 5.2.1
+
+Versione pronta per la distribuzione.
+
+IDENTITÀ APP
+Nome completo: Campo Ex Velodromo
+Nome breve: Ex Velodromo
+Sottotitolo: Prenotazione campo
+
+MODIFICHE DI DISTRIBUZIONE
+- eliminato il banner “Versione di test”;
+- eliminate le diciture Beta;
+- nuova icona dell'app in tutti i formati;
+- aggiornati nome, titolo, manifest e messaggio di installazione;
+- nuova cache PWA per forzare il caricamento dei file aggiornati.
+
+INSTALLAZIONE SU GITHUB
+Caricare integralmente tutto il contenuto di questo pacchetto nel repository
+destinato alla distribuzione, mantenendo le cartelle.
+
+SUPABASE
+Non è richiesto un nuovo script SQL.
+Deve essere già stata applicata la migrazione del costo storico:
+sql/06_costo_storico_v5_1_5.sql
+oppure:
+sql/07_upgrade_versione_5_2_0.sql
+
+
+NOVITÀ 5.2.1
+Sotto il campo Data viene mostrata una descrizione leggibile:
+- Oggi (giorno della settimana) data completa;
+- Domani (giorno della settimana) data completa;
+- per gli altri giorni: giorno della settimana e data completa.

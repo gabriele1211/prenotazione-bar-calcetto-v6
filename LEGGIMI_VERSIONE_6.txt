@@ -1,0 +1,13 @@
+PARCO EX VELODROMO - VERSIONE 6.0.0
+
+1. Pubblica tutti i file su GitHub Pages.
+2. Apri Supabase > SQL Editor.
+3. Copia ed esegui sql/08_versione_6_bar.sql una sola volta.
+4. Apri index.html: troverai Campo Ex Velodromo e Bar Parco Ex Velodromo.
+5. Per gestire immagini e proposte apri bar-admin.html con lo stesso account gestore.
+
+GESTIONE IMMAGINI
+- Crea prima una proposta.
+- Nella scheda trascina la foto nel riquadro oppure clicca il riquadro.
+- “Elimina immagine” rimuove la foto dal database e da Supabase Storage.
+- Una nuova foto sostituisce automaticamente quella precedente.

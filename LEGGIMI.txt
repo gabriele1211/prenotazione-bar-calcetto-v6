@@ -1,0 +1,21 @@
+CORREZIONE COMUNI - VERSIONE 4.0.1
+
+Il database completo dei Comuni era già caricato.
+Il problema era nell'ordine della ricerca: il programma si fermava dopo
+12 risultati contenenti la parola "ROMA", prima di arrivare al Comune "Roma".
+
+INSTALLAZIONE
+1. Apri la repository prenotazione-calcetto-v4 su GitHub.
+2. Entra nella cartella js.
+3. Sostituisci js/cliente.js con quello contenuto in questo archivio.
+4. Conferma il commit.
+5. Attendi GitHub Pages e premi Ctrl+F5 sul sito.
+
+La chiave della cache è stata aggiornata, così il browser ricaricherà
+l'intero archivio invece di usare la vecchia copia memorizzata.
+
+DOPO L'AGGIORNAMENTO
+Scrivendo "roma" devono comparire prima:
+- Roma
+- eventuali altri Comuni che iniziano con Roma
+e successivamente i Comuni che contengono la parola.

@@ -1,0 +1,60 @@
+ORIONE 2000 — VERSIONE 5.2.0 COMPLETA
+
+Questa è una nuova base completa da caricare integralmente nella nuova
+versione/release GitHub. Non è una patch incrementale.
+
+FUNZIONI INCLUSE
+
+PAGINA PUBBLICA
+- prenotazione campo intero o mezzo campo;
+- assegnazione automatica Mezzo A / Mezzo B;
+- fasce gratuite 09:00–19:00;
+- fasce a pagamento 19:00–22:00;
+- prezzo mostrato nello slot e nel riepilogo, non nei pulsanti utilizzo;
+- conferma con costo applicato;
+- previsione meteo oraria per il giorno e l'orario scelti;
+- salvataggio temporaneo completo del modulo;
+- privacy nella stessa scheda;
+- ritorno dalla privacy con tutti i campi compilati;
+- un solo pulsante di ritorno nella privacy.
+
+AREA GESTORE
+- protezione contro il salvataggio di impostazioni non caricate;
+- ferie/chiusure, mezzo campo, bambini e prezzi;
+- colonna Costo con prezzo storico;
+- previsione “Previsioni di oggi”;
+- stampa singola prenotazione;
+- stampa planning giornaliero con meteo, costi e totale;
+- stampa archivio completo con costi e totale;
+- pulsanti “Torna all’Area gestore” e “Stampa” in tutte le stampe.
+
+PWA
+- pulsante Installa app visibile solo quando disponibile;
+- aggiornamento automatico con banner;
+- nuova cache 5.2.0;
+- HTML, JavaScript e CSS cercati prima online per evitare vecchie versioni;
+- versione uniforme nel banner, footer, Area gestore e file PWA.
+
+SUPABASE
+Ogni prenotazione salva il costo applicato al momento della conferma.
+I futuri cambi di prezzo riguardano soltanto le nuove prenotazioni.
+
+INSTALLAZIONE SU GITHUB
+1. Creare la nuova versione/release/cartella Versione 5.
+2. Caricare TUTTO il contenuto di questo pacchetto, mantenendo le cartelle.
+3. Non mescolare questi file con vecchie versioni.
+4. Aprire il sito normale nel browser e verificare il banner:
+   PWA 5.2.0 BETA.
+5. Reinstallare o aggiornare la PWA quando richiesto.
+
+SQL
+Se è già stato eseguito:
+sql/06_costo_storico_v5_1_5.sql
+non eseguire altro.
+
+Se non è mai stato eseguito, usare:
+sql/07_upgrade_versione_5_2_0.sql
+prima di pubblicare il sito.
+
+VERSIONE
+5.2.0 PWA Beta
