@@ -1,4 +1,4 @@
-const CACHE_NAME = "campo-ex-velodromo-v6.2.1-release";
+const CACHE_NAME = "campo-ex-velodromo-v6.1.0-bar-hero";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -11,7 +11,7 @@ const APP_SHELL = [
   "./bar.html",
   "./campo.html",
   "./manifest.webmanifest",
-  "./css/style.css?v=6.0.0release1",
+  "./css/style.css?v=6.1.0",
   "./js/config.js?v=6.0.0release1",
   "./js/weather.js?v=6.0.0release1",
   "./js/supabase-client.js?v=6.0.0release1",
