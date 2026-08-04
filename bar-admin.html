@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Gestione Bar Parco Ex Velodromo</title>
-  <link rel="stylesheet" href="./css/style.css?v=6.2.4release1">
-  <link rel="stylesheet" href="./css/bar.css?v=6.2.4release1">
+  <link rel="stylesheet" href="./css/style.css?v=6.2.5release1">
+  <link rel="stylesheet" href="./css/bar.css?v=6.2.5release1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <meta name="theme-color" content="#145637">
   <meta name="mobile-web-app-capable" content="yes">
@@ -140,6 +140,46 @@
         <span class="status-pill status-confirmed">Confermata</span>
         <span class="status-pill status-cancelled">Rifiutata/annullata</span>
       </div>
+      <div class="bar-print-panel" aria-labelledby="bar-print-title">
+        <div class="bar-print-heading">
+          <div>
+            <span class="eyebrow">STAMPA E PDF</span>
+            <h3 id="bar-print-title">Stampa prenotazioni aperitivo</h3>
+            <p>Prepara il programma di una giornata oppure scegli periodo e stato.</p>
+          </div>
+          <div class="bar-print-daily">
+            <label>Giornata
+              <input id="bar-print-daily-date" type="date">
+            </label>
+            <button id="bar-print-daily" class="primary" type="button">🖨️ Stampa giornata</button>
+          </div>
+        </div>
+        <details class="bar-print-other">
+          <summary>Altre stampe a scelta</summary>
+          <div class="bar-print-grid">
+            <label>Dal
+              <input id="bar-print-from" type="date">
+            </label>
+            <label>Al
+              <input id="bar-print-to" type="date">
+            </label>
+            <label>Stato
+              <select id="bar-print-status">
+                <option value="confermata">Confermate</option>
+                <option value="">Tutti gli stati</option>
+                <option value="da_confermare">Da confermare</option>
+                <option value="rifiutata">Rifiutate</option>
+                <option value="annullata">Annullate</option>
+                <option value="rifiutata_annullata">Rifiutate e annullate</option>
+              </select>
+            </label>
+          </div>
+          <div class="bar-print-actions">
+            <button id="bar-print-range" class="primary" type="button">🖨️ Stampa periodo scelto</button>
+            <button id="bar-print-all" class="secondary" type="button">🗃️ Stampa archivio completo</button>
+          </div>
+        </details>
+      </div>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Data e ora</th><th>Proposta e costo</th><th>Cliente</th><th>Contatto</th><th>Persone</th><th>Note</th><th>Stato</th><th>Azioni</th></tr></thead>
@@ -153,15 +193,15 @@
 <footer class="site-footer admin-site-footer">
   <div class="footer-inline" aria-label="Firma del progetto">
     <img src="./assets/gf-logo.png" alt="Logo GF" class="gf-logo-inline">
-    <span><strong>Bar Parco Ex Velodromo</strong> · Versione <strong data-app-version>6.2.4</strong> · © 2026 Gabriele Facchini</span>
+    <span><strong>Bar Parco Ex Velodromo</strong> · Versione <strong data-app-version>6.2.5</strong> · © 2026 Gabriele Facchini</span>
   </div>
 </footer>
 
-<script src="./js/config.js?v=6.2.4release1"></script>
-<script src="./js/supabase-client.js?v=6.2.4release1"></script>
-<script src="./js/bar-admin.js?v=6.2.4release1"></script>
-<script src="./js/footer.js?v=6.2.4release1"></script>
-<script src="./js/pwa.js?v=6.2.4release1"></script>
-<script src="./js/update-manager.js?v=6.2.4"></script>
+<script src="./js/config.js?v=6.2.5release1"></script>
+<script src="./js/supabase-client.js?v=6.2.5release1"></script>
+<script src="./js/bar-admin.js?v=6.2.5release1"></script>
+<script src="./js/footer.js?v=6.2.5release1"></script>
+<script src="./js/pwa.js?v=6.2.5release1"></script>
+<script src="./js/update-manager.js?v=6.2.5"></script>
 </body>
 </html>

@@ -1,10 +1,15 @@
 {
-  "latest": "6.2.4",
+  "latest": "6.2.5",
   "minimum": "6.0.0",
   "mandatory": false,
   "title": "Nuovo aggiornamento disponibile",
-  "message": "Messaggi WhatsApp di conferma e disdetta già pronti nell’Area gestore.",
+  "message": "Elenchi in ordine crescente e nuove stampe giornaliere o personalizzate nell’Area gestore.",
   "notes": [
+    "Gli elenchi gestore sono ordinati per data e ora crescenti",
+    "La gestione bar stampa le prenotazioni confermate della giornata scelta",
+    "È possibile stampare un intervallo di date filtrandolo per stato",
+    "È disponibile anche la stampa dell’intero archivio aperitivi",
+    "Ogni stampa riporta prenotazioni, persone e totale confermato ed è salvabile in PDF",
     "Conferma, rifiuto e annullamento aprono WhatsApp con il messaggio corretto già compilato",
     "Il testo riporta cliente, data, ora, persone, proposta e totale quando pertinenti",
     "Il gestore può controllare e modificare il messaggio prima di inviarlo",

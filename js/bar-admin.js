@@ -404,6 +404,145 @@ function renderTodayConfirmed(bookings) {
   }).join("") : '<p class="bar-today-empty">Nessuna prenotazione aperitivo confermata per oggi.</p>';
 }
 
+function sortBookingsChronologically(bookings) {
+  return [...(bookings || [])].sort((a, b) => {
+    const aKey = `${a.data || "9999-12-31"}T${String(a.ora || "23:59").slice(0, 5)}`;
+    const bKey = `${b.data || "9999-12-31"}T${String(b.ora || "23:59").slice(0, 5)}`;
+    const byDateAndTime = aKey.localeCompare(bKey);
+    if (byDateAndTime !== 0) return byDateAndTime;
+    return String(a.creato_il || "").localeCompare(String(b.creato_il || ""));
+  });
+}
+
+function matchesPrintStatus(booking, status) {
+  if (!status) return true;
+  if (status === "rifiutata_annullata") return ["rifiutata", "annullata"].includes(booking.stato);
+  return booking.stato === status;
+}
+
+function selectBookingsForPrint({ from = "", to = "", status = "" } = {}) {
+  return sortBookingsChronologically(loadedBookings.filter(booking => {
+    if (from && booking.data < from) return false;
+    if (to && booking.data > to) return false;
+    return matchesPrintStatus(booking, status);
+  }));
+}
+
+function printPeriodLabel(from, to) {
+  if (from && to && from === to) return fullLocalDate(from);
+  if (from && to) return `Dal ${localDate(from)} al ${localDate(to)}`;
+  if (from) return `Dal ${localDate(from)}`;
+  if (to) return `Fino al ${localDate(to)}`;
+  return "Intero archivio";
+}
+
+function openBookingsPrint(title, periodLabel, bookings) {
+  if (!bookings.length) {
+    alert("Non ci sono prenotazioni corrispondenti alla scelta effettuata.");
+    return;
+  }
+
+  const printWindow = window.open("", "_blank");
+  if (!printWindow) {
+    alert("Il browser ha bloccato la finestra di stampa. Consenti i popup per questo sito e riprova.");
+    return;
+  }
+
+  const logoUrl = new URL("./assets/gf-logo.png", window.location.href).href;
+  const people = bookings.reduce((total, booking) => total + Number(booking.persone || 0), 0);
+  const confirmed = bookings.filter(booking => booking.stato === "confermata");
+  const confirmedTotal = confirmed.reduce((total, booking) => total + Number(booking.costo_totale || 0), 0);
+  const rows = bookings.map((booking, index) => {
+    const quantity = Number(booking.quantita_proposte || 1);
+    const product = booking.bar_prodotti?.nome || "Proposta archiviata";
+    return `<tr>
+      <td>${index + 1}</td>
+      <td><strong>${localDate(booking.data)}</strong><br>${String(booking.ora).slice(0, 5)}</td>
+      <td><strong>${esc(product)}</strong><br>${quantity} ${quantity === 1 ? "proposta" : "proposte"}</td>
+      <td><strong>${esc(booking.nome_cliente || "—")}</strong><br>${esc(booking.telefono || "—")}</td>
+      <td>${Number(booking.persone || 0)}</td>
+      <td><strong>${euro(booking.costo_totale)}</strong></td>
+      <td>${esc(booking.note || "—")}</td>
+      <td>${esc(statusLabel(booking.stato))}</td>
+    </tr>`;
+  }).join("");
+  const generatedAt = new Date().toLocaleString("it-IT", { dateStyle: "full", timeStyle: "short" });
+
+  printWindow.document.open();
+  printWindow.document.write(`<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><title>${esc(title)}</title>
+<style>
+@page { size: A4 landscape; margin: 11mm; }
+* { box-sizing: border-box; }
+body { margin: 0; color: #1f2937; font-family: Arial, Helvetica, sans-serif; font-size: 10px; }
+.toolbar { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 13px; padding-bottom: 10px; border-bottom: 1px solid #cbd5e1; }
+.toolbar button { padding: 8px 12px; border: 1px solid #9ca3af; border-radius: 7px; background: #fff; font-weight: 700; cursor: pointer; }
+.header { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-bottom: 10px; border-bottom: 3px solid #8a431d; }
+.header img { width: 72px; height: auto; }
+h1 { margin: 0 0 5px; color: #713917; font-size: 21px; }
+.period { margin: 0; color: #4b5563; font-size: 12px; }
+.summary { display: flex; gap: 8px; flex-wrap: wrap; margin: 13px 0; }
+.summary span { padding: 6px 9px; border: 1px solid #d7c0aa; border-radius: 6px; background: #fff8ef; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 5px; border: 1px solid #aeb6c1; text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+th { color: #713917; background: #f4e6d9; font-size: 9px; }
+tbody tr:nth-child(even) { background: #fafafa; }
+.footer { margin-top: 11px; padding-top: 7px; border-top: 1px solid #d1d5db; color: #6b7280; font-size: 9px; }
+@media print { .no-print { display: none !important; } thead { display: table-header-group; } tr { break-inside: avoid; } }
+</style></head><body>
+<div class="toolbar no-print">
+  <button type="button" onclick="window.opener?.focus(); window.close();">← Torna all’Area gestore</button>
+  <button type="button" onclick="window.print()">🖨️ Stampa / salva PDF</button>
+</div>
+<div class="header"><div><h1>${esc(title)}</h1><p class="period">${esc(periodLabel)}</p></div><img src="${logoUrl}" alt="GF"></div>
+<div class="summary">
+  <span><strong>Prenotazioni:</strong> ${bookings.length}</span>
+  <span><strong>Confermate:</strong> ${confirmed.length}</span>
+  <span><strong>Persone:</strong> ${people}</span>
+  <span><strong>Totale confermato:</strong> ${euro(confirmedTotal)}</span>
+</div>
+<table>
+  <thead><tr><th>N.</th><th>Data e ora</th><th>Proposta</th><th>Cliente e telefono</th><th>Persone</th><th>Totale</th><th>Note</th><th>Stato</th></tr></thead>
+  <tbody>${rows}</tbody>
+</table>
+<div class="footer">Generato ${esc(generatedAt)} · Documento ad uso gestionale contenente dati personali · Versione 6.2.5</div>
+<script>window.addEventListener("load", () => setTimeout(() => { window.focus(); window.print(); }, 500));<\/script>
+</body></html>`);
+  printWindow.document.close();
+}
+
+function printDailyBookings() {
+  const date = $("bar-print-daily-date").value;
+  if (!date) return alert("Seleziona la giornata da stampare.");
+  const bookings = selectBookingsForPrint({ from: date, to: date, status: "confermata" });
+  openBookingsPrint("Prenotazioni aperitivo della giornata", fullLocalDate(date), bookings);
+}
+
+function printBookingsRange() {
+  const from = $("bar-print-from").value;
+  const to = $("bar-print-to").value;
+  const status = $("bar-print-status").value;
+  if (!from || !to) return alert("Seleziona sia la data iniziale sia quella finale.");
+  if (from > to) return alert("La data finale deve essere successiva o uguale a quella iniziale.");
+  const bookings = selectBookingsForPrint({ from, to, status });
+  const statusText = status ? ` · ${status === "rifiutata_annullata" ? "Rifiutate e annullate" : statusLabel(status)}` : " · Tutti gli stati";
+  openBookingsPrint("Prenotazioni aperitivo", `${printPeriodLabel(from, to)}${statusText}`, bookings);
+}
+
+function printAllBookings() {
+  openBookingsPrint("Archivio completo prenotazioni aperitivo", "Tutte le richieste, in ordine crescente per data e ora", selectBookingsForPrint());
+}
+
+function initializePrintControls() {
+  const today = localDateKey();
+  $("bar-print-daily-date").value = today;
+  $("bar-print-from").value = today;
+  $("bar-print-to").value = today;
+  $("bar-print-daily").onclick = printDailyBookings;
+  $("bar-print-range").onclick = printBookingsRange;
+  $("bar-print-all").onclick = printAllBookings;
+}
+
 function startBookingAutoRefresh() {
   if (bookingRefreshTimer) return;
   bookingRefreshTimer = window.setInterval(() => {
@@ -456,8 +595,8 @@ async function loadBookings() {
   bookingsLoading = true;
   const { data, error } = await db.from("bar_prenotazioni")
     .select("*,bar_prodotti(nome)")
-    .order("data", { ascending: false })
-    .order("ora", { ascending: false });
+    .order("data", { ascending: true })
+    .order("ora", { ascending: true });
 
   if (error) {
     $("bar-bookings-body").innerHTML = `<tr><td colspan="8">${esc(error.message)}. Esegui lo script SQL 09 della Versione 6.2.</td></tr>`;
@@ -465,7 +604,7 @@ async function loadBookings() {
     return;
   }
 
-  loadedBookings = data || [];
+  loadedBookings = sortBookingsChronologically(data || []);
   renderPendingBookings(loadedBookings);
   renderTodayConfirmed(loadedBookings);
 
@@ -500,6 +639,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $("bar-product-reset").onclick = resetForm;
   $("bar-refresh-bookings").onclick = loadBookings;
   $("bar-print-privacy").onclick = printPrivacyNotice;
+  initializePrintControls();
   checkSession();
 });
 

@@ -1,0 +1,19 @@
+PARCO EX VELODROMO - VERSIONE 6.2.5
+
+NOVITÀ ELENCHI E STAMPE
+
+- Gli elenchi dell'Area gestore sono ordinati per data e ora crescenti.
+- La gestione aperitivi permette di stampare le prenotazioni confermate di una giornata.
+- È possibile scegliere un intervallo di date e filtrarlo per stato.
+- È disponibile anche la stampa dell'intero archivio aperitivi.
+- Le stampe mostrano il totale delle prenotazioni, delle persone e dell'importo confermato.
+- Dal comando di stampa del browser il documento può essere stampato oppure salvato in PDF.
+- Restano inclusi i messaggi WhatsApp già pronti per conferma e disdetta.
+
+INSTALLAZIONE
+
+Caricare su GitHub tutto il contenuto di questo pacchetto, sostituendo la versione precedente.
+Non è necessario eseguire nuovi script SQL.
+
+Dopo il caricamento verificare che nel piè di pagina compaia Versione 6.2.5.
+Nell'Area gestore bar provare "Stampa giornata", "Stampa periodo scelto" e "Stampa archivio completo".

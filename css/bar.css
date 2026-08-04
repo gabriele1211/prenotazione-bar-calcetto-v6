@@ -124,7 +124,28 @@
 .bar-action-link.phone { background: #2868a9; }
 .bar-decision-actions button, .bar-booking-row td > .secondary { padding: 7px 9px; font-size: .78rem; }
 
-/* V6.2.4 - priorità giornaliere nell'Area gestore */
+.bar-print-panel {
+  margin: 18px 0;
+  padding: 18px;
+  border: 2px solid #b98a5e;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #fff8ef, #fff);
+}
+.bar-print-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; }
+.bar-print-heading h3 { margin: 5px 0 4px; color: #71401f; font-size: 1.18rem; }
+.bar-print-heading p { margin: 0; color: var(--muted); }
+.bar-print-daily { display: flex; align-items: end; gap: 10px; flex-wrap: wrap; }
+.bar-print-daily label,
+.bar-print-grid label { margin: 0; min-width: 160px; }
+.bar-print-daily input,
+.bar-print-grid input,
+.bar-print-grid select { min-height: 44px; font-weight: 700; }
+.bar-print-other { margin-top: 15px; padding-top: 13px; border-top: 1px solid #e1c6ab; }
+.bar-print-other summary { color: #71401f; font-weight: 900; cursor: pointer; }
+.bar-print-grid { margin-top: 14px; display: grid; grid-template-columns: repeat(3, minmax(150px, 1fr)); gap: 12px; }
+.bar-print-actions { margin-top: 13px; display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* V6.2.5 - priorità giornaliere nell'Area gestore */
 .bar-priority-heading { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
 .bar-priority-heading h2 { margin: 5px 0 4px; }
 .bar-priority-heading p { margin: 0; }
@@ -228,4 +249,10 @@
   .bar-pending-card .bar-contact-actions,
   .bar-pending-card .bar-decision-actions { justify-content: flex-start; }
   .bar-today-total { text-align: left; }
+  .bar-print-heading { align-items: stretch; flex-direction: column; }
+  .bar-print-daily { align-items: stretch; flex-direction: column; }
+  .bar-print-daily label { width: 100%; }
+  .bar-print-grid { grid-template-columns: 1fr; }
+  .bar-print-actions { flex-direction: column; }
+  .bar-print-actions button { width: 100%; }
 }

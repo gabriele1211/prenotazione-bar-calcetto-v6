@@ -1,9 +1,9 @@
-PARCO EX VELODROMO - VERSIONE 6.2.4
+PARCO EX VELODROMO - VERSIONE 6.2.5
 
 Questo è il pacchetto completo da caricare nel repository GitHub della Versione 6.
 Non copiare soltanto i file JavaScript: sostituisci tutto il contenuto mantenendo le cartelle.
 
-AGGIORNAMENTO DA VERSIONE 6.2.1, 6.2.2 O 6.2.3
+AGGIORNAMENTO DA VERSIONE 6.2.1, 6.2.2, 6.2.3 O 6.2.4
 Non eseguire alcun nuovo script SQL. Carica direttamente tutti i file del pacchetto su GitHub.
 
 AGGIORNAMENTO DA VERSIONE 6.2.0
@@ -22,10 +22,14 @@ Esegui in ordine gli script SQL da 01 a 10.
 CARICAMENTO SU GITHUB
 1. Carica tutto il contenuto del pacchetto nel repository della Versione 6.
 2. Attendi la pubblicazione di GitHub Pages.
-3. Apri l’app e verifica che compaia Versione 6.2.4.
+3. Apri l’app e verifica che compaia Versione 6.2.5.
 4. Se compare ancora una versione precedente, premi “Aggiorna ora” oppure chiudi e riapri l’app.
 
 NOVITÀ APERITIVI
+- elenchi gestore ordinati per data e ora crescenti;
+- stampa delle prenotazioni confermate della giornata scelta;
+- stampa di un intervallo con filtro per stato e stampa dell’archivio completo;
+- riepilogo di prenotazioni, persone e totale confermato, salvabile anche in PDF;
 - messaggi WhatsApp distinti e già compilati per conferma e disdetta;
 - conferma, rifiuto e annullamento aprono il testo corretto dopo l’aggiornamento dello stato;
 - le date comprese nella chiusura per ferie sono rifiutate immediatamente nella pagina aperitivi e bloccate anche dal database;

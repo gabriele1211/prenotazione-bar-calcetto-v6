@@ -183,7 +183,7 @@ tr:nth-child(even) td { background:#f8fafc; }
 </div>
 <div class="print-header"><div><h1>Campo Ex Velodromo</h1><p class="meta">Prenotazione campo</p></div><img src="${logoUrl}" alt="GF"></div>
 ${bodyHtml}
-<div class="print-footer"><span>Documento generato il ${new Date().toLocaleString("it-IT")}</span><span>Versione 6.2.4</span></div>
+<div class="print-footer"><span>Documento generato il ${new Date().toLocaleString("it-IT")}</span><span>Versione 6.2.5</span></div>
 <script>
 window.addEventListener('load', () => {
   setTimeout(() => {
@@ -913,7 +913,7 @@ function resetFilters() {
   $("filtro-testo").value = "";
   $("filtro-stato").value = "";
   $("filtro-campo").value = "";
-  $("filtro-ordine").value = "recenti";
+  $("filtro-ordine").value = "vicine";
   $("filtro-da").value = "";
   $("filtro-a").value = "";
   loadBookings();
@@ -973,6 +973,7 @@ $("data-planning-pdf")?.addEventListener("change", () => showPlanningWeather());
 
 $("filtro-da").value = "";
 $("filtro-a").value = "";
+$("filtro-ordine").value = "vicine";
 $("data-planning-pdf").value = localTodayIso();
 checkSession();
 
