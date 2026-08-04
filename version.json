@@ -1,10 +1,12 @@
 {
-  "latest": "6.2.1",
+  "latest": "6.2.2",
   "minimum": "6.0.0",
   "mandatory": false,
   "title": "Nuovo aggiornamento disponibile",
-  "message": "Aperitivi dalle 09:00 alle 21:00, ferie bloccate e nuova icona campo/bar.",
+  "message": "Installazione dell’app disponibile dalla pagina iniziale, come nella Versione 5.",
   "notes": [
+    "La pagina iniziale mostra il pulsante Installa app sui browser compatibili",
+    "Su iPhone viene mostrata l’istruzione Condividi e poi Aggiungi alla schermata Home",
     "Tutte le correzioni della Versione 5.2.8 sono incluse anche nella sezione campo",
     "Le date comprese nelle ferie vengono rifiutate e disabilitate nella richiesta aperitivo",
     "Le richieste aperitivo sono consentite dalle 09:00 alle 21:00",

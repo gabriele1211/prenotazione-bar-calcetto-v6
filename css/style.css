@@ -1213,6 +1213,8 @@ input:invalid:not(:placeholder-shown) { border-color: #d98b84; }
   width: min(100% - 32px, 1120px);
   margin: 10px auto 14px;
   display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
   justify-content: flex-end;
   align-items: center;
   clear: both;

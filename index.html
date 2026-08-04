@@ -4,18 +4,32 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Parco Ex Velodromo</title>
-  <link rel="stylesheet" href="./css/style.css?v=6.2.1release1">
-  <link rel="stylesheet" href="./css/bar.css?v=6.2.1release1">
+  <link rel="stylesheet" href="./css/style.css?v=6.2.2release1">
+  <link rel="stylesheet" href="./css/bar.css?v=6.2.2release1">
   <meta name="theme-color" content="#145637">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Ex Velodromo">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
   <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
 </head>
 <body>
+<div id="pwa-update-box" class="pwa-update-box" hidden>
+  <span>È disponibile un aggiornamento dell’app.</span>
+  <button id="pwa-update-now" type="button">Aggiorna ora</button>
+</div>
+<div id="ios-install-help" class="ios-install-help" hidden>
+  Su iPhone: premi <strong>Condividi</strong> e poi <strong>Aggiungi alla schermata Home</strong>.
+</div>
 <header class="site-header centered-header">
   <span class="eyebrow">SERVIZI ONLINE</span>
   <h1>Parco Ex Velodromo</h1>
   <p>Scegli il servizio che desideri prenotare.</p>
+  <div class="header-actions-row">
+    <button id="install-app" class="link-button install-app-button" type="button" hidden>📲 Installa app</button>
+  </div>
 </header>
 <main class="page home-services-page">
   <section class="service-choice-grid">
@@ -32,7 +46,7 @@
   </section>
   <div class="manager-access-row"><a class="link-button manager-access-button" href="./admin.html">Area gestore</a></div>
 </main>
-<footer class="site-footer"><div class="footer-signature"><img src="./assets/gf-logo.png" alt="Logo GF" class="gf-logo"><p class="footer-product">Parco Ex Velodromo</p><p>Versione <strong data-app-version>6.2.1</strong></p><p>© 2026 Gabriele Facchini</p></div></footer>
-<script src="./js/config.js?v=6.2.1release1"></script><script src="./js/footer.js?v=6.2.1release1"></script><script src="./js/pwa.js?v=6.2.1release1"></script><script src="./js/update-manager.js?v=6.2.1"></script>
+<footer class="site-footer"><div class="footer-signature"><img src="./assets/gf-logo.png" alt="Logo GF" class="gf-logo"><p class="footer-product">Parco Ex Velodromo</p><p>Versione <strong data-app-version>6.2.2</strong></p><p>© 2026 Gabriele Facchini</p></div></footer>
+<script src="./js/config.js?v=6.2.2release1"></script><script src="./js/footer.js?v=6.2.2release1"></script><script src="./js/pwa.js?v=6.2.2release1"></script><script src="./js/update-manager.js?v=6.2.2"></script>
 </body>
 </html>

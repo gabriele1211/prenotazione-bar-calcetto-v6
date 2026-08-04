@@ -1,0 +1,16 @@
+PARCO EX VELODROMO - VERSIONE 6.2.2
+
+CORREZIONE INSTALLAZIONE APP
+
+- La pagina iniziale propone l'installazione con lo stesso sistema della Versione 5.
+- Su Android/Chrome compare il pulsante "Installa app" quando il browser rende disponibile l'installazione.
+- Su iPhone/iPad compare l'indicazione "Condividi" e poi "Aggiungi alla schermata Home".
+- Il sistema è disponibile anche nelle pagine Campo, Aperitivi e Area gestore.
+- Rimane la nuova icona divisa tra campo e due calici.
+
+CARICAMENTO
+
+Caricare su GitHub tutto il contenuto di questa cartella, sostituendo i file della versione precedente.
+Non è necessario eseguire alcun nuovo script SQL.
+
+Dopo il caricamento verificare che nel piè di pagina compaia Versione 6.2.2.
