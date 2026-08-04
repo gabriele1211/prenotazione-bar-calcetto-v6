@@ -1,4 +1,4 @@
-PARCO EX VELODROMO - VERSIONE 6.2.5
+PARCO EX VELODROMO - VERSIONE 6.2.6
 
 La Versione 6 riunisce:
 - prenotazione Campo Sportivo Parco Ex Velodromo;

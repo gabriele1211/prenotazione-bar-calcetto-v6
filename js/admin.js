@@ -183,7 +183,7 @@ tr:nth-child(even) td { background:#f8fafc; }
 </div>
 <div class="print-header"><div><h1>Campo Ex Velodromo</h1><p class="meta">Prenotazione campo</p></div><img src="${logoUrl}" alt="GF"></div>
 ${bodyHtml}
-<div class="print-footer"><span>Documento generato il ${new Date().toLocaleString("it-IT")}</span><span>Versione 6.2.5</span></div>
+<div class="print-footer"><span>Documento generato il ${new Date().toLocaleString("it-IT")}</span><span>Versione 6.2.6</span></div>
 <script>
 window.addEventListener('load', () => {
   setTimeout(() => {
@@ -736,9 +736,14 @@ function filteredAndSortedBookings() {
     const haystack = [item.nome_cliente, item.telefono, item.documento_numero, item.documento_rilasciato_da, item.note, item.campi?.nome, item.settore, item.numero_bambini, item.data, cleanTime(item.ora_inizio)].map(normalize).join(" ");
     return haystack.includes(term);
   });
+  const now = new Date();
   filtered.sort((a, b) => {
     const aKey = `${a.data}T${cleanTime(a.ora_inizio)}`;
     const bKey = `${b.data}T${cleanTime(b.ora_inizio)}`;
+    const aConcluded = temporalState(a, now).concluded;
+    const bConcluded = temporalState(b, now).concluded;
+    if (aConcluded !== bConcluded) return aConcluded ? 1 : -1;
+    if (aConcluded) return bKey.localeCompare(aKey);
     return order === "vicine" ? aKey.localeCompare(bKey) : bKey.localeCompare(aKey);
   });
   return filtered;

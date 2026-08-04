@@ -118,6 +118,24 @@
 .status-confirmed { color: #07562f; background: #dff5e9; }
 .status-cancelled { color: #84221b; background: #f9dfdc; }
 .bar-booking-row.needs-confirmation { background: #fffaf0; }
+.bar-booking-row.booking-past > td {
+  color: #737b84;
+  background: #f1f3f5;
+}
+.bar-booking-row.booking-past strong,
+.bar-booking-row.booking-past small,
+.bar-booking-row.booking-past a {
+  color: #737b84;
+}
+.bar-booking-row.booking-past .status-pill {
+  color: #555d66;
+  background: #dfe3e7;
+}
+.bar-booking-row.booking-past .bar-action-link,
+.bar-booking-row.booking-past button {
+  filter: grayscale(.7);
+  opacity: .72;
+}
 .bar-contact-actions, .bar-decision-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 7px; }
 .bar-action-link { padding: 7px 9px; display: inline-block; border-radius: 7px; color: #fff; text-decoration: none; font-size: .78rem; font-weight: 800; }
 .bar-action-link.whatsapp { background: #178c4e; }

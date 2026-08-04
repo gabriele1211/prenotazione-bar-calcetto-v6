@@ -414,6 +414,41 @@ function sortBookingsChronologically(bookings) {
   });
 }
 
+function bookingStartTimestamp(booking) {
+  const date = String(booking?.data || "");
+  const time = String(booking?.ora || "").slice(0, 5);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(time)) return Number.NaN;
+  const timestamp = new Date(`${date}T${time}:00`).getTime();
+  return Number.isFinite(timestamp) ? timestamp : Number.NaN;
+}
+
+function isPastBooking(booking, now = new Date()) {
+  const start = bookingStartTimestamp(booking);
+  if (!Number.isFinite(start)) return false;
+  const nowTimestamp = now instanceof Date ? now.getTime() : new Date(now).getTime();
+  return nowTimestamp >= start + (60 * 60 * 1000);
+}
+
+function sortBookingsForManagement(bookings, now = new Date()) {
+  const nowTimestamp = now instanceof Date ? now.getTime() : new Date(now).getTime();
+  return [...(bookings || [])].sort((a, b) => {
+    const aTimestamp = bookingStartTimestamp(a);
+    const bTimestamp = bookingStartTimestamp(b);
+    const aValid = Number.isFinite(aTimestamp);
+    const bValid = Number.isFinite(bTimestamp);
+    const aPast = aValid && nowTimestamp >= aTimestamp + (60 * 60 * 1000);
+    const bPast = bValid && nowTimestamp >= bTimestamp + (60 * 60 * 1000);
+
+    // Prima le prenotazioni imminenti in ordine crescente; in fondo lo storico,
+    // dalla prenotazione passata piu recente alla piu vecchia.
+    const aGroup = aValid ? (aPast ? 1 : 0) : 2;
+    const bGroup = bValid ? (bPast ? 1 : 0) : 2;
+    if (aGroup !== bGroup) return aGroup - bGroup;
+    if (aTimestamp !== bTimestamp) return aPast ? bTimestamp - aTimestamp : aTimestamp - bTimestamp;
+    return String(a.creato_il || "").localeCompare(String(b.creato_il || ""));
+  });
+}
+
 function matchesPrintStatus(booking, status) {
   if (!status) return true;
   if (status === "rifiutata_annullata") return ["rifiutata", "annullata"].includes(booking.stato);
@@ -505,7 +540,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
   <thead><tr><th>N.</th><th>Data e ora</th><th>Proposta</th><th>Cliente e telefono</th><th>Persone</th><th>Totale</th><th>Note</th><th>Stato</th></tr></thead>
   <tbody>${rows}</tbody>
 </table>
-<div class="footer">Generato ${esc(generatedAt)} · Documento ad uso gestionale contenente dati personali · Versione 6.2.5</div>
+<div class="footer">Generato ${esc(generatedAt)} · Documento ad uso gestionale contenente dati personali · Versione 6.2.6</div>
 <script>window.addEventListener("load", () => setTimeout(() => { window.focus(); window.print(); }, 500));<\/script>
 </body></html>`);
   printWindow.document.close();
@@ -604,7 +639,7 @@ async function loadBookings() {
     return;
   }
 
-  loadedBookings = sortBookingsChronologically(data || []);
+  loadedBookings = sortBookingsForManagement(data || []);
   renderPendingBookings(loadedBookings);
   renderTodayConfirmed(loadedBookings);
 
@@ -612,7 +647,8 @@ async function loadBookings() {
     const quantity = Number(booking.quantita_proposte || 1);
     const peopleIncluded = Number(booking.persone_per_proposta_applicate || 1);
     const contactPreference = booking.canale_contatto === "telefono" ? "Preferisce telefonata" : "Preferisce WhatsApp";
-    return `<tr class="bar-booking-row ${booking.stato === "da_confermare" ? "needs-confirmation" : ""}">
+    const pastClass = isPastBooking(booking) ? "booking-past" : "";
+    return `<tr class="bar-booking-row ${booking.stato === "da_confermare" ? "needs-confirmation" : ""} ${pastClass}">
       <td><strong>${localDate(booking.data)}</strong><br>${String(booking.ora).slice(0, 5)}<br><small>Richiesta ${localDate(String(booking.creato_il).slice(0, 10))}</small></td>
       <td><strong>${esc(booking.bar_prodotti?.nome || "Proposta archiviata")}</strong><br>${quantity} × ${euro(booking.prezzo_unitario_applicato)}<br><strong>Totale ${euro(booking.costo_totale)}</strong><br><small>${peopleIncluded} ${peopleIncluded === 1 ? "persona" : "persone"} per proposta</small></td>
       <td>${esc(booking.nome_cliente)}</td>

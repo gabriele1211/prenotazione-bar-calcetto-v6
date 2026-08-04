@@ -1,11 +1,12 @@
 {
-  "latest": "6.2.5",
+  "latest": "6.2.6",
   "minimum": "6.0.0",
   "mandatory": false,
   "title": "Nuovo aggiornamento disponibile",
-  "message": "Elenchi in ordine crescente e nuove stampe giornaliere o personalizzate nell’Area gestore.",
+  "message": "Le prenotazioni imminenti sono mostrate per prime e quelle già trascorse sono raccolte in fondo in grigio.",
   "notes": [
-    "Gli elenchi gestore sono ordinati per data e ora crescenti",
+    "Gli elenchi gestore mostrano prima le prenotazioni imminenti in ordine crescente",
+    "Le prenotazioni già trascorse sono spostate in fondo e visualizzate in grigio",
     "La gestione bar stampa le prenotazioni confermate della giornata scelta",
     "È possibile stampare un intervallo di date filtrandolo per stato",
     "È disponibile anche la stampa dell’intero archivio aperitivi",
