@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Gestione Bar Parco Ex Velodromo</title>
-  <link rel="stylesheet" href="./css/style.css?v=6.2.2release1">
-  <link rel="stylesheet" href="./css/bar.css?v=6.2.2release1">
+  <link rel="stylesheet" href="./css/style.css?v=6.2.3release1">
+  <link rel="stylesheet" href="./css/bar.css?v=6.2.3release1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <meta name="theme-color" content="#145637">
   <meta name="mobile-web-app-capable" content="yes">
@@ -48,6 +48,32 @@
   </section>
 
   <div id="bar-dashboard" class="hidden">
+    <section id="bar-pending-alert" class="panel bar-pending-alert" role="alert" aria-live="assertive" hidden>
+      <div class="bar-priority-heading">
+        <div>
+          <span class="eyebrow">⚠ AZIONE RICHIESTA</span>
+          <h2 id="bar-pending-title">Richieste da confermare</h2>
+          <p id="bar-pending-summary">Rispondi rapidamente al cliente tramite WhatsApp o telefono.</p>
+        </div>
+        <span id="bar-pending-count" class="bar-priority-count" aria-label="Richieste in attesa">0</span>
+      </div>
+      <p class="bar-response-target"><strong>Obiettivo:</strong> confermare o rifiutare entro 10 minuti.</p>
+      <div id="bar-pending-list" class="bar-priority-list"></div>
+    </section>
+
+    <section class="panel bar-today-confirmed" aria-labelledby="bar-today-title">
+      <div class="bar-priority-heading">
+        <div>
+          <span class="eyebrow">PROGRAMMA DI OGGI</span>
+          <h2 id="bar-today-title">Prenotazioni confermate di oggi</h2>
+          <p id="bar-today-date"></p>
+        </div>
+        <span id="bar-today-count" class="bar-today-count" aria-label="Prenotazioni confermate oggi">0</span>
+      </div>
+      <div id="bar-today-metrics" class="bar-today-metrics"></div>
+      <div id="bar-today-list" class="bar-today-list"></div>
+    </section>
+
     <section class="panel bar-admin-summary">
       <div>
         <span class="eyebrow">FERIE E CHIUSURE</span>
@@ -101,11 +127,11 @@
       <div id="bar-admin-products" class="bar-admin-products"></div>
     </section>
 
-    <section class="panel">
+    <section id="bar-bookings-history" class="panel">
       <div class="slots-header">
         <div>
-          <h2>Richieste aperitivo</h2>
-          <p>Le nuove richieste restano “Da confermare”. Contatta il cliente e poi approva o rifiuta.</p>
+          <h2>Tutte le richieste aperitivo</h2>
+          <p>Elenco completo, comprese le richieste passate, rifiutate e annullate.</p>
         </div>
         <button id="bar-refresh-bookings" class="secondary" type="button">Aggiorna</button>
       </div>
@@ -127,15 +153,15 @@
 <footer class="site-footer admin-site-footer">
   <div class="footer-inline" aria-label="Firma del progetto">
     <img src="./assets/gf-logo.png" alt="Logo GF" class="gf-logo-inline">
-    <span><strong>Bar Parco Ex Velodromo</strong> · Versione <strong data-app-version>6.2.2</strong> · © 2026 Gabriele Facchini</span>
+    <span><strong>Bar Parco Ex Velodromo</strong> · Versione <strong data-app-version>6.2.3</strong> · © 2026 Gabriele Facchini</span>
   </div>
 </footer>
 
-<script src="./js/config.js?v=6.2.2release1"></script>
-<script src="./js/supabase-client.js?v=6.2.2release1"></script>
-<script src="./js/bar-admin.js?v=6.2.2release1"></script>
-<script src="./js/footer.js?v=6.2.2release1"></script>
-<script src="./js/pwa.js?v=6.2.2release1"></script>
-<script src="./js/update-manager.js?v=6.2.2"></script>
+<script src="./js/config.js?v=6.2.3release1"></script>
+<script src="./js/supabase-client.js?v=6.2.3release1"></script>
+<script src="./js/bar-admin.js?v=6.2.3release1"></script>
+<script src="./js/footer.js?v=6.2.3release1"></script>
+<script src="./js/pwa.js?v=6.2.3release1"></script>
+<script src="./js/update-manager.js?v=6.2.3"></script>
 </body>
 </html>

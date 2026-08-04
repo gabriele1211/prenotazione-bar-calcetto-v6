@@ -1,5 +1,10 @@
 const $ = id => document.getElementById(id);
 let products = [];
+let loadedBookings = [];
+let bookingRefreshTimer = null;
+let bookingsLoading = false;
+const ORIGINAL_PAGE_TITLE = document.title;
+const BOOKING_REFRESH_MS = 30 * 1000;
 
 function esc(value) {
   return String(value ?? "").replace(/[&<>"']/g, character => ({
@@ -14,6 +19,40 @@ function euro(value) {
 function localDate(value) {
   if (!value) return "—";
   return new Date(`${value}T12:00:00`).toLocaleDateString("it-IT", { day: "2-digit", month: "2-digit", year: "numeric" });
+}
+
+function localDateKey(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function fullLocalDate(value) {
+  if (!value) return "—";
+  return new Date(`${value}T12:00:00`).toLocaleDateString("it-IT", {
+    weekday: "long", day: "numeric", month: "long", year: "numeric"
+  });
+}
+
+function waitMinutes(value) {
+  const created = new Date(value).getTime();
+  if (!Number.isFinite(created)) return 0;
+  return Math.max(0, Math.floor((Date.now() - created) / 60000));
+}
+
+function waitLabel(value) {
+  const minutes = waitMinutes(value);
+  if (minutes === 0) return "Ricevuta adesso";
+  if (minutes === 1) return "Attende da 1 minuto";
+  return `Attende da ${minutes} minuti`;
+}
+
+function urgencyClass(value) {
+  const minutes = waitMinutes(value);
+  if (minutes >= 20) return "critical";
+  if (minutes >= 10) return "urgent";
+  return "fresh";
 }
 
 function message(text, type = "success", id = "bar-admin-message") {
@@ -56,7 +95,12 @@ async function checkSession() {
   const authenticated = Boolean(data.session);
   $("bar-login-box").classList.toggle("hidden", authenticated);
   $("bar-dashboard").classList.toggle("hidden", !authenticated);
-  if (authenticated) await Promise.all([loadProducts(), loadBookings(), loadClosureSummary()]);
+  if (authenticated) {
+    await Promise.all([loadProducts(), loadBookings(), loadClosureSummary()]);
+    startBookingAutoRefresh();
+  } else {
+    stopBookingAutoRefresh();
+  }
 }
 
 async function login() {
@@ -266,6 +310,85 @@ function bookingActions(booking) {
   return contact;
 }
 
+function renderPendingBookings(bookings) {
+  const pending = bookings
+    .filter(booking => booking.stato === "da_confermare")
+    .sort((a, b) => new Date(a.creato_il) - new Date(b.creato_il));
+  const panel = $("bar-pending-alert");
+  panel.hidden = pending.length === 0;
+  $("bar-pending-count").textContent = pending.length;
+  $("bar-pending-title").textContent = pending.length === 1
+    ? "1 richiesta da confermare"
+    : `${pending.length} richieste da confermare`;
+
+  panel.classList.remove("has-urgent", "has-critical");
+  if (pending.some(booking => urgencyClass(booking.creato_il) === "critical")) panel.classList.add("has-critical");
+  else if (pending.some(booking => urgencyClass(booking.creato_il) === "urgent")) panel.classList.add("has-urgent");
+
+  document.title = pending.length ? `(${pending.length}) ⚠ Da confermare · ${ORIGINAL_PAGE_TITLE}` : ORIGINAL_PAGE_TITLE;
+  $("bar-pending-list").innerHTML = pending.map(booking => {
+    const quantity = Number(booking.quantita_proposte || 1);
+    const urgency = urgencyClass(booking.creato_il);
+    const urgencyPrefix = urgency === "critical" ? "RISPOSTA URGENTE · " : urgency === "urgent" ? "ATTENZIONE · " : "";
+    return `<article class="bar-pending-card ${urgency}">
+      <div>
+        <span class="bar-wait-time">⏱ ${urgencyPrefix}${esc(waitLabel(booking.creato_il))}</span>
+        <h3>${esc(booking.nome_cliente)} · ${Number(booking.persone || 0)} persone</h3>
+        <p>${localDate(booking.data)} alle ${String(booking.ora).slice(0, 5)} · ${esc(booking.canale_contatto === "telefono" ? "Preferisce telefonata" : "Preferisce WhatsApp")}</p>
+      </div>
+      <div>
+        <h3>${esc(booking.bar_prodotti?.nome || "Proposta archiviata")}</h3>
+        <p>${quantity} ${quantity === 1 ? "proposta" : "proposte"} · <strong>${euro(booking.costo_totale)}</strong></p>
+      </div>
+      <div>${bookingActions(booking)}</div>
+    </article>`;
+  }).join("");
+}
+
+function renderTodayConfirmed(bookings) {
+  const today = localDateKey();
+  const confirmed = bookings
+    .filter(booking => booking.stato === "confermata" && booking.data === today)
+    .sort((a, b) => String(a.ora).localeCompare(String(b.ora)));
+  const people = confirmed.reduce((total, booking) => total + Number(booking.persone || 0), 0);
+  const revenue = confirmed.reduce((total, booking) => total + Number(booking.costo_totale || 0), 0);
+
+  $("bar-today-date").textContent = fullLocalDate(today);
+  $("bar-today-count").textContent = confirmed.length;
+  $("bar-today-metrics").innerHTML = `
+    <span>${confirmed.length} ${confirmed.length === 1 ? "prenotazione" : "prenotazioni"}</span>
+    <span>${people} ${people === 1 ? "persona" : "persone"}</span>
+    <span>Totale ${euro(revenue)}</span>`;
+  $("bar-today-list").innerHTML = confirmed.length ? confirmed.map(booking => {
+    const quantity = Number(booking.quantita_proposte || 1);
+    return `<article class="bar-today-card">
+      <div class="bar-today-time">${String(booking.ora).slice(0, 5)}</div>
+      <div>
+        <h3>${esc(booking.bar_prodotti?.nome || "Proposta archiviata")}</h3>
+        <p>${quantity} ${quantity === 1 ? "proposta" : "proposte"}</p>
+      </div>
+      <div>
+        <h3>${esc(booking.nome_cliente)}</h3>
+        <p>${Number(booking.persone || 0)} persone · ${esc(booking.telefono)}</p>
+      </div>
+      <div class="bar-today-total">${euro(booking.costo_totale)}</div>
+    </article>`;
+  }).join("") : '<p class="bar-today-empty">Nessuna prenotazione aperitivo confermata per oggi.</p>';
+}
+
+function startBookingAutoRefresh() {
+  if (bookingRefreshTimer) return;
+  bookingRefreshTimer = window.setInterval(() => {
+    if (!document.hidden) loadBookings();
+  }, BOOKING_REFRESH_MS);
+}
+
+function stopBookingAutoRefresh() {
+  if (bookingRefreshTimer) window.clearInterval(bookingRefreshTimer);
+  bookingRefreshTimer = null;
+  document.title = ORIGINAL_PAGE_TITLE;
+}
+
 async function updateBookingStatus(id, status) {
   const labels = { confermata: "confermare", rifiutata: "rifiutare", annullata: "annullare" };
   if (!confirm(`Vuoi ${labels[status]} questa richiesta?`)) return;
@@ -284,6 +407,8 @@ function attachBookingActions() {
 }
 
 async function loadBookings() {
+  if (bookingsLoading) return;
+  bookingsLoading = true;
   const { data, error } = await db.from("bar_prenotazioni")
     .select("*,bar_prodotti(nome)")
     .order("data", { ascending: false })
@@ -291,10 +416,15 @@ async function loadBookings() {
 
   if (error) {
     $("bar-bookings-body").innerHTML = `<tr><td colspan="8">${esc(error.message)}. Esegui lo script SQL 09 della Versione 6.2.</td></tr>`;
+    bookingsLoading = false;
     return;
   }
 
-  $("bar-bookings-body").innerHTML = (data || []).map(booking => {
+  loadedBookings = data || [];
+  renderPendingBookings(loadedBookings);
+  renderTodayConfirmed(loadedBookings);
+
+  $("bar-bookings-body").innerHTML = loadedBookings.map(booking => {
     const quantity = Number(booking.quantita_proposte || 1);
     const peopleIncluded = Number(booking.persone_per_proposta_applicate || 1);
     const contactPreference = booking.canale_contatto === "telefono" ? "Preferisce telefonata" : "Preferisce WhatsApp";
@@ -310,6 +440,7 @@ async function loadBookings() {
     </tr>`;
   }).join("") || '<tr><td colspan="8">Nessuna richiesta aperitivo.</td></tr>';
   attachBookingActions();
+  bookingsLoading = false;
 }
 
 function printPrivacyNotice() {
@@ -325,4 +456,8 @@ document.addEventListener("DOMContentLoaded", () => {
   $("bar-refresh-bookings").onclick = loadBookings;
   $("bar-print-privacy").onclick = printPrivacyNotice;
   checkSession();
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && !$("bar-dashboard").classList.contains("hidden")) loadBookings();
 });

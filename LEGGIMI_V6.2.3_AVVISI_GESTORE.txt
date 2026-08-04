@@ -1,0 +1,19 @@
+PARCO EX VELODROMO - VERSIONE 6.2.3
+
+NOVITÀ AREA GESTORE BAR
+
+- Le richieste aperitivo da confermare sono mostrate per prime in un riquadro di avviso.
+- Ogni richiesta indica da quanti minuti il cliente attende.
+- Obiettivo visibile: confermare oppure rifiutare entro 10 minuti.
+- Dopo 10 minuti l’avviso diventa urgente; dopo 20 minuti diventa rosso.
+- Tutte le prenotazioni aperitivo confermate di oggi sono raccolte in un unico riquadro verde.
+- Il riquadro giornaliero mostra numero prenotazioni, persone e totale previsto.
+- I dati vengono aggiornati automaticamente ogni 30 secondi quando l’Area gestore è aperta.
+- L’elenco storico completo rimane disponibile più in basso.
+
+INSTALLAZIONE
+
+Caricare su GitHub tutto il contenuto di questo pacchetto, sostituendo la versione precedente.
+Non è necessario eseguire nuovi script SQL.
+
+Dopo il caricamento verificare che nel piè di pagina compaia Versione 6.2.3.

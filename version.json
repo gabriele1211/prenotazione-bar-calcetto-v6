@@ -1,10 +1,14 @@
 {
-  "latest": "6.2.2",
+  "latest": "6.2.3",
   "minimum": "6.0.0",
   "mandatory": false,
   "title": "Nuovo aggiornamento disponibile",
-  "message": "Installazione dell’app disponibile dalla pagina iniziale, come nella Versione 5.",
+  "message": "Nuovo riepilogo operativo nell’Area gestore per rispondere rapidamente alle richieste aperitivo.",
   "notes": [
+    "Le richieste da confermare compaiono in alto con il tempo di attesa e priorità crescente",
+    "Dopo 10 minuti l’avviso diventa urgente e dopo 20 minuti diventa rosso",
+    "Le prenotazioni confermate di oggi sono raccolte in un unico riquadro verde",
+    "L’Area gestore aggiorna automaticamente le richieste ogni 30 secondi",
     "La pagina iniziale mostra il pulsante Installa app sui browser compatibili",
     "Su iPhone viene mostrata l’istruzione Condividi e poi Aggiungi alla schermata Home",
     "Tutte le correzioni della Versione 5.2.8 sono incluse anche nella sezione campo",

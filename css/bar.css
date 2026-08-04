@@ -124,6 +124,91 @@
 .bar-action-link.phone { background: #2868a9; }
 .bar-decision-actions button, .bar-booking-row td > .secondary { padding: 7px 9px; font-size: .78rem; }
 
+/* V6.2.3 - priorità giornaliere nell'Area gestore */
+.bar-priority-heading { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.bar-priority-heading h2 { margin: 5px 0 4px; }
+.bar-priority-heading p { margin: 0; }
+.bar-priority-count,
+.bar-today-count {
+  min-width: 58px;
+  height: 58px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 1.65rem;
+  font-weight: 900;
+  line-height: 1;
+}
+.bar-pending-alert {
+  border: 3px solid #e09a22;
+  background: linear-gradient(135deg, #fff7df, #fff);
+  box-shadow: 0 10px 28px rgba(157, 91, 0, .16);
+}
+.bar-pending-alert .eyebrow { color: #8a4f00; }
+.bar-pending-alert .bar-priority-count { background: #b56800; }
+.bar-pending-alert.has-urgent { border-color: #df6c16; background: linear-gradient(135deg, #fff0dd, #fff); }
+.bar-pending-alert.has-critical { border-color: #bd2922; background: linear-gradient(135deg, #ffe7e4, #fff); box-shadow: 0 10px 30px rgba(158, 28, 24, .22); }
+.bar-pending-alert.has-critical .eyebrow { color: #9b211b; }
+.bar-pending-alert.has-critical .bar-priority-count { background: #b4231d; }
+.bar-response-target { margin: 14px 0; padding: 10px 13px; border-radius: 9px; color: #623d08; background: rgba(255, 255, 255, .78); }
+.bar-priority-list { display: grid; gap: 11px; }
+.bar-pending-card {
+  padding: 14px;
+  display: grid;
+  grid-template-columns: minmax(180px, 1.2fr) minmax(180px, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid #e3b75e;
+  border-left: 8px solid #d88a0b;
+  border-radius: 12px;
+  background: #fff;
+}
+.bar-pending-card.urgent { border-left-color: #df6c16; }
+.bar-pending-card.critical { border-color: #e1a5a1; border-left-color: #bd2922; }
+.bar-pending-card h3,
+.bar-pending-card p { margin: 0; }
+.bar-pending-card p { margin-top: 4px; color: var(--muted); }
+.bar-wait-time { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 6px; color: #7a4800; font-weight: 900; }
+.bar-pending-card.critical .bar-wait-time { color: #aa241e; }
+.bar-pending-card .bar-contact-actions,
+.bar-pending-card .bar-decision-actions { justify-content: flex-end; margin: 0 0 7px; }
+
+.bar-today-confirmed { border: 3px solid #3a9365; background: linear-gradient(135deg, #eaf8f0, #fff); box-shadow: 0 10px 28px rgba(20, 86, 55, .12); }
+.bar-today-confirmed .eyebrow { color: #14603b; }
+.bar-today-count { background: #18734a; }
+.bar-today-metrics { margin: 15px 0; display: flex; gap: 9px; flex-wrap: wrap; }
+.bar-today-metrics span { padding: 7px 11px; border-radius: 999px; color: #145637; background: #dff3e8; font-size: .86rem; font-weight: 800; }
+.bar-today-list { display: grid; gap: 10px; }
+.bar-today-card {
+  padding: 13px 14px;
+  display: grid;
+  grid-template-columns: 74px minmax(180px, 1.3fr) minmax(160px, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid #add5bf;
+  border-left: 7px solid #238154;
+  border-radius: 11px;
+  background: #fff;
+}
+.bar-today-time { color: #145637; font-size: 1.25rem; font-weight: 900; }
+.bar-today-card h3,
+.bar-today-card p { margin: 0; }
+.bar-today-card p { margin-top: 3px; color: var(--muted); }
+.bar-today-total { color: #145637; font-size: 1.05rem; font-weight: 900; text-align: right; }
+.bar-today-empty { margin: 0; padding: 18px; border: 1px dashed #89ba9f; border-radius: 11px; color: #315f49; background: rgba(255, 255, 255, .7); text-align: center; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .bar-pending-alert.has-critical { animation: bar-alert-pulse 1.8s ease-in-out infinite; }
+}
+@keyframes bar-alert-pulse {
+  0%, 100% { box-shadow: 0 10px 30px rgba(158, 28, 24, .18); }
+  50% { box-shadow: 0 10px 34px rgba(158, 28, 24, .38); }
+}
+
 @media (max-width: 760px) {
   .service-choice-grid { grid-template-columns: 1fr; }
   .bar-header { min-height: 225px; margin-top: 0; padding: 28px 18px; border-radius: 0 0 22px 22px; }
@@ -135,4 +220,10 @@
   .bar-admin-image { min-height: 220px; }
   .bar-admin-summary { align-items: stretch; flex-direction: column; }
   .bar-admin-summary-actions { width: 100%; min-width: 0; }
+  .bar-priority-heading { align-items: flex-start; }
+  .bar-priority-count, .bar-today-count { min-width: 48px; height: 48px; font-size: 1.35rem; }
+  .bar-pending-card, .bar-today-card { grid-template-columns: 1fr; gap: 10px; }
+  .bar-pending-card .bar-contact-actions,
+  .bar-pending-card .bar-decision-actions { justify-content: flex-start; }
+  .bar-today-total { text-align: left; }
 }

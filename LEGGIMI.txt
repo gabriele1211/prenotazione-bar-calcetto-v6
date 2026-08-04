@@ -1,4 +1,4 @@
-PARCO EX VELODROMO - VERSIONE 6.2.2
+PARCO EX VELODROMO - VERSIONE 6.2.3
 
 Questo è il pacchetto completo da caricare nel repository GitHub della Versione 6.
 Non copiare soltanto i file JavaScript: sostituisci tutto il contenuto mantenendo le cartelle.
@@ -22,7 +22,7 @@ Esegui in ordine gli script SQL da 01 a 10.
 CARICAMENTO SU GITHUB
 1. Carica tutto il contenuto del pacchetto nel repository della Versione 6.
 2. Attendi la pubblicazione di GitHub Pages.
-3. Apri l’app e verifica che compaia Versione 6.2.2.
+3. Apri l’app e verifica che compaia Versione 6.2.3.
 4. Se compare ancora una versione precedente, premi “Aggiorna ora” oppure chiudi e riapri l’app.
 
 NOVITÀ APERITIVI
