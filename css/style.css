@@ -1250,6 +1250,10 @@ input:invalid:not(:placeholder-shown) { border-color: #d98b84; }
   color: #24513a;
 }
 
+.date-description.date-unavailable {
+  color: var(--danger);
+}
+
 #data {
   font-size: 1.12rem;
   font-weight: 700;

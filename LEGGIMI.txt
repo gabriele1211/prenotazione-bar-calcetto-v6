@@ -1,26 +1,31 @@
-PARCO EX VELODROMO - VERSIONE 6.2.0
+PARCO EX VELODROMO - VERSIONE 6.2.1
 
 Questo è il pacchetto completo da caricare nel repository GitHub della Versione 6.
 Non copiare soltanto i file JavaScript: sostituisci tutto il contenuto mantenendo le cartelle.
 
-AGGIORNAMENTO DEL DATABASE GIÀ IN USO
+AGGIORNAMENTO DA VERSIONE 6.2.0
 1. Apri Supabase > SQL Editor.
 2. Copia ed esegui una sola volta:
-   sql/09_versione_6_2_aperitivi_conferma.sql
+   sql/10_versione_6_2_1_orari_ferie_aperitivi.sql
 3. Lo script conserva prodotti e prenotazioni bar già presenti.
-4. Non devi rieseguire gli script da 01 a 08 se erano già stati eseguiti.
+4. Non devi rieseguire gli script da 01 a 09 se erano già stati eseguiti.
+
+AGGIORNAMENTO DA VERSIONE 6.0/6.1
+Esegui, nell’ordine, gli script 09 e 10.
 
 NUOVA INSTALLAZIONE
-Esegui in ordine gli script SQL da 01 a 09.
+Esegui in ordine gli script SQL da 01 a 10.
 
 CARICAMENTO SU GITHUB
 1. Carica tutto il contenuto del pacchetto nel repository della Versione 6.
 2. Attendi la pubblicazione di GitHub Pages.
-3. Apri l’app e verifica che compaia Versione 6.2.0.
+3. Apri l’app e verifica che compaia Versione 6.2.1.
 4. Se compare ancora una versione precedente, premi “Aggiorna ora” oppure chiudi e riapri l’app.
 
 NOVITÀ APERITIVI
-- le chiusure per ferie configurate nell’Area gestore del campo bloccano anche il bar;
+- le date comprese nella chiusura per ferie sono rifiutate immediatamente nella pagina aperitivi e bloccate anche dal database;
+- la fascia oraria prenotabile è dalle 09:00 alle 21:00, comprese;
+- l’icona dell’app è quella divisa diagonalmente tra il campo e i due calici del bar;
 - ogni proposta ha prezzo e numero di persone comprese, entrambi programmabili;
 - quantità e costo totale sono calcolati automaticamente in base ai partecipanti;
 - prezzo, persone comprese, quantità e totale vengono salvati nella richiesta e non cambiano modificando successivamente il prodotto;

@@ -1,4 +1,4 @@
-const CACHE_NAME = "parco-ex-velodromo-v6.2.0-release1";
+const CACHE_NAME = "parco-ex-velodromo-v6.2.1-release1";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -9,23 +9,24 @@ const APP_SHELL = [
   "./privacy.html",
   "./offline.html",
   "./manifest.webmanifest",
-  "./css/style.css?v=6.2.0release1",
-  "./css/bar.css?v=6.2.0release1",
-  "./js/config.js?v=6.2.0release1",
-  "./js/weather.js?v=6.2.0release1",
-  "./js/supabase-client.js?v=6.2.0release1",
-  "./js/cliente.js?v=6.2.0release1",
-  "./js/admin.js?v=6.2.0release1",
-  "./js/bar.js?v=6.2.0release1",
-  "./js/bar-admin.js?v=6.2.0release1",
-  "./js/footer.js?v=6.2.0release1",
-  "./js/pwa.js?v=6.2.0release1",
-  "./js/update-manager.js?v=6.2.0",
+  "./css/style.css?v=6.2.1release1",
+  "./css/bar.css?v=6.2.1release1",
+  "./js/config.js?v=6.2.1release1",
+  "./js/weather.js?v=6.2.1release1",
+  "./js/supabase-client.js?v=6.2.1release1",
+  "./js/cliente.js?v=6.2.1release1",
+  "./js/admin.js?v=6.2.1release1",
+  "./js/bar.js?v=6.2.1release1",
+  "./js/bar-admin.js?v=6.2.1release1",
+  "./js/footer.js?v=6.2.1release1",
+  "./js/pwa.js?v=6.2.1release1",
+  "./js/update-manager.js?v=6.2.1",
   "./version.json",
   "./assets/gf-logo.png",
   "./assets/icon-192.png",
   "./assets/icon-512.png",
   "./assets/apple-touch-icon.png",
+  "./assets/favicon-32.png",
   "./assets/maskable-512.png"
 ];
 

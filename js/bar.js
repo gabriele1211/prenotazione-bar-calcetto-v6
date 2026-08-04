@@ -6,6 +6,10 @@ let settingsLoaded = false;
 let closureStart = null;
 let closureEnd = null;
 let closureMessage = "";
+let rejectedClosedDate = null;
+
+const BAR_FIRST_TIME = "09:00";
+const BAR_LAST_TIME = "21:00";
 
 function esc(value) {
   return String(value ?? "").replace(/[&<>"']/g, character => ({
@@ -55,7 +59,44 @@ function isDateClosed(value) {
 
 function updateDateDescription() {
   const value = $("bar-data").value;
-  $("bar-data-description").textContent = value ? localDate(value) : "";
+  const description = $("bar-data-description");
+  description.classList.toggle("date-unavailable", Boolean(rejectedClosedDate));
+
+  if (rejectedClosedDate && closureStart && closureEnd) {
+    description.textContent = `Date disabilitate per ferie: dal ${localDate(closureStart)} al ${localDate(closureEnd)}.`;
+    return;
+  }
+  if (value) {
+    description.textContent = localDate(value);
+    return;
+  }
+  description.textContent = closureStart && closureEnd
+    ? `Ferie: dal ${localDate(closureStart)} al ${localDate(closureEnd)} le date non sono prenotabili.`
+    : "";
+}
+
+function enforceOpenDate(announce = false) {
+  const input = $("bar-data");
+  const value = input.value;
+
+  if (!isDateClosed(value)) {
+    rejectedClosedDate = null;
+    input.setCustomValidity("");
+    input.removeAttribute("aria-invalid");
+    updateDateDescription();
+    return true;
+  }
+
+  rejectedClosedDate = value;
+  input.value = "";
+  input.setCustomValidity("La data scelta rientra nel periodo di ferie.");
+  input.setAttribute("aria-invalid", "true");
+  updateDateDescription();
+
+  if (announce) {
+    showMessage(`Le date dal ${localDate(closureStart)} al ${localDate(closureEnd)} sono disabilitate per ferie. Scegli un altro giorno.`, "warning");
+  }
+  return false;
 }
 
 function selectedCalculation() {
@@ -92,7 +133,8 @@ function updateCalculation() {
 
 function updateAvailability() {
   const date = $("bar-data").value;
-  const closed = !settingsLoaded || !bookingsEnabled || isDateClosed(date);
+  const dateUnavailable = Boolean(rejectedClosedDate) || isDateClosed(date);
+  const closed = !settingsLoaded || !bookingsEnabled || !date || dateUnavailable;
   const closureBox = $("bar-closure-box");
   const closureText = $("bar-closure-message");
 
@@ -102,7 +144,7 @@ function updateAvailability() {
   } else if (!bookingsEnabled) {
     closureBox.classList.remove("hidden");
     closureText.textContent = closureMessage || "Le prenotazioni sono temporaneamente sospese.";
-  } else if (isDateClosed(date)) {
+  } else if (dateUnavailable) {
     closureBox.classList.remove("hidden");
     closureText.textContent = closureMessage || `Chiuso per ferie dal ${localDate(closureStart)} al ${localDate(closureEnd)}.`;
   } else {
@@ -128,6 +170,7 @@ async function loadSettings() {
     closureEnd = data.chiusura_al || null;
     closureMessage = data.messaggio_chiusura || "";
   }
+  enforceOpenDate(false);
   updateAvailability();
 }
 
@@ -201,6 +244,7 @@ async function book() {
   };
 
   if (!payload.nome_cliente || !payload.telefono || !payload.data || !payload.ora) return showMessage("Compila tutti i campi obbligatori.", "error");
+  if (payload.ora < BAR_FIRST_TIME || payload.ora > BAR_LAST_TIME) return showMessage("Scegli un orario compreso tra le 09:00 e le 21:00.", "error");
   if (!/^3\d{2} \d{3} \d{4}$/.test(payload.telefono)) return showMessage("Inserisci un cellulare italiano valido, ad esempio 328 673 9425.", "error");
   if (payload.data < todayIso()) return showMessage("Non puoi scegliere una data già trascorsa.", "error");
   if (!$("bar-privacy").checked) return showMessage("Devi leggere e accettare l’informativa privacy.", "error");
@@ -215,6 +259,7 @@ async function book() {
   if (error) {
     const message = String(error.message || "");
     if (message.includes("APERITIVI_SOSPESI")) return showMessage(closureMessage || "La data scelta non è disponibile per chiusura.", "warning");
+    if (message.includes("ORARIO_NON_VALIDO")) return showMessage("L’orario deve essere compreso tra le 09:00 e le 21:00.", "warning");
     if (message.includes("PRODOTTO_NON_DISPONIBILE")) {
       await loadProducts();
       return showMessage("La proposta non è più disponibile. Scegline un’altra.", "error");
@@ -239,8 +284,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   updateAvailability();
 
   $("bar-data").addEventListener("change", () => {
-    updateDateDescription();
     clearMessage();
+    enforceOpenDate(true);
     updateAvailability();
   });
   $("bar-persone").addEventListener("input", updateCalculation);

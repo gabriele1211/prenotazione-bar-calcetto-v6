@@ -1,4 +1,4 @@
-PARCO EX VELODROMO - VERSIONE 6.2.0
+PARCO EX VELODROMO - VERSIONE 6.2.1
 
 La Versione 6 riunisce:
 - prenotazione Campo Sportivo Parco Ex Velodromo;
@@ -9,9 +9,16 @@ La Versione 6 riunisce:
 - calcolo automatico del totale;
 - conferma manuale del gestore tramite contatto WhatsApp o telefonico;
 - tutte le correzioni della Versione 5.2.8.
+- richieste aperitivo dalle 09:00 alle 21:00;
+- date di ferie disabilitate anche per gli aperitivi;
+- icona unificata con campo e due calici divisi da una linea obliqua.
 
-Per aggiornare un database che usa già la Versione 6.0/6.1 esegui soltanto:
+Per aggiornare un database che usa già la Versione 6.2.0 esegui soltanto:
+sql/10_versione_6_2_1_orari_ferie_aperitivi.sql
+
+Se il database usa ancora la Versione 6.0/6.1, esegui nell’ordine:
 sql/09_versione_6_2_aperitivi_conferma.sql
+sql/10_versione_6_2_1_orari_ferie_aperitivi.sql
 
 Il sito ufficiale previsto dal progetto è:
 https://gabriele1211.github.io/prenotazione-bar-calc/

@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Bar Parco Ex Velodromo — Prenotazione aperitivo</title>
-  <link rel="stylesheet" href="./css/style.css?v=6.2.0release1">
-  <link rel="stylesheet" href="./css/bar.css?v=6.2.0release1">
+  <link rel="stylesheet" href="./css/style.css?v=6.2.1release1">
+  <link rel="stylesheet" href="./css/bar.css?v=6.2.1release1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <meta name="theme-color" content="#6f3518">
   <link rel="manifest" href="./manifest.webmanifest">
@@ -64,7 +64,8 @@
         <small id="bar-data-description" class="date-description"></small>
       </label>
       <label>Ora
-        <input id="bar-ora" type="time" min="16:00" max="22:30" step="900" value="18:30" required>
+        <input id="bar-ora" type="time" min="09:00" max="21:00" step="900" value="18:30" aria-describedby="bar-ora-description" required>
+        <small id="bar-ora-description" class="field-help">Prenotazioni disponibili dalle 09:00 alle 21:00.</small>
       </label>
       <label>Numero di persone
         <input id="bar-persone" type="number" min="1" max="30" value="2" inputmode="numeric" required>
@@ -133,16 +134,16 @@
   <div class="footer-signature">
     <img src="./assets/gf-logo.png" alt="Logo GF" class="gf-logo">
     <p class="footer-product">Bar Parco Ex Velodromo</p>
-    <p>Versione <strong data-app-version>6.2.0</strong></p>
+    <p>Versione <strong data-app-version>6.2.1</strong></p>
     <p>© 2026 Gabriele Facchini</p>
   </div>
 </footer>
 
-<script src="./js/config.js?v=6.2.0release1"></script>
-<script src="./js/supabase-client.js?v=6.2.0release1"></script>
-<script src="./js/bar.js?v=6.2.0release1"></script>
-<script src="./js/footer.js?v=6.2.0release1"></script>
-<script src="./js/pwa.js?v=6.2.0release1"></script>
-<script src="./js/update-manager.js?v=6.2.0"></script>
+<script src="./js/config.js?v=6.2.1release1"></script>
+<script src="./js/supabase-client.js?v=6.2.1release1"></script>
+<script src="./js/bar.js?v=6.2.1release1"></script>
+<script src="./js/footer.js?v=6.2.1release1"></script>
+<script src="./js/pwa.js?v=6.2.1release1"></script>
+<script src="./js/update-manager.js?v=6.2.1"></script>
 </body>
 </html>
