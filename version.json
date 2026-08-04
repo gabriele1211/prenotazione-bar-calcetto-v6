@@ -1,10 +1,14 @@
 {
-  "latest": "6.2.6",
+  "latest": "6.3.0",
   "minimum": "6.0.0",
   "mandatory": false,
   "title": "Nuovo aggiornamento disponibile",
-  "message": "Le prenotazioni imminenti sono mostrate per prime e quelle già trascorse sono raccolte in fondo in grigio.",
+  "message": "Nell’Area gestore è disponibile il primo riepilogo intelligente, con una generazione ogni 24 ore.",
   "notes": [
+    "Riepilogo IA giornaliero nell’Area gestore bar",
+    "Una generazione ogni 24 ore con limite controllato da Supabase",
+    "Il riepilogo usa soltanto dati aggregati e non invia nomi, telefoni o documenti all’IA",
+    "La chiave OpenAI resta protetta nei segreti delle Edge Functions",
     "Gli elenchi gestore mostrano prima le prenotazioni imminenti in ordine crescente",
     "Le prenotazioni già trascorse sono spostate in fondo e visualizzate in grigio",
     "La gestione bar stampa le prenotazioni confermate della giornata scelta",

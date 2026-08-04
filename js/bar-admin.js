@@ -97,9 +97,75 @@ async function checkSession() {
   $("bar-dashboard").classList.toggle("hidden", !authenticated);
   if (authenticated) {
     await Promise.all([loadProducts(), loadBookings(), loadClosureSummary()]);
+    await loadAiSummaryStatus();
     startBookingAutoRefresh();
   } else {
     stopBookingAutoRefresh();
+  }
+}
+
+function formatNextAiSummary(value) {
+  return new Date(value).toLocaleString("it-IT", {
+    weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit"
+  });
+}
+
+function renderAiSummary(data) {
+  const result = $("ai-summary-result");
+  if (data.summary) {
+    result.textContent = data.summary;
+    result.hidden = false;
+  }
+  if (data.next_available_at) {
+    $("ai-summary-status").textContent = `Prossimo riepilogo disponibile: ${formatNextAiSummary(data.next_available_at)}.`;
+  } else {
+    $("ai-summary-status").textContent = "Il riepilogo gratuito di oggi è disponibile.";
+  }
+}
+
+async function callAiSummary(action) {
+  const { data: sessionData } = await db.auth.getSession();
+  const token = sessionData.session?.access_token;
+  if (!token) throw new Error("Sessione scaduta. Accedi nuovamente.");
+  const response = await fetch(`${window.APP_CONFIG.SUPABASE_URL}/functions/v1/riepilogo-giornaliero`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+      "apikey": window.APP_CONFIG.SUPABASE_PUBLISHABLE_KEY
+    },
+    body: JSON.stringify({ action })
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok && response.status !== 429) throw new Error(payload.error || "Riepilogo non disponibile.");
+  return payload;
+}
+
+async function loadAiSummaryStatus() {
+  try {
+    const data = await callAiSummary("status");
+    renderAiSummary(data);
+    $("generate-ai-summary").disabled = !data.available;
+  } catch (error) {
+    $("ai-summary-status").textContent = "Assistente IA non ancora configurato.";
+    $("generate-ai-summary").disabled = false;
+  }
+}
+
+async function generateAiSummary() {
+  const button = $("generate-ai-summary");
+  button.disabled = true;
+  button.textContent = "Generazione…";
+  $("ai-summary-status").textContent = "Sto preparando il riepilogo delle prenotazioni di oggi…";
+  try {
+    const data = await callAiSummary("generate");
+    renderAiSummary(data);
+    button.disabled = !data.available;
+  } catch (error) {
+    $("ai-summary-status").textContent = error.message;
+    button.disabled = false;
+  } finally {
+    button.textContent = "✨ Genera riepilogo";
   }
 }
 
@@ -540,7 +606,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
   <thead><tr><th>N.</th><th>Data e ora</th><th>Proposta</th><th>Cliente e telefono</th><th>Persone</th><th>Totale</th><th>Note</th><th>Stato</th></tr></thead>
   <tbody>${rows}</tbody>
 </table>
-<div class="footer">Generato ${esc(generatedAt)} · Documento ad uso gestionale contenente dati personali · Versione 6.2.6</div>
+<div class="footer">Generato ${esc(generatedAt)} · Documento ad uso gestionale contenente dati personali · Versione 6.3.0</div>
 <script>window.addEventListener("load", () => setTimeout(() => { window.focus(); window.print(); }, 500));<\/script>
 </body></html>`);
   printWindow.document.close();
@@ -675,6 +741,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $("bar-product-reset").onclick = resetForm;
   $("bar-refresh-bookings").onclick = loadBookings;
   $("bar-print-privacy").onclick = printPrivacyNotice;
+  $("generate-ai-summary").onclick = generateAiSummary;
   initializePrintControls();
   checkSession();
 });

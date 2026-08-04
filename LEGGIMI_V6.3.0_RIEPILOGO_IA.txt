@@ -1,0 +1,19 @@
+VERSIONE 6.3.0 - RIEPILOGO INTELLIGENTE
+
+1. Esegui una sola volta nel SQL Editor:
+   sql/11_versione_6_3_0_riepilogo_ia.sql
+
+2. In Supabase apri Edge Functions e crea/deploya la funzione:
+   riepilogo-giornaliero
+   usando il file supabase/functions/riepilogo-giornaliero/index.ts
+
+3. Nei segreti delle Edge Functions aggiungi:
+   OPENAI_API_KEY = chiave API intestata al gestore
+
+   Facoltativo:
+   OPENAI_MODEL = gpt-5-nano
+
+4. Carica sul sito tutti i file della Versione 6.3.0.
+
+La chiave OpenAI non deve essere inserita in config.js, nei file del sito o su GitHub.
+Il limite gratuito è controllato sul server: una nuova generazione ogni 24 ore per gestore.
