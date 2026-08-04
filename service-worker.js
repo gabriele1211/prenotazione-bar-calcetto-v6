@@ -1,24 +1,27 @@
-const CACHE_NAME = "campo-ex-velodromo-v6.1.0-bar-hero";
+const CACHE_NAME = "parco-ex-velodromo-v6.2.0-release1";
 const APP_SHELL = [
   "./",
   "./index.html",
+  "./campo.html",
+  "./bar.html",
+  "./bar-admin.html",
   "./admin.html",
   "./privacy.html",
   "./offline.html",
-  "./js/bar-admin.js",
-  "./js/bar.js",
-  "./bar-admin.html",
-  "./bar.html",
-  "./campo.html",
   "./manifest.webmanifest",
-  "./css/style.css?v=6.1.0",
-  "./js/config.js?v=6.0.0release1",
-  "./js/weather.js?v=6.0.0release1",
-  "./js/supabase-client.js?v=6.0.0release1",
-  "./js/cliente.js?v=6.0.0release1",
-  "./js/admin.js?v=6.0.0release1",
-  "./js/footer.js?v=6.0.0release1",
-  "./js/pwa.js?v=6.0.0release1",
+  "./css/style.css?v=6.2.0release1",
+  "./css/bar.css?v=6.2.0release1",
+  "./js/config.js?v=6.2.0release1",
+  "./js/weather.js?v=6.2.0release1",
+  "./js/supabase-client.js?v=6.2.0release1",
+  "./js/cliente.js?v=6.2.0release1",
+  "./js/admin.js?v=6.2.0release1",
+  "./js/bar.js?v=6.2.0release1",
+  "./js/bar-admin.js?v=6.2.0release1",
+  "./js/footer.js?v=6.2.0release1",
+  "./js/pwa.js?v=6.2.0release1",
+  "./js/update-manager.js?v=6.2.0",
+  "./version.json",
   "./assets/gf-logo.png",
   "./assets/icon-192.png",
   "./assets/icon-512.png",
@@ -78,12 +81,7 @@ self.addEventListener("fetch", event => {
         })
         .catch(async () =>
           (await caches.match(request)) ||
-          (await caches.match("./offline.html",
-  "./js/bar-admin.js",
-  "./js/bar.js",
-  "./bar-admin.html",
-  "./bar.html",
-  "./campo.html"))
+          (await caches.match("./offline.html"))
         )
     );
     return;

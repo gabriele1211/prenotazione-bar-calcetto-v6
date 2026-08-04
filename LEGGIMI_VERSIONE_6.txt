@@ -1,13 +1,17 @@
-PARCO EX VELODROMO - VERSIONE 6.0.0
+PARCO EX VELODROMO - VERSIONE 6.2.0
 
-1. Pubblica tutti i file su GitHub Pages.
-2. Apri Supabase > SQL Editor.
-3. Copia ed esegui sql/08_versione_6_bar.sql una sola volta.
-4. Apri index.html: troverai Campo Ex Velodromo e Bar Parco Ex Velodromo.
-5. Per gestire immagini e proposte apri bar-admin.html con lo stesso account gestore.
+La Versione 6 riunisce:
+- prenotazione Campo Sportivo Parco Ex Velodromo;
+- richieste aperitivo del Bar Parco Ex Velodromo;
+- unica Area gestore e stesse credenziali Supabase;
+- ferie e sospensioni condivise tra campo e bar;
+- proposte bar con immagini sostituibili, ordine, visibilità, prezzo e persone comprese;
+- calcolo automatico del totale;
+- conferma manuale del gestore tramite contatto WhatsApp o telefonico;
+- tutte le correzioni della Versione 5.2.8.
 
-GESTIONE IMMAGINI
-- Crea prima una proposta.
-- Nella scheda trascina la foto nel riquadro oppure clicca il riquadro.
-- “Elimina immagine” rimuove la foto dal database e da Supabase Storage.
-- Una nuova foto sostituisce automaticamente quella precedente.
+Per aggiornare un database che usa già la Versione 6.0/6.1 esegui soltanto:
+sql/09_versione_6_2_aperitivi_conferma.sql
+
+Il sito ufficiale previsto dal progetto è:
+https://gabriele1211.github.io/prenotazione-bar-calc/

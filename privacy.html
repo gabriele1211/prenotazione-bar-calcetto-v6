@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Informativa privacy - Parco Ex Velodromo</title>
-  <link rel="stylesheet" href="./css/style.css?v=5.2.1release1">
+  <link rel="stylesheet" href="./css/style.css?v=6.2.0release1">
 
   <meta name="theme-color" content="#145637">
   <meta name="mobile-web-app-capable" content="yes">
@@ -28,14 +28,17 @@
     <div>
       <span class="eyebrow">Tutela dei dati personali</span>
       <h1>Informativa privacy</h1>
-      <p>Prenotazioni del Campo Sportivo Parco Ex Velodromo (BO)</p>
+      <p>Prenotazioni del Campo Sportivo e del Bar Parco Ex Velodromo (BO)</p>
     </div>
     
   </header>
   
-<div class="privacy-back-row">
+<div class="privacy-back-row" id="privacy-toolbar">
   <button id="privacy-back" type="button" class="link-button">
     ← Torna alla prenotazione
+  </button>
+  <button id="privacy-print" type="button" class="primary privacy-print-action" hidden>
+    🖨️ Stampa informativa
   </button>
 </div>
 <main class="page privacy-page">
@@ -44,7 +47,7 @@
       <p>Il titolare del trattamento è <strong>Cooperativa Sociale ORIONE 2000</strong>, con sede in <strong>Via Bainsizza n. 18, 40133 Bologna</strong>, contattabile all’indirizzo <a href="mailto:orione2000@libero.it">orione2000@libero.it</a>.</p>
 
       <h2>Dati raccolti e finalità</h2>
-      <p>Il sistema raccoglie nome e cognome, numero di telefono, numero e dati di rilascio della Carta d’Identità Elettronica, data e orario richiesti ed eventuali note. I dati sono utilizzati esclusivamente per gestire la prenotazione, evitare sovrapposizioni, controllare il limite settimanale, contattare l’utente in caso di necessità e mostrare nel planning pubblico soltanto un nome abbreviato.</p>
+      <p>Il sistema raccoglie nome e cognome, numero di telefono, data e orario richiesti, eventuali note e, per la prenotazione del campo, numero e dati di rilascio della Carta d’Identità Elettronica. I dati sono utilizzati esclusivamente per gestire la richiesta, evitare sovrapposizioni, controllare il limite settimanale del campo, calcolare il costo dell’aperitivo, contattare l’utente tramite WhatsApp o telefono e mostrare nel planning del campo soltanto un nome abbreviato.</p>
 
       <h2>Accesso ai dati</h2>
       <p>I dati completi sono consultabili esclusivamente dagli utenti autorizzati ad accedere all’Area Gestore mediante credenziali personali. Nel planning pubblico non vengono mostrati numero di telefono, numero del documento, data di rilascio o Comune di rilascio.</p>
@@ -53,7 +56,7 @@
       <p>Il trattamento è necessario per dare seguito alla richiesta di prenotazione e per organizzare l’utilizzo dell’impianto. Il conferimento dei dati indicati come obbligatori è necessario per completare la prenotazione.</p>
 
       <h2>Conservazione</h2>
-      <p>I dati relativi alla prenotazione sono conservati per <strong>30 giorni successivi alla data di utilizzo del campo</strong>. Trascorso questo periodo, la prenotazione e i relativi dati personali vengono cancellati automaticamente dal sistema, salvo la necessità di conservarli più a lungo per adempiere a un obbligo di legge o gestire una contestazione già in corso.</p>
+      <p>I dati relativi alla prenotazione sono conservati per <strong>30 giorni successivi alla data di utilizzo del campo o del servizio bar</strong>. Trascorso questo periodo, la prenotazione e i relativi dati personali vengono cancellati automaticamente dal sistema, salvo la necessità di conservarli più a lungo per adempiere a un obbligo di legge o gestire una contestazione già in corso.</p>
 
       <h2>Servizi tecnici e sicurezza</h2>
       <p>I dati sono memorizzati tramite Supabase. L’accesso amministrativo è protetto da autenticazione. Il gestore adotta misure organizzative e tecniche adeguate per limitare l’accesso ai soli incaricati.</p>
@@ -67,22 +70,51 @@
     <div class="footer-signature" aria-label="Firma del progetto">
       <img src="./assets/gf-logo.png" alt="Logo GF" class="gf-logo">
       <p class="footer-product">Prenotazione campo</p>
-      <p>Versione <strong data-app-version>5.2.0</strong></p>
+      <p>Versione <strong data-app-version>6.2.0</strong></p>
       <p>© 2026 Gabriele Facchini</p>
     </div>
   </footer>
-  <script src="./js/config.js?v=5.2.1release1"></script>
-  <script src="./js/footer.js?v=5.2.1release1"></script>
-  <script src="./js/pwa.js?v=5.2.1release1"></script>
+  <script src="./js/config.js?v=6.2.0release1"></script>
+  <script src="./js/footer.js?v=6.2.0release1"></script>
+  <script src="./js/pwa.js?v=6.2.0release1"></script>
 <script>
-document.getElementById("privacy-back")?.addEventListener("click", () => {
+const privacyParams = new URLSearchParams(location.search);
+const privacyPrintMode = privacyParams.get("stampa") === "privacy";
+const privacyFromBarManager = privacyParams.get("origine") === "bar-gestore";
+const privacyFromManager = privacyParams.get("origine") === "gestore" || privacyFromBarManager;
+const privacyManagerReturnUrl = privacyFromBarManager ? "./bar-admin.html" : "./admin.html";
+const privacyBackButton = document.getElementById("privacy-back");
+const privacyPrintButton = document.getElementById("privacy-print");
+
+if (privacyFromManager && privacyBackButton) {
+  privacyBackButton.textContent = "← Torna all’Area gestore";
+}
+
+privacyBackButton?.addEventListener("click", () => {
+  if (privacyFromManager && window.opener && !window.opener.closed) {
+    window.opener.focus();
+    window.close();
+    return;
+  }
   if (document.referrer && new URL(document.referrer).origin === location.origin) {
     history.back();
   } else {
-    location.href = "./index.html";
+    location.href = privacyFromManager ? privacyManagerReturnUrl : "./campo.html";
   }
 });
+
+if (privacyPrintMode) {
+  document.body.classList.add("privacy-print-mode");
+  if (privacyPrintButton) privacyPrintButton.hidden = false;
+  privacyPrintButton?.addEventListener("click", () => window.print());
+  window.addEventListener("load", () => {
+    window.setTimeout(() => {
+      window.focus();
+      window.print();
+    }, 450);
+  });
+}
 </script>
-<script src="./js/update-manager.js?v=5.2.1"></script>
+<script src="./js/update-manager.js?v=6.2.0"></script>
 </body>
 </html>

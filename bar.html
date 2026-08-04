@@ -1,37 +1,148 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Bar Parco Ex Velodromo</title>
-  <link rel="stylesheet" href="./css/style.css?v=6.1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Bar Parco Ex Velodromo — Prenotazione aperitivo</title>
+  <link rel="stylesheet" href="./css/style.css?v=6.2.0release1">
+  <link rel="stylesheet" href="./css/bar.css?v=6.2.0release1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <meta name="theme-color" content="#6f3518"><link rel="manifest" href="./manifest.webmanifest">
+  <meta name="theme-color" content="#6f3518">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
+  <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
 </head>
 <body>
+<div id="pwa-update-box" class="pwa-update-box" hidden>
+  <span>È disponibile un aggiornamento dell’app.</span>
+  <button id="pwa-update-now" type="button">Aggiorna ora</button>
+</div>
+<div id="ios-install-help" class="ios-install-help" hidden>
+  Su iPhone: premi <strong>Condividi</strong> e poi <strong>Aggiungi alla schermata Home</strong>.
+</div>
+
 <header class="site-header public-header bar-header">
   <div class="bar-hero-content">
     <div class="bar-hero-icon" aria-hidden="true">🍹</div>
-    <span class="eyebrow">PRENOTAZIONE APERITIVO</span>
+    <span class="eyebrow">RICHIESTA APERITIVO</span>
     <h1>Bar Parco Ex Velodromo</h1>
-    <p>Prenota il tuo aperitivo, scegli la proposta che preferisci e indica data e orario.</p>
+    <p>Scegli la proposta, indica quante persone siete e visualizza subito il costo previsto.</p>
     <div class="bar-hero-tags" aria-label="Servizi disponibili">
       <span>Aperitivi</span><span>Taglieri</span><span>Stuzzichini</span>
     </div>
   </div>
 </header>
-<div class="manager-access-row"><a class="link-button" href="./index.html">← Parco Ex Velodromo</a><a class="link-button manager-access-button" href="./bar-admin.html">Gestione bar</a></div>
+
+<div class="manager-access-row">
+  <a class="link-button" href="./index.html">← Parco Ex Velodromo</a>
+  <a class="link-button manager-access-button" href="./bar-admin.html">Gestione bar</a>
+</div>
+
 <main class="page">
-  <section class="panel"><h2>Le proposte del bar</h2><p>Le immagini e le proposte possono essere aggiornate frequentemente dal gestore.</p><div id="bar-products" class="bar-products-grid"><p>Caricamento proposte…</p></div></section>
+  <section id="bar-closure-box" class="closure-box hidden" aria-live="polite">
+    <strong>Prenotazioni aperitivo non disponibili</strong>
+    <span id="bar-closure-message">Il servizio è temporaneamente sospeso.</span>
+  </section>
+
+  <section class="panel">
+    <h2>Le proposte del bar</h2>
+    <p>Il prezzo mostrato indica quante persone sono comprese. Il totale viene calcolato automaticamente in base al numero dei partecipanti.</p>
+    <div id="bar-products" class="bar-products-grid" aria-live="polite"><p>Caricamento proposte…</p></div>
+  </section>
+
   <section class="panel" id="bar-booking-panel">
-    <div class="step-title"><span class="step-number">1</span><div><h2>Prenota il tuo aperitivo</h2><p>Seleziona prima una proposta dalla galleria.</p></div></div>
+    <div class="step-title">
+      <span class="step-number">1</span>
+      <div><h2>Invia la richiesta aperitivo</h2><p>Seleziona prima una proposta dalla galleria.</p></div>
+    </div>
+
     <div id="bar-selected-product" class="bar-selected-product">Nessuna proposta selezionata.</div>
-    <div class="grid three"><label>Data<input id="bar-data" type="date" required></label><label>Ora<input id="bar-ora" type="time" min="16:00" max="22:30" step="900" required></label><label>Persone<input id="bar-persone" type="number" min="1" max="30" value="2" required></label></div>
-    <div class="grid two"><label>Nome e cognome<input id="bar-nome" type="text" maxlength="100" required></label><label>Telefono<input id="bar-telefono" type="tel" maxlength="30" required></label></div>
-    <label>Note<textarea id="bar-note" rows="3" maxlength="500" placeholder="Allergie, intolleranze o richieste particolari"></textarea></label>
-    <label class="check-row"><input id="bar-privacy" type="checkbox"><span>Acconsento al trattamento dei dati per gestire la prenotazione.</span></label>
-    <button id="bar-prenota" class="primary full" type="button">Conferma prenotazione aperitivo</button><div id="bar-message" class="message"></div>
+
+    <div class="grid three">
+      <label>Data
+        <input id="bar-data" type="date" required>
+        <small id="bar-data-description" class="date-description"></small>
+      </label>
+      <label>Ora
+        <input id="bar-ora" type="time" min="16:00" max="22:30" step="900" value="18:30" required>
+      </label>
+      <label>Numero di persone
+        <input id="bar-persone" type="number" min="1" max="30" value="2" inputmode="numeric" required>
+      </label>
+    </div>
+
+    <div id="bar-cost-summary" class="bar-cost-summary" aria-live="polite">
+      Seleziona una proposta per visualizzare il costo.
+    </div>
+
+    <div class="grid two">
+      <label>Nome e cognome
+        <input id="bar-nome" type="text" maxlength="100" autocomplete="name" required>
+      </label>
+      <label>Telefono cellulare
+        <input id="bar-telefono" type="tel" maxlength="30" autocomplete="tel" placeholder="Es. 328 673 9425" required>
+      </label>
+    </div>
+
+    <label>Come preferisci essere contattato?
+      <select id="bar-canale-contatto">
+        <option value="whatsapp">WhatsApp</option>
+        <option value="telefono">Telefonata</option>
+      </select>
+    </label>
+
+    <label>Note
+      <textarea id="bar-note" rows="3" maxlength="500" placeholder="Allergie, intolleranze o richieste particolari"></textarea>
+    </label>
+
+    <label class="check-row privacy-check">
+      <input id="bar-privacy" type="checkbox" required>
+      <span>Ho letto l’<a href="./privacy.html" id="bar-apri-privacy">informativa privacy</a> e acconsento al trattamento dei dati per gestire la richiesta e ricevere la conferma.</span>
+    </label>
+
+    <div class="bar-confirmation-note">
+      <strong>La richiesta non è ancora una prenotazione confermata.</strong>
+      Il gestore ti contatterà al numero indicato tramite WhatsApp o telefono per confermarla.
+    </div>
+
+    <button id="bar-prenota" class="primary full" type="button">Invia richiesta aperitivo</button>
+    <div id="bar-message" class="message" aria-live="polite"></div>
   </section>
 </main>
-<footer class="site-footer"><div class="footer-signature"><img src="./assets/gf-logo.png" alt="Logo GF" class="gf-logo"><p class="footer-product">Bar Parco Ex Velodromo</p><p>Versione <strong>6.1.0</strong></p></div></footer>
-<script src="./js/config.js?v=6.1.0"></script><script src="./js/supabase-client.js?v=6.1.0"></script><script src="./js/bar.js?v=6.1.0"></script><script src="./js/footer.js?v=6.1.0"></script>
-</body></html>
+
+<dialog id="bar-privacy-dialog" class="privacy-dialog" aria-labelledby="bar-privacy-dialog-title">
+  <div class="privacy-dialog-header">
+    <h2 id="bar-privacy-dialog-title">Informativa privacy</h2>
+    <button id="bar-chiudi-privacy" type="button" class="privacy-dialog-close" aria-label="Chiudi informativa">×</button>
+  </div>
+  <div class="privacy-dialog-content">
+    <h3>Chi tratta i dati</h3>
+    <p>Il titolare del trattamento è <strong>Cooperativa Sociale ORIONE 2000</strong>, Via Bainsizza n. 18, 40133 Bologna, contattabile a <a href="mailto:orione2000@libero.it">orione2000@libero.it</a>.</p>
+    <h3>Dati e finalità</h3>
+    <p>Nome, telefono, data, ora, numero di persone, preferenza di contatto ed eventuali note sono utilizzati esclusivamente per calcolare e gestire la richiesta aperitivo e contattarti per la conferma.</p>
+    <h3>Accesso e conservazione</h3>
+    <p>I dati completi sono consultabili soltanto dal personale autorizzato e vengono eliminati 30 giorni dopo la data prenotata, salvo obblighi di legge o contestazioni.</p>
+    <h3>Diritti</h3>
+    <p>Puoi chiedere informazioni, rettifica o cancellazione scrivendo a <a href="mailto:orione2000@libero.it">orione2000@libero.it</a>.</p>
+  </div>
+  <button id="bar-torna-prenotazione" type="button" class="primary full">Torna alla richiesta</button>
+</dialog>
+
+<footer class="site-footer">
+  <div class="footer-contact"><p>Per informazioni telefona al <a href="tel:+393286739425"><strong>328 673 9425</strong></a>.</p></div>
+  <div class="footer-signature">
+    <img src="./assets/gf-logo.png" alt="Logo GF" class="gf-logo">
+    <p class="footer-product">Bar Parco Ex Velodromo</p>
+    <p>Versione <strong data-app-version>6.2.0</strong></p>
+    <p>© 2026 Gabriele Facchini</p>
+  </div>
+</footer>
+
+<script src="./js/config.js?v=6.2.0release1"></script>
+<script src="./js/supabase-client.js?v=6.2.0release1"></script>
+<script src="./js/bar.js?v=6.2.0release1"></script>
+<script src="./js/footer.js?v=6.2.0release1"></script>
+<script src="./js/pwa.js?v=6.2.0release1"></script>
+<script src="./js/update-manager.js?v=6.2.0"></script>
+</body>
+</html>

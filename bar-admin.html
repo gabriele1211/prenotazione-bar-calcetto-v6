@@ -1,7 +1,135 @@
-<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Gestione Bar Parco Ex Velodromo</title><link rel="stylesheet" href="./css/style.css?v=6.0.0"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head>
-<body><header class="site-header centered-header"><span class="eyebrow">AREA GESTORE</span><h1>Bar Parco Ex Velodromo</h1><p>Gestione proposte, immagini e prenotazioni aperitivo.</p><div class="header-actions-row"><a class="link-button" href="./admin.html">Gestione campo</a><a class="link-button" href="./bar.html">Pagina pubblica bar</a></div></header>
-<main class="page admin-page"><section id="bar-login-box" class="panel narrow"><h2>Accesso gestore</h2><div class="grid two"><label>Email<input id="bar-login-email" type="email"></label><label>Password<input id="bar-login-password" type="password"></label></div><button id="bar-login" class="primary">Accedi</button><div id="bar-login-message" class="message"></div></section>
-<div id="bar-dashboard" class="hidden"><section class="panel"><div class="slots-header"><div><h2>Proposte del bar</h2><p>Trascina una foto nel riquadro oppure clicca per sceglierla. Puoi eliminarla e sostituirla quando vuoi.</p></div><button id="bar-logout" class="secondary">Esci</button></div>
-<form id="bar-product-form"><input id="bar-product-id" type="hidden"><div class="grid three"><label>Nome<input id="bar-product-name" required maxlength="100"></label><label>Prezzo (€)<input id="bar-product-price" type="number" min="0" step="0.50" required></label><label>Ordine<input id="bar-product-order" type="number" min="0" step="1" value="0"></label></div><label>Descrizione<textarea id="bar-product-description" rows="2" maxlength="300"></textarea></label><label class="check-row"><input id="bar-product-active" type="checkbox" checked><span>Proposta visibile al pubblico</span></label><div class="form-actions"><button class="primary" type="submit">Salva proposta</button><button id="bar-product-reset" class="secondary" type="button">Nuova proposta</button></div></form><div id="bar-admin-message" class="message"></div><div id="bar-admin-products" class="bar-admin-products"></div></section>
-<section class="panel"><div class="slots-header"><div><h2>Prenotazioni aperitivo</h2><p>Elenco aggiornato delle richieste ricevute.</p></div><button id="bar-refresh-bookings" class="secondary">Aggiorna</button></div><div class="table-wrap"><table><thead><tr><th>Data</th><th>Ora</th><th>Proposta</th><th>Cliente</th><th>Telefono</th><th>Persone</th><th>Note</th><th>Stato</th><th>Azione</th></tr></thead><tbody id="bar-bookings-body"></tbody></table></div></section></div></main>
-<script src="./js/config.js?v=6.0.0"></script><script src="./js/supabase-client.js?v=6.0.0"></script><script src="./js/bar-admin.js?v=6.0.0"></script></body></html>
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gestione Bar Parco Ex Velodromo</title>
+  <link rel="stylesheet" href="./css/style.css?v=6.2.0release1">
+  <link rel="stylesheet" href="./css/bar.css?v=6.2.0release1">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <meta name="theme-color" content="#145637">
+  <link rel="manifest" href="./manifest.webmanifest">
+</head>
+<body>
+<div id="pwa-update-box" class="pwa-update-box" hidden>
+  <span>È disponibile un aggiornamento dell’app.</span>
+  <button id="pwa-update-now" type="button">Aggiorna ora</button>
+</div>
+<div id="ios-install-help" class="ios-install-help" hidden>
+  Su iPhone: premi <strong>Condividi</strong> e poi <strong>Aggiungi alla schermata Home</strong>.
+</div>
+
+<header class="site-header centered-header">
+  <span class="eyebrow">AREA GESTORE</span>
+  <h1>Bar Parco Ex Velodromo</h1>
+  <p>Gestione proposte, immagini e richieste aperitivo.</p>
+  <div class="header-actions-row">
+    <button id="install-app" class="link-button install-app-button" type="button" hidden>📲 Installa app</button>
+    <a class="link-button" href="./admin.html">Gestione campo</a>
+    <a class="link-button" href="./bar.html">Pagina pubblica bar</a>
+  </div>
+</header>
+
+<main class="page admin-page">
+  <section id="bar-login-box" class="panel narrow">
+    <h2>Accesso gestore</h2>
+    <div class="grid two">
+      <label>Email<input id="bar-login-email" type="email" autocomplete="username"></label>
+      <label>Password<input id="bar-login-password" type="password" autocomplete="current-password"></label>
+    </div>
+    <button id="bar-login" class="primary" type="button">Accedi</button>
+    <div id="bar-login-message" class="message" aria-live="polite"></div>
+  </section>
+
+  <div id="bar-dashboard" class="hidden">
+    <section class="panel bar-admin-summary">
+      <div>
+        <span class="eyebrow">FERIE E CHIUSURE</span>
+        <h2>Regole condivise con il campo</h2>
+        <p id="bar-closure-summary">Caricamento regole di chiusura…</p>
+      </div>
+      <div class="bar-admin-summary-actions">
+        <a class="secondary button-link" href="./admin.html#gestione-impostazioni">Modifica ferie</a>
+        <button id="bar-print-privacy" class="secondary" type="button">🖨️ Stampa informativa privacy</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="slots-header">
+        <div>
+          <h2>Proposte del bar</h2>
+          <p>Imposta prezzo e persone comprese. Trascina una foto nel riquadro oppure clicca per sceglierla.</p>
+        </div>
+        <button id="bar-logout" class="secondary" type="button">Esci</button>
+      </div>
+
+      <form id="bar-product-form">
+        <input id="bar-product-id" type="hidden">
+        <div class="grid two">
+          <label>Nome della proposta
+            <input id="bar-product-name" required maxlength="100">
+          </label>
+          <label>Descrizione
+            <input id="bar-product-description" maxlength="300">
+          </label>
+        </div>
+        <div class="grid three">
+          <label>Prezzo della proposta (€)
+            <input id="bar-product-price" type="number" min="0" step="0.50" required>
+          </label>
+          <label>Persone comprese nel prezzo
+            <input id="bar-product-people" type="number" min="1" max="30" step="1" value="1" inputmode="numeric" required>
+            <small class="field-help">Esempio: 15 € per 2 persone.</small>
+          </label>
+          <label>Ordine di visualizzazione
+            <input id="bar-product-order" type="number" min="0" step="1" value="0">
+          </label>
+        </div>
+        <label class="check-row"><input id="bar-product-active" type="checkbox" checked><span>Proposta visibile al pubblico</span></label>
+        <div class="form-actions">
+          <button class="primary" type="submit">Salva proposta</button>
+          <button id="bar-product-reset" class="secondary" type="button">Nuova proposta</button>
+        </div>
+      </form>
+      <div id="bar-admin-message" class="message" aria-live="polite"></div>
+      <div id="bar-admin-products" class="bar-admin-products"></div>
+    </section>
+
+    <section class="panel">
+      <div class="slots-header">
+        <div>
+          <h2>Richieste aperitivo</h2>
+          <p>Le nuove richieste restano “Da confermare”. Contatta il cliente e poi approva o rifiuta.</p>
+        </div>
+        <button id="bar-refresh-bookings" class="secondary" type="button">Aggiorna</button>
+      </div>
+      <div class="bar-status-legend">
+        <span class="status-pill status-pending">Da confermare</span>
+        <span class="status-pill status-confirmed">Confermata</span>
+        <span class="status-pill status-cancelled">Rifiutata/annullata</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Data e ora</th><th>Proposta e costo</th><th>Cliente</th><th>Contatto</th><th>Persone</th><th>Note</th><th>Stato</th><th>Azioni</th></tr></thead>
+          <tbody id="bar-bookings-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer admin-site-footer">
+  <div class="footer-inline" aria-label="Firma del progetto">
+    <img src="./assets/gf-logo.png" alt="Logo GF" class="gf-logo-inline">
+    <span><strong>Bar Parco Ex Velodromo</strong> · Versione <strong data-app-version>6.2.0</strong> · © 2026 Gabriele Facchini</span>
+  </div>
+</footer>
+
+<script src="./js/config.js?v=6.2.0release1"></script>
+<script src="./js/supabase-client.js?v=6.2.0release1"></script>
+<script src="./js/bar-admin.js?v=6.2.0release1"></script>
+<script src="./js/footer.js?v=6.2.0release1"></script>
+<script src="./js/pwa.js?v=6.2.0release1"></script>
+<script src="./js/update-manager.js?v=6.2.0"></script>
+</body>
+</html>

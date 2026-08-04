@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Area gestore - Parco Ex Velodromo</title>
-  <link rel="stylesheet" href="./css/style.css?v=6.0.0">
+  <link rel="stylesheet" href="./css/style.css?v=6.2.0release1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <meta name="theme-color" content="#145637">
@@ -30,7 +30,8 @@
   <p>Gestione prenotazioni e configurazione</p>
   <div class="header-actions-row">
     <button id="install-app" class="link-button install-app-button" type="button" hidden>📲 Installa app</button>
-    <a class="link-button" href="./campo.html">Pagina campo</a><a class="link-button" href="./bar-admin.html">Gestione bar</a>
+    <a class="link-button" href="./campo.html">Pagina campo</a>
+    <a class="link-button" href="./bar-admin.html">Gestione bar</a>
   </div>
 </header>
 <main class="page admin-page">
@@ -41,7 +42,7 @@
   </section>
 
   <div id="dashboard" class="hidden">
-    <section class="panel closure-admin">
+    <section id="gestione-impostazioni" class="panel closure-admin">
       <div class="slots-header"><div><h2>Stato prenotazioni</h2><p>Puoi sospendere il servizio per un periodo di chiusura.</p></div><button id="logout" class="secondary" type="button">Esci</button></div>
       <label class="check-row"><input id="prenotazioni-attive" type="checkbox"><span>Prenotazioni attive</span></label>
       <div class="grid two"><label>Chiusura dal<input id="chiusura-dal" type="date"></label><label>Chiusura al<input id="chiusura-al" type="date"></label></div>
@@ -71,6 +72,18 @@
         <button id="ricarica-impostazioni" class="secondary" type="button">Ricarica impostazioni</button>
       </div>
       <div id="settings-message" class="message">Caricamento impostazioni…</div>
+    </section>
+
+    <section class="panel direct-booking-launcher">
+      <div>
+        <span class="eyebrow">INSERIMENTO DAL GESTORE</span>
+        <h2>Prenotazione diretta</h2>
+        <p>Per richieste ricevute per telefono o direttamente al campo. La fascia viene occupata subito anche nel planning pubblico.</p>
+      </div>
+      <div class="direct-booking-launcher-actions">
+        <button id="apri-prenotazione-diretta" class="primary direct-booking-open" type="button">＋ Prenotazione diretta</button>
+        <button id="stampa-informativa-privacy" class="secondary privacy-print-button" type="button">🖨️ Stampa informativa privacy</button>
+      </div>
     </section>
 
     <section class="panel">
@@ -121,14 +134,106 @@
       <div class="table-wrap"><table><thead><tr><th>Data</th><th>Orario</th><th>Campo</th><th>Utilizzo</th><th>Costo</th><th>Cliente</th><th>Contatto</th><th>Documento</th><th>Richiesta</th><th>Meteo</th><th>Stato</th><th>Azione</th></tr></thead><tbody id="prenotazioni-body"></tbody></table></div>
     </section>
   </div>
+
+  <dialog id="prenotazione-diretta-dialog" class="direct-booking-dialog" aria-labelledby="prenotazione-diretta-title">
+    <div class="direct-booking-dialog-header">
+      <div>
+        <span class="eyebrow">AREA GESTORE</span>
+        <h2 id="prenotazione-diretta-title">Nuova prenotazione diretta</h2>
+      </div>
+      <button id="chiudi-prenotazione-diretta" class="direct-booking-close" type="button" aria-label="Chiudi">×</button>
+    </div>
+
+    <form id="prenotazione-diretta-form" class="direct-booking-form">
+      <div class="direct-booking-dialog-content">
+        <p class="direct-booking-intro">Inserisci qui la richiesta ricevuta dal cliente. Vengono applicati gli stessi limiti e controlli della pagina pubblica.</p>
+
+        <h3>1. Data, campo e orario</h3>
+        <div class="grid two">
+          <label>Data
+            <input id="diretta-data" type="date" required>
+          </label>
+          <label>Campo
+            <select id="diretta-campo" required></select>
+          </label>
+        </div>
+
+        <div id="diretta-tipo-box" class="booking-mode-box hidden">
+          <h3>Tipo di utilizzo</h3>
+          <div class="booking-mode-options">
+            <label class="booking-mode-card">
+              <input type="radio" name="diretta-tipo-prenotazione" value="INTERO" checked>
+              <span><strong>Campo intero</strong><small>Utilizzo dell’intero campo</small></span>
+            </label>
+            <label class="booking-mode-card">
+              <input type="radio" name="diretta-tipo-prenotazione" value="MEZZO">
+              <span><strong>Mezzo campo</strong><small>Per attività con bambini</small></span>
+            </label>
+          </div>
+          <div id="diretta-bambini-box" class="children-box hidden">
+            <label>Numero di bambini
+              <input id="diretta-numero-bambini" type="number" min="1" step="1" inputmode="numeric">
+              <small id="diretta-bambini-help" class="field-help"></small>
+            </label>
+          </div>
+        </div>
+
+        <div class="slots-header direct-slots-header">
+          <div>
+            <h3>Orari disponibili</h3>
+            <p>Sono mostrati soltanto gli orari ancora prenotabili.</p>
+          </div>
+          <button id="diretta-aggiorna" class="secondary" type="button">Aggiorna</button>
+        </div>
+        <div id="diretta-slots" class="slots direct-booking-slots" aria-live="polite"></div>
+        <p id="diretta-slot-selezionato" class="selected-slot">Nessun orario selezionato.</p>
+
+        <h3>2. Dati del cliente</h3>
+        <div class="grid two">
+          <label>Nome e cognome
+            <input id="diretta-nome" type="text" maxlength="100" autocomplete="name" required>
+          </label>
+          <label>Telefono
+            <input id="diretta-telefono" type="tel" maxlength="30" autocomplete="tel" required>
+          </label>
+        </div>
+        <div class="grid three">
+          <label>Numero carta d’identità
+            <input id="diretta-documento-numero" type="text" maxlength="9" autocapitalize="characters" autocomplete="off" placeholder="Es. CA12345AA" required>
+          </label>
+          <label>Data di rilascio
+            <input id="diretta-documento-data-rilascio" type="date" required>
+          </label>
+          <label>Comune di rilascio
+            <input id="diretta-documento-rilasciato-da" type="text" maxlength="100" autocomplete="off" required>
+          </label>
+        </div>
+        <label>Richiesta facoltativa
+          <textarea id="diretta-note" rows="3" maxlength="430" placeholder="Es. richiesta palloni o spogliatoio"></textarea>
+        </label>
+
+        <label class="check-row direct-booking-consent">
+          <input id="diretta-privacy-confermata" type="checkbox" required>
+          <span>Confermo di avere informato il cliente sul trattamento dei dati e che il cliente ha autorizzato l’inserimento della prenotazione.</span>
+        </label>
+
+        <div id="diretta-messaggio" class="message" aria-live="polite"></div>
+      </div>
+
+      <div class="direct-booking-dialog-actions">
+        <button id="annulla-prenotazione-diretta" class="secondary" type="button">Chiudi</button>
+        <button id="conferma-prenotazione-diretta" class="primary" type="submit">Conferma prenotazione diretta</button>
+      </div>
+    </form>
+  </dialog>
 </main>
   <footer class="site-footer admin-site-footer">
     <div class="footer-inline" aria-label="Firma del progetto">
       <img src="./assets/gf-logo.png" alt="Logo GF" class="gf-logo-inline">
-      <span><strong>Prenotazione campo</strong> · Versione <strong data-app-version>6.0.0</strong> · © 2026 Gabriele Facchini</span>
+      <span><strong>Parco Ex Velodromo</strong> · Versione <strong data-app-version>6.2.0</strong> · © 2026 Gabriele Facchini</span>
     </div>
   </footer>
-<script src="./js/config.js?v=6.0.0"></script><script src="./js/supabase-client.js?v=6.0.0"></script><script src="./js/weather.js?v=6.0.0"></script><script src="./js/admin.js?v=6.0.0"></script><script src="./js/footer.js?v=6.0.0"></script>
-  <script src="./js/pwa.js?v=6.0.0"></script>
-<script src="./js/update-manager.js?v=6.0.0"></script>
+<script src="./js/config.js?v=6.2.0release1"></script><script src="./js/supabase-client.js?v=6.2.0release1"></script><script src="./js/weather.js?v=6.2.0release1"></script><script src="./js/admin.js?v=6.2.0release1"></script><script src="./js/footer.js?v=6.2.0release1"></script>
+  <script src="./js/pwa.js?v=6.2.0release1"></script>
+<script src="./js/update-manager.js?v=6.2.0"></script>
 </body></html>

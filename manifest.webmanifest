@@ -39,7 +39,18 @@
     {
       "name": "Prenotazione campo",
       "short_name": "Prenota",
-      "url": "./index.html",
+      "url": "./campo.html",
+      "icons": [
+        {
+          "src": "./assets/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Prenotazione aperitivo",
+      "short_name": "Aperitivo",
+      "url": "./bar.html",
       "icons": [
         {
           "src": "./assets/icon-192.png",

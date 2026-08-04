@@ -6,6 +6,10 @@ const bookingWeather = new Map();
 let weatherRenderToken = 0;
 let managerFullFieldPrice = 0;
 let managerHalfFieldPrice = 0;
+let managerFields = [];
+let directSelectedStart = null;
+let directSelectedEnd = null;
+let directSlotsRequestToken = 0;
 
 
 
@@ -179,7 +183,7 @@ tr:nth-child(even) td { background:#f8fafc; }
 </div>
 <div class="print-header"><div><h1>Campo Ex Velodromo</h1><p class="meta">Prenotazione campo</p></div><img src="${logoUrl}" alt="GF"></div>
 ${bodyHtml}
-<div class="print-footer"><span>Documento generato il ${new Date().toLocaleString("it-IT")}</span><span>Versione 5.2.1</span></div>
+<div class="print-footer"><span>Documento generato il ${new Date().toLocaleString("it-IT")}</span><span>Versione 6.2.0</span></div>
 <script>
 window.addEventListener('load', () => {
   setTimeout(() => {
@@ -289,10 +293,326 @@ function temporalState(item, now = new Date()) {
   };
 }
 
+function localTodayIso() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+}
+
+function minutesToTime(minutes) {
+  return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
+}
+
+function normalizeDocument(value) {
+  return String(value || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+}
+
+function validateIdentityCardNumber(value) {
+  return /^[A-Z]{2}\d{5}[A-Z]{2}$/.test(normalizeDocument(value));
+}
+
+function formatPersonName(value) {
+  return String(value || "")
+    .trim()
+    .toLocaleLowerCase("it-IT")
+    .replace(/\s+/g, " ")
+    .replace(/(^|[\s'’\-])([a-zà-öø-ÿ])/giu, (_, separator, letter) =>
+      separator + letter.toLocaleUpperCase("it-IT")
+    );
+}
+
+function formatPhone(value) {
+  let digits = String(value || "").replace(/\D/g, "");
+  if (digits.startsWith("0039")) digits = digits.slice(4);
+  else if (digits.startsWith("39") && digits.length > 10) digits = digits.slice(2);
+  return /^3\d{9}$/.test(digits)
+    ? `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`
+    : digits;
+}
+
+function directBookingType() {
+  if (!$("mezzo-campo-attivo")?.checked) return "INTERO";
+  return document.querySelector('input[name="diretta-tipo-prenotazione"]:checked')?.value || "INTERO";
+}
+
+function updateDirectBookingModeUi() {
+  const halfEnabled = Boolean($("mezzo-campo-attivo")?.checked);
+  const typeBox = $("diretta-tipo-box");
+  if (!typeBox) return;
+  typeBox.classList.toggle("hidden", !halfEnabled);
+
+  if (!halfEnabled) {
+    const whole = document.querySelector('input[name="diretta-tipo-prenotazione"][value="INTERO"]');
+    if (whole) whole.checked = true;
+  }
+
+  const isHalf = halfEnabled && directBookingType() === "MEZZO";
+  $("diretta-bambini-box").classList.toggle("hidden", !isHalf);
+  $("diretta-numero-bambini").required = isHalf;
+  $("diretta-numero-bambini").max = String(Math.max(1, Number($("max-bambini-mezzo-campo")?.value || 6)));
+  $("diretta-bambini-help").textContent = `Massimo ${$("diretta-numero-bambini").max} bambini per metà campo.`;
+}
+
+function directDateClosed(dateValue) {
+  const from = $("chiusura-dal")?.value;
+  const to = $("chiusura-al")?.value;
+  return Boolean(dateValue && from && to && dateValue >= from && dateValue <= to);
+}
+
+function groupDirectPlanning(planning) {
+  const grouped = new Map();
+  for (const booking of planning || []) {
+    const key = cleanTime(booking.ora_inizio);
+    if (!grouped.has(key)) grouped.set(key, []);
+    grouped.get(key).push(booking);
+  }
+  return grouped;
+}
+
+function directSlotAvailability(bookings, requestedType) {
+  const whole = (bookings || []).find(item => (item.settore || "INTERO") === "INTERO");
+  const halves = (bookings || []).filter(item => ["A", "B"].includes(item.settore));
+  if (whole) return { available: false };
+  if (requestedType === "INTERO") return { available: halves.length === 0, label: "Campo intero libero" };
+  if (halves.length >= 2) return { available: false };
+  return { available: true, label: halves.length === 1 ? "1 metà disponibile" : "2 metà disponibili" };
+}
+
+function directPriceLabel(startTime, type) {
+  if (!isPaidTimeSlot(startTime)) return "Gratuito";
+  return euroAmount(type === "MEZZO" ? managerHalfFieldPrice : managerFullFieldPrice);
+}
+
+function clearDirectMessage() {
+  const box = $("diretta-messaggio");
+  box.textContent = "";
+  box.className = "message";
+}
+
+function showDirectMessage(text, type = "warning") {
+  const box = $("diretta-messaggio");
+  box.textContent = text;
+  box.className = `message show ${type}`;
+  box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function resetDirectBookingForm() {
+  $("prenotazione-diretta-form")?.reset();
+  directSelectedStart = null;
+  directSelectedEnd = null;
+  directSlotsRequestToken += 1;
+  $("diretta-slots").innerHTML = "";
+  $("diretta-slot-selezionato").textContent = "Nessun orario selezionato.";
+  clearDirectMessage();
+}
+
+async function loadDirectSlots() {
+  const token = ++directSlotsRequestToken;
+  const slotsBox = $("diretta-slots");
+  const selectedText = $("diretta-slot-selezionato");
+  const bookingDate = $("diretta-data").value;
+  const fieldId = $("diretta-campo").value;
+  const requestedType = directBookingType();
+
+  directSelectedStart = null;
+  directSelectedEnd = null;
+  selectedText.textContent = "Nessun orario selezionato.";
+  clearDirectMessage();
+
+  if (!bookingDate || !fieldId) {
+    slotsBox.innerHTML = '<p class="direct-booking-empty">Seleziona data e campo.</p>';
+    return;
+  }
+  if (!settingsLoaded) {
+    slotsBox.innerHTML = '<p class="direct-booking-empty">Impostazioni non disponibili. Ricarica la pagina.</p>';
+    return;
+  }
+  if (!$("prenotazioni-attive").checked) {
+    slotsBox.innerHTML = '<p class="direct-booking-empty">Le prenotazioni sono temporaneamente sospese.</p>';
+    return;
+  }
+  if (directDateClosed(bookingDate)) {
+    slotsBox.innerHTML = '<p class="direct-booking-empty">La data selezionata rientra nel periodo di chiusura.</p>';
+    return;
+  }
+
+  slotsBox.innerHTML = '<p class="direct-booking-empty">Caricamento orari disponibili…</p>';
+  const { data: planning, error } = await db.rpc("get_daily_planning_v4_1", {
+    p_campo_id: fieldId,
+    p_data: bookingDate
+  });
+  if (token !== directSlotsRequestToken) return;
+  if (error) {
+    slotsBox.innerHTML = "";
+    return showDirectMessage("Impossibile leggere gli orari: " + error.message, "error");
+  }
+
+  const bookingsByStart = groupDirectPlanning(planning);
+  const today = localTodayIso();
+  const now = new Date();
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  const opening = APP_CONFIG.OPENING_HOUR * 60;
+  const closing = APP_CONFIG.CLOSING_HOUR * 60;
+  const duration = APP_CONFIG.DEFAULT_FIELD_DURATION_MINUTES;
+  let availableCount = 0;
+  slotsBox.innerHTML = "";
+
+  for (let min = opening; min + duration <= closing; min += duration) {
+    const isPast = bookingDate < today || (bookingDate === today && min <= currentMinutes);
+    if (isPast) continue;
+
+    const startTime = minutesToTime(min);
+    const endTime = minutesToTime(min + duration);
+    const availability = directSlotAvailability(bookingsByStart.get(startTime) || [], requestedType);
+    if (!availability.available) continue;
+
+    availableCount += 1;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `slot direct-slot ${isPaidTimeSlot(startTime) ? "paid-slot" : "free-slot"}`;
+    button.innerHTML = `<span class="slot-time">${startTime}–${endTime}</span><span class="slot-price">${directPriceLabel(startTime, requestedType)}</span><span class="slot-status available-label">${availability.label}</span>`;
+    button.addEventListener("click", () => {
+      slotsBox.querySelectorAll(".slot.selected").forEach(element => element.classList.remove("selected"));
+      button.classList.add("selected");
+      directSelectedStart = startTime;
+      directSelectedEnd = endTime;
+      const usage = requestedType === "MEZZO" ? "mezzo campo" : "campo intero";
+      selectedText.textContent = `Orario selezionato: ${startTime}–${endTime} · ${usage} · ${directPriceLabel(startTime, requestedType)}`;
+    });
+    slotsBox.appendChild(button);
+  }
+
+  if (!availableCount) {
+    slotsBox.innerHTML = '<p class="direct-booking-empty">Non ci sono orari disponibili per questa selezione.</p>';
+  }
+}
+
+async function openDirectBookingDialog() {
+  resetDirectBookingForm();
+  if (!settingsLoaded) await loadSettings();
+  if (!managerFields.length) await loadFieldFilter();
+
+  const today = localTodayIso();
+  $("diretta-data").value = today;
+  $("diretta-data").min = today;
+  $("diretta-documento-data-rilascio").max = today;
+  updateDirectBookingModeUi();
+
+  const dialog = $("prenotazione-diretta-dialog");
+  if (typeof dialog.showModal === "function") dialog.showModal();
+  else dialog.setAttribute("open", "");
+  dialog.querySelector(".direct-booking-dialog-content")?.scrollTo(0, 0);
+  await loadDirectSlots();
+}
+
+function closeDirectBookingDialog() {
+  const dialog = $("prenotazione-diretta-dialog");
+  if (typeof dialog.close === "function") dialog.close();
+  else {
+    dialog.removeAttribute("open");
+    resetDirectBookingForm();
+  }
+}
+
+function printPrivacyNotice() {
+  const privacyUrl = new URL("./privacy.html", window.location.href);
+  privacyUrl.searchParams.set("stampa", "privacy");
+  privacyUrl.searchParams.set("origine", "gestore");
+
+  const printWindow = window.open(privacyUrl.href, "_blank");
+  if (!printWindow) {
+    alert("Il browser ha bloccato la finestra di stampa. Consenti i popup per questo sito e riprova.");
+  }
+}
+
+async function createDirectBooking(event) {
+  event.preventDefault();
+  clearDirectMessage();
+
+  const button = $("conferma-prenotazione-diretta");
+  const bookingDate = $("diretta-data").value;
+  const fieldId = $("diretta-campo").value;
+  const type = directBookingType();
+  const maxChildren = Math.max(1, Number($("max-bambini-mezzo-campo")?.value || 6));
+  const children = type === "MEZZO" ? Number($("diretta-numero-bambini").value) : null;
+  const customerName = formatPersonName($("diretta-nome").value);
+  const phone = formatPhone($("diretta-telefono").value);
+  const documentNumber = normalizeDocument($("diretta-documento-numero").value);
+  const documentDate = $("diretta-documento-data-rilascio").value;
+  const documentMunicipality = $("diretta-documento-rilasciato-da").value.trim();
+  const customerNote = $("diretta-note").value.trim();
+
+  $("diretta-nome").value = customerName;
+  $("diretta-telefono").value = phone;
+  $("diretta-documento-numero").value = documentNumber;
+
+  if (!settingsLoaded) return showDirectMessage("Le impostazioni non sono disponibili. Ricaricale e riprova.", "error");
+  if (!$("prenotazioni-attive").checked || directDateClosed(bookingDate)) return showDirectMessage("La data selezionata non è disponibile per le prenotazioni.", "error");
+  if (!bookingDate || bookingDate < localTodayIso() || !fieldId || !directSelectedStart) return showDirectMessage("Seleziona una data valida, il campo e un orario disponibile.", "warning");
+  if (type === "MEZZO" && (!Number.isInteger(children) || children < 1 || children > maxChildren)) return showDirectMessage(`Indica un numero di bambini compreso tra 1 e ${maxChildren}.`, "warning");
+  if (!customerName || !phone || !documentNumber || !documentDate || !documentMunicipality) return showDirectMessage("Compila tutti i dati obbligatori del cliente e del documento.", "warning");
+  if (!/^3\d{2} \d{3} \d{4}$/.test(phone)) return showDirectMessage("Inserisci un cellulare italiano valido, ad esempio 328 673 9425.", "error");
+  if (!validateIdentityCardNumber(documentNumber)) return showDirectMessage("Il numero CIE non è valido. Usa il formato CA12345AA.", "error");
+  if (documentDate > localTodayIso()) return showDirectMessage("La data di rilascio del documento non può essere futura.", "error");
+  if (documentMunicipality.length < 2) return showDirectMessage("Inserisci il Comune che ha rilasciato il documento.", "error");
+  if (!$("diretta-privacy-confermata").checked) return showDirectMessage("Conferma di avere informato il cliente sul trattamento dei dati.", "warning");
+
+  const confirmedStart = directSelectedStart;
+  const confirmedEnd = directSelectedEnd;
+  const fieldName = managerFields.find(field => String(field.id) === String(fieldId))?.nome || "Campo";
+  const automaticNote = "Prenotazione inserita direttamente dal gestore";
+  const completeNote = customerNote ? `${automaticNote}\n${customerNote}` : automaticNote;
+
+  button.disabled = true;
+  button.textContent = "Prenotazione in corso…";
+  const { data, error } = await db.rpc("crea_prenotazione_v4_1", {
+    p_campo_id: fieldId,
+    p_nome_cliente: customerName,
+    p_telefono: phone,
+    p_documento_numero: documentNumber,
+    p_documento_data_rilascio: documentDate,
+    p_documento_rilasciato_da: documentMunicipality,
+    p_data: bookingDate,
+    p_ora_inizio: confirmedStart,
+    p_ora_fine: confirmedEnd,
+    p_note: completeNote,
+    p_tipo_prenotazione: type,
+    p_numero_bambini: children
+  });
+
+  button.disabled = false;
+  button.textContent = "Conferma prenotazione diretta";
+  if (error) {
+    const message = String(error.message || "");
+    if (message.includes("LIMITE_SETTIMANALE")) return showDirectMessage("Questo documento ha già raggiunto il limite di due prenotazioni nella settimana.", "error");
+    if (message.includes("ORARIO_OCCUPATO") || message.includes("MEZZI_CAMPI_COMPLETI") || error.code === "23505") {
+      await loadDirectSlots();
+      return showDirectMessage("L’orario è stato appena occupato. Seleziona un’altra fascia.", "error");
+    }
+    if (message.includes("PRENOTAZIONI_SOSPESE")) return showDirectMessage("Le prenotazioni sono temporaneamente sospese o il campo è chiuso.", "error");
+    if (message.includes("NUMERO_BAMBINI_NON_VALIDO")) return showDirectMessage("Il numero di bambini non è valido.", "error");
+    return showDirectMessage("Prenotazione non riuscita: " + message, "error");
+  }
+
+  const sector = data?.settore || (type === "INTERO" ? "INTERO" : "");
+  const usage = sector === "INTERO" ? "campo intero" : `mezzo campo ${sector}`;
+  const confirmedCost = Number(data?.costo_applicato ?? (isPaidTimeSlot(confirmedStart) ? (type === "MEZZO" ? managerHalfFieldPrice : managerFullFieldPrice) : 0));
+
+  ["diretta-nome", "diretta-telefono", "diretta-documento-numero", "diretta-documento-data-rilascio", "diretta-documento-rilasciato-da", "diretta-note", "diretta-numero-bambini"].forEach(id => { $(id).value = ""; });
+  $("diretta-privacy-confermata").checked = false;
+  await Promise.all([loadBookings(), loadDirectSlots()]);
+  showDirectMessage(`✓ Prenotazione diretta confermata: ${fieldName}, ${localDate(bookingDate)}, ${confirmedStart}–${confirmedEnd}, ${usage}, ${confirmedCost > 0 ? euroAmount(confirmedCost) : "gratuito"}.`, "success");
+}
+
 async function loadFieldFilter() {
-  const { data, error } = await db.from("campi").select("id,nome").order("nome");
+  const { data, error } = await db.from("campi").select("id,nome,attivo").order("nome");
   if (error) return $("admin-message").textContent = "Errore campi: " + error.message;
-  $("filtro-campo").innerHTML = '<option value="">Tutti</option>' + (data || []).map(c => `<option value="${c.id}">${safeText(c.nome)}</option>`).join("");
+  managerFields = data || [];
+  $("filtro-campo").innerHTML = '<option value="">Tutti</option>' + managerFields.map(c => `<option value="${c.id}">${safeText(c.nome)}</option>`).join("");
+  const directField = $("diretta-campo");
+  if (directField) {
+    const activeFields = managerFields.filter(field => field.attivo !== false);
+    directField.innerHTML = activeFields.map(field => `<option value="${field.id}">${safeText(field.nome)}</option>`).join("");
+  }
 }
 
 function setSettingsControlsEnabled(enabled) {
@@ -357,6 +677,7 @@ async function loadSettings() {
     managerHalfFieldPrice = Number(data.prezzo_mezzo_campo ?? 0);
     $("prezzo-campo-intero").value = managerFullFieldPrice;
     $("prezzo-mezzo-campo").value = managerHalfFieldPrice;
+    updateDirectBookingModeUi();
 
     settingsLoaded = true;
     setSettingsControlsEnabled(true);
@@ -612,6 +933,25 @@ $("login").addEventListener("click", async () => {
   await checkSession();
 });
 $("logout").addEventListener("click", async () => { await db.auth.signOut(); await checkSession(); });
+$("apri-prenotazione-diretta")?.addEventListener("click", openDirectBookingDialog);
+$("stampa-informativa-privacy")?.addEventListener("click", printPrivacyNotice);
+$("chiudi-prenotazione-diretta")?.addEventListener("click", closeDirectBookingDialog);
+$("annulla-prenotazione-diretta")?.addEventListener("click", closeDirectBookingDialog);
+$("prenotazione-diretta-dialog")?.addEventListener("close", resetDirectBookingForm);
+$("prenotazione-diretta-form")?.addEventListener("submit", createDirectBooking);
+$("diretta-aggiorna")?.addEventListener("click", loadDirectSlots);
+$("diretta-data")?.addEventListener("change", loadDirectSlots);
+$("diretta-campo")?.addEventListener("change", loadDirectSlots);
+document.querySelectorAll('input[name="diretta-tipo-prenotazione"]').forEach(input => input.addEventListener("change", async () => {
+  updateDirectBookingModeUi();
+  await loadDirectSlots();
+}));
+$("diretta-documento-numero")?.addEventListener("input", event => {
+  event.target.value = normalizeDocument(event.target.value).slice(0, 9);
+});
+$("diretta-telefono")?.addEventListener("blur", event => {
+  event.target.value = formatPhone(event.target.value);
+});
 $("carica").addEventListener("click", loadBookings);
 $("azzera-filtri").addEventListener("click", resetFilters);
 $("salva-impostazioni").addEventListener("click", saveSettings);
@@ -633,7 +973,7 @@ $("data-planning-pdf")?.addEventListener("change", () => showPlanningWeather());
 
 $("filtro-da").value = "";
 $("filtro-a").value = "";
-$("data-planning-pdf").value = new Date().toISOString().slice(0, 10);
+$("data-planning-pdf").value = localTodayIso();
 checkSession();
 
 

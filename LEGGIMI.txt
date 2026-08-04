@@ -1,21 +1,42 @@
-CORREZIONE COMUNI - VERSIONE 4.0.1
+PARCO EX VELODROMO - VERSIONE 6.2.0
 
-Il database completo dei Comuni era già caricato.
-Il problema era nell'ordine della ricerca: il programma si fermava dopo
-12 risultati contenenti la parola "ROMA", prima di arrivare al Comune "Roma".
+Questo è il pacchetto completo da caricare nel repository GitHub della Versione 6.
+Non copiare soltanto i file JavaScript: sostituisci tutto il contenuto mantenendo le cartelle.
 
-INSTALLAZIONE
-1. Apri la repository prenotazione-calcetto-v4 su GitHub.
-2. Entra nella cartella js.
-3. Sostituisci js/cliente.js con quello contenuto in questo archivio.
-4. Conferma il commit.
-5. Attendi GitHub Pages e premi Ctrl+F5 sul sito.
+AGGIORNAMENTO DEL DATABASE GIÀ IN USO
+1. Apri Supabase > SQL Editor.
+2. Copia ed esegui una sola volta:
+   sql/09_versione_6_2_aperitivi_conferma.sql
+3. Lo script conserva prodotti e prenotazioni bar già presenti.
+4. Non devi rieseguire gli script da 01 a 08 se erano già stati eseguiti.
 
-La chiave della cache è stata aggiornata, così il browser ricaricherà
-l'intero archivio invece di usare la vecchia copia memorizzata.
+NUOVA INSTALLAZIONE
+Esegui in ordine gli script SQL da 01 a 09.
 
-DOPO L'AGGIORNAMENTO
-Scrivendo "roma" devono comparire prima:
-- Roma
-- eventuali altri Comuni che iniziano con Roma
-e successivamente i Comuni che contengono la parola.
+CARICAMENTO SU GITHUB
+1. Carica tutto il contenuto del pacchetto nel repository della Versione 6.
+2. Attendi la pubblicazione di GitHub Pages.
+3. Apri l’app e verifica che compaia Versione 6.2.0.
+4. Se compare ancora una versione precedente, premi “Aggiorna ora” oppure chiudi e riapri l’app.
+
+NOVITÀ APERITIVI
+- le chiusure per ferie configurate nell’Area gestore del campo bloccano anche il bar;
+- ogni proposta ha prezzo e numero di persone comprese, entrambi programmabili;
+- quantità e costo totale sono calcolati automaticamente in base ai partecipanti;
+- prezzo, persone comprese, quantità e totale vengono salvati nella richiesta e non cambiano modificando successivamente il prodotto;
+- le nuove richieste sono “Da confermare”;
+- il gestore può contattare il cliente tramite WhatsApp o telefonata e poi confermare, rifiutare o annullare;
+- i dati delle richieste bar vengono eliminati automaticamente dopo 30 giorni.
+
+FUNZIONI V5 INCLUSE
+- privacy interna nella pagina campo, senza perdita dei dati compilati;
+- data odierna proposta alla riapertura e carattere della data più evidente;
+- prenotazione diretta dall’Area gestore;
+- stampa A4 dell’informativa privacy;
+- limiti settimanali, mezzo campo, prezzi storici, ferie e controlli di sovrapposizione invariati.
+
+GESTIONE IMMAGINI
+- crea prima una proposta;
+- trascina una foto nel riquadro oppure clicca il riquadro;
+- “Elimina immagine” rimuove la foto anche da Supabase Storage;
+- caricando una nuova foto, quella precedente viene sostituita.

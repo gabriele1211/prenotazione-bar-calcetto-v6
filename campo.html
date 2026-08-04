@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Campo Ex Velodromo — Prenotazione campo</title>
-  <link rel="stylesheet" href="./css/style.css?v=6.0.0">
+  <link rel="stylesheet" href="./css/style.css?v=6.2.0release1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <meta name="theme-color" content="#145637">
@@ -38,7 +38,8 @@
   </header>
 
 <div class="manager-access-row">
-  <a class="link-button" href="./index.html">← Parco Ex Velodromo</a><a class="link-button manager-access-button" href="./admin.html">Area gestore</a>
+  <a class="link-button" href="./index.html">← Parco Ex Velodromo</a>
+  <a class="link-button manager-access-button" href="./admin.html">Area gestore</a>
 </div>
 
 <main class="page">
@@ -163,7 +164,7 @@
           <label class="check-row privacy-check">
             <input id="privacy" type="checkbox" required>
             <span>
-              Ho letto l’<a href="./privacy.html">informativa privacy</a>
+              Ho letto l’<a href="./privacy.html" id="apri-privacy">informativa privacy</a>
               e acconsento al trattamento dei miei dati esclusivamente per la gestione della prenotazione,
               la verifica del limite settimanale e la visualizzazione del nome abbreviato nel planning.
             </span>
@@ -179,6 +180,30 @@
     </div>
   </main>
 
+  <dialog id="privacy-dialog" class="privacy-dialog" aria-labelledby="privacy-dialog-title">
+    <div class="privacy-dialog-header">
+      <h2 id="privacy-dialog-title">Informativa privacy</h2>
+      <button id="chiudi-privacy" type="button" class="privacy-dialog-close" aria-label="Chiudi informativa">×</button>
+    </div>
+    <div class="privacy-dialog-content">
+      <h3>Chi tratta i dati</h3>
+      <p>Il titolare del trattamento è <strong>Cooperativa Sociale ORIONE 2000</strong>, con sede in <strong>Via Bainsizza n. 18, 40133 Bologna</strong>, contattabile all’indirizzo <a href="mailto:orione2000@libero.it">orione2000@libero.it</a>.</p>
+      <h3>Dati raccolti e finalità</h3>
+      <p>Il sistema raccoglie nome e cognome, numero di telefono, numero e dati di rilascio della Carta d’Identità Elettronica, data e orario richiesti ed eventuali note. I dati sono utilizzati esclusivamente per gestire la prenotazione, evitare sovrapposizioni, controllare il limite settimanale, contattare l’utente in caso di necessità e mostrare nel planning pubblico soltanto un nome abbreviato.</p>
+      <h3>Accesso ai dati</h3>
+      <p>I dati completi sono consultabili esclusivamente dagli utenti autorizzati ad accedere all’Area Gestore. Nel planning pubblico non vengono mostrati numero di telefono o dati del documento.</p>
+      <h3>Base giuridica e conferimento</h3>
+      <p>Il trattamento è necessario per dare seguito alla richiesta di prenotazione e organizzare l’utilizzo dell’impianto. Il conferimento dei dati obbligatori è necessario per completare la prenotazione.</p>
+      <h3>Conservazione</h3>
+      <p>I dati sono conservati per <strong>30 giorni successivi alla data di utilizzo del campo</strong>, salvo obblighi di legge o contestazioni già in corso.</p>
+      <h3>Servizi tecnici e sicurezza</h3>
+      <p>I dati sono memorizzati tramite Supabase. L’accesso amministrativo è protetto da autenticazione e limitato agli incaricati.</p>
+      <h3>Diritti dell’interessato</h3>
+      <p>È possibile chiedere informazioni, rettifica o cancellazione dei dati scrivendo a <a href="mailto:orione2000@libero.it">orione2000@libero.it</a>. Resta possibile rivolgersi al Garante per la protezione dei dati personali.</p>
+    </div>
+    <button id="torna-prenotazione" type="button" class="primary full">Torna alla prenotazione</button>
+  </dialog>
+
   <footer class="site-footer">
     <div class="footer-contact">
       <p>Per modificare o annullare una prenotazione telefona al <a href="tel:+393286739425"><strong>328 673 9425</strong></a>.</p>
@@ -186,16 +211,16 @@
     <div class="footer-signature" aria-label="Firma del progetto">
       <img src="./assets/gf-logo.png" alt="Logo GF" class="gf-logo">
       <p class="footer-product">Prenotazione campo</p>
-      <p>Versione <strong data-app-version>6.0.0</strong></p>
+      <p>Versione <strong data-app-version>6.2.0</strong></p>
       <p>© 2026 Gabriele Facchini</p>
     </div>
   </footer>
 
-  <script src="./js/config.js?v=6.0.0"></script>
-  <script src="./js/supabase-client.js?v=6.0.0"></script>
-  <script src="./js/weather.js?v=6.0.0"></script><script src="./js/cliente.js?v=6.0.0"></script>
-  <script src="./js/footer.js?v=6.0.0"></script>
-  <script src="./js/pwa.js?v=6.0.0"></script>
-<script src="./js/update-manager.js?v=6.0.0"></script>
+  <script src="./js/config.js?v=6.2.0release1"></script>
+  <script src="./js/supabase-client.js?v=6.2.0release1"></script>
+  <script src="./js/weather.js?v=6.2.0release1"></script><script src="./js/cliente.js?v=6.2.0release1"></script>
+  <script src="./js/footer.js?v=6.2.0release1"></script>
+  <script src="./js/pwa.js?v=6.2.0release1"></script>
+<script src="./js/update-manager.js?v=6.2.0"></script>
 </body>
 </html>

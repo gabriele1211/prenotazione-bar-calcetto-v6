@@ -23,7 +23,13 @@ let italianMunicipalityNames = [];
 let municipalitiesReady = false;
 let municipalitySelectionConfirmed = false;
 let weatherSelectionToken = 0;
-const BOOKING_DRAFT_KEY = "orione-booking-draft-v520";
+const BOOKING_DRAFT_KEY = "orione-booking-draft-v525";
+const LEGACY_BOOKING_DRAFT_KEYS = [
+  "orione-booking-draft-v524",
+  "orione-booking-draft-v523",
+  "orione-booking-draft-v522",
+  "orione-booking-draft-v520"
+];
 let restoringBookingDraft = false;
 
 
@@ -66,7 +72,6 @@ function setValue(id, value) {
 function bookingDraftPayload() {
   return {
     savedAt: Date.now(),
-    data: dataInput.value,
     campo: campoSelect.value,
     tipoPrenotazione: selectedBookingType,
     selectedStart,
@@ -84,19 +89,41 @@ function bookingDraftPayload() {
 
 function saveBookingDraft() {
   if (restoringBookingDraft) return;
-  try {
-    localStorage.setItem(BOOKING_DRAFT_KEY, JSON.stringify(bookingDraftPayload()));
-  } catch (error) {
-    console.warn("Salvataggio temporaneo modulo non riuscito:", error);
-  }
+  const serializedDraft = JSON.stringify(bookingDraftPayload());
+
+  // Su iOS la sessione della PWA può essere ricreata passando a una pagina
+  // interna. Manteniamo quindi anche una copia locale temporanea, eliminata
+  // dopo la prenotazione o alla scadenza della bozza.
+  try { sessionStorage.setItem(BOOKING_DRAFT_KEY, serializedDraft); } catch (_) {}
+  try { localStorage.setItem(BOOKING_DRAFT_KEY, serializedDraft); } catch (_) {}
+}
+
+function readStorage(storage, key) {
+  try { return storage.getItem(key); } catch (_) { return null; }
 }
 
 function readBookingDraft() {
   try {
-    const draft = JSON.parse(localStorage.getItem(BOOKING_DRAFT_KEY) || "null");
+    // iOS può ripristinare una sessionStorage più vecchia della copia in
+    // localStorage. Leggiamo tutte le copie disponibili e scegliamo quella
+    // salvata più di recente, invece di privilegiare la sessione.
+    const candidates = [];
+    const keys = [BOOKING_DRAFT_KEY, ...LEGACY_BOOKING_DRAFT_KEYS];
+    for (const key of keys) {
+      for (const storage of [sessionStorage, localStorage]) {
+        const serializedDraft = readStorage(storage, key);
+        if (!serializedDraft) continue;
+        try {
+          const candidate = JSON.parse(serializedDraft);
+          if (candidate?.savedAt) candidates.push(candidate);
+        } catch (_) {}
+      }
+    }
+
+    const draft = candidates.sort((a, b) => Number(b.savedAt) - Number(a.savedAt))[0] || null;
     if (!draft?.savedAt) return null;
     if (Date.now() - draft.savedAt > 12 * 60 * 60 * 1000) {
-      localStorage.removeItem(BOOKING_DRAFT_KEY);
+      clearBookingDraft();
       return null;
     }
     return draft;
@@ -106,9 +133,36 @@ function readBookingDraft() {
 }
 
 function clearBookingDraft() {
+  const keys = [BOOKING_DRAFT_KEY, ...LEGACY_BOOKING_DRAFT_KEYS];
+  for (const key of keys) {
+    try { sessionStorage.removeItem(key); } catch (_) {}
+    try { localStorage.removeItem(key); } catch (_) {}
+  }
+}
+
+function applyBookingDraftFields(draft) {
+  if (!draft) return;
+
+  setValue("nome", draft.nome);
+  setValue("telefono", draft.telefono);
+  setValue("documento-numero", draft.documentoNumero);
+  setValue("documento-data-rilascio", draft.documentoDataRilascio);
+  setValue("documento-rilasciato-da", draft.documentoRilasciatoDa);
+  setValue("note", draft.note);
+  setValue("numero-bambini", draft.numeroBambini);
+}
+
+function restoreBookingDraftFieldsImmediately() {
+  const draft = readBookingDraft();
+  if (!draft) return null;
+
+  restoringBookingDraft = true;
   try {
-    localStorage.removeItem(BOOKING_DRAFT_KEY);
-  } catch (_) {}
+    applyBookingDraftFields(draft);
+  } finally {
+    restoringBookingDraft = false;
+  }
+  return draft;
 }
 
 async function restoreBookingDraft() {
@@ -117,10 +171,7 @@ async function restoreBookingDraft() {
 
   restoringBookingDraft = true;
   try {
-    if (draft.data && draft.data >= localTodayIso()) {
-      dataInput.value = draft.data;
-      updateDateDescription();
-    }
+    applyBookingDraftFields(draft);
 
     if (
       draft.campo &&
@@ -139,14 +190,6 @@ async function restoreBookingDraft() {
     );
     if (requestedRadio) requestedRadio.checked = true;
     updateBookingModeUi();
-
-    setValue("nome", draft.nome);
-    setValue("telefono", draft.telefono);
-    setValue("documento-numero", draft.documentoNumero);
-    setValue("documento-data-rilascio", draft.documentoDataRilascio);
-    setValue("documento-rilasciato-da", draft.documentoRilasciatoDa);
-    setValue("note", draft.note);
-    setValue("numero-bambini", draft.numeroBambini);
 
     const municipality = String(draft.documentoRilasciatoDa || "");
     municipalitySelectionConfirmed =
@@ -657,6 +700,8 @@ async function createBooking() {
   municipalitySelectionConfirmed = false;
   closeMunicipalitySuggestions();
   $("privacy").checked = false;
+  dataInput.value = localTodayIso();
+  updateDateDescription();
   await loadSlots({ preserveMessage: true });
   const confirmedCost = Number(data?.costo_applicato ?? bookingPriceForSlot(confirmedStart, tipoPrenotazione));
   const confirmedCostLabel = confirmedCost > 0 ? euroLabel(confirmedCost) : "Gratuito";
@@ -711,13 +756,36 @@ campoSelect.addEventListener("change", saveBookingDraft);
 document.querySelectorAll('input[name="tipo-prenotazione"]').forEach(input =>
   input.addEventListener("change", saveBookingDraft)
 );
-document.querySelectorAll('a[href="./privacy.html"]').forEach(link => {
-  link.addEventListener("click", saveBookingDraft);
+const privacyDialog = $("privacy-dialog");
+const openPrivacyLink = $("apri-privacy");
+
+function closePrivacyDialog() {
+  if (privacyDialog?.open) privacyDialog.close();
+}
+
+openPrivacyLink?.addEventListener("click", event => {
+  event.preventDefault();
+  saveBookingDraft();
+  if (privacyDialog?.showModal) privacyDialog.showModal();
+  else window.open("./privacy.html", "_blank", "noopener");
+});
+$("chiudi-privacy")?.addEventListener("click", closePrivacyDialog);
+$("torna-prenotazione")?.addEventListener("click", closePrivacyDialog);
+privacyDialog?.addEventListener("click", event => {
+  if (event.target === privacyDialog) closePrivacyDialog();
 });
 window.addEventListener("pagehide", saveBookingDraft);
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden") saveBookingDraft();
+});
 window.addEventListener("pageshow", event => {
+  restoreBookingDraftFieldsImmediately();
   if (event.persisted) restoreBookingDraft();
 });
+
+// Ripristina subito i campi personali, senza aspettare rete, Supabase o Comuni.
+// Il completamento asincrono ripristinerà poi campo, modalità e fascia oraria.
+restoreBookingDraftFieldsImmediately();
 
 (async () => {
   await Promise.all([loadBookingStatus(), loadItalianMunicipalities()]);
