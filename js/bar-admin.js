@@ -286,28 +286,56 @@ async function loadClosureSummary() {
   box.textContent = "Nessuna chiusura programmata. Le richieste aperitivo sono attive.";
 }
 
-function contactActions(booking) {
-  const number = whatsappNumber(booking.telefono);
+function preparedWhatsappText(booking, type) {
+  const time = String(booking.ora).slice(0, 5);
+  const people = Number(booking.persone || 0);
   const quantity = Number(booking.quantita_proposte || 1);
-  const text = `Ciao ${booking.nome_cliente}, ti contattiamo dal Bar Parco Ex Velodromo per la richiesta del ${localDate(booking.data)} alle ${String(booking.ora).slice(0, 5)}: ${quantity} ${quantity === 1 ? "proposta" : "proposte"} ${booking.bar_prodotti?.nome || "aperitivo"}, totale ${euro(booking.costo_totale)}. La prenotazione è confermata.`;
+  const product = booking.bar_prodotti?.nome || "aperitivo";
+  const proposalLabel = quantity === 1 ? "proposta" : "proposte";
+  const peopleLabel = people === 1 ? "persona" : "persone";
+
+  if (type === "conferma") {
+    return `Ciao ${booking.nome_cliente}, la tua prenotazione aperitivo presso il Bar Parco Ex Velodromo è confermata per il ${localDate(booking.data)} alle ${time}, per ${people} ${peopleLabel}. Proposta: ${quantity} ${proposalLabel} ${product}. Totale: ${euro(booking.costo_totale)}. Ti aspettiamo!`;
+  }
+
+  return `Ciao ${booking.nome_cliente}, ci dispiace, la prenotazione aperitivo richiesta per il ${localDate(booking.data)} alle ${time}, per ${people} ${peopleLabel}, non può essere confermata ed è stata annullata. Se desideri concordare un altro giorno o orario, contattaci. Bar Parco Ex Velodromo.`;
+}
+
+function whatsappUrl(booking, type) {
+  const number = whatsappNumber(booking.telefono);
+  if (!number) return "";
+  return `https://wa.me/${number}?text=${encodeURIComponent(preparedWhatsappText(booking, type))}`;
+}
+
+function phoneAction(booking) {
+  const number = whatsappNumber(booking.telefono);
+  return `<a class="bar-action-link phone" href="tel:+${number}">Chiama</a>`;
+}
+
+function preparedWhatsappAction(booking, type) {
+  const url = whatsappUrl(booking, type);
+  const label = type === "conferma" ? "Invia conferma" : "Invia disdetta";
+  return `<a class="bar-action-link whatsapp" href="${url}" target="_blank" rel="noopener">${label}</a>`;
+}
+
+function contactActions(booking, type = null) {
   return `<div class="bar-contact-actions">
-    <a class="bar-action-link whatsapp" href="https://wa.me/${number}?text=${encodeURIComponent(text)}" target="_blank" rel="noopener">WhatsApp</a>
-    <a class="bar-action-link phone" href="tel:+${number}">Chiama</a>
+    ${type ? preparedWhatsappAction(booking, type) : ""}
+    ${phoneAction(booking)}
   </div>`;
 }
 
 function bookingActions(booking) {
-  const contact = contactActions(booking);
   if (booking.stato === "da_confermare") {
-    return `${contact}<div class="bar-decision-actions">
-      <button class="primary confirm-booking" data-id="${booking.id}" type="button">Conferma</button>
-      <button class="danger reject-booking" data-id="${booking.id}" type="button">Rifiuta</button>
+    return `${contactActions(booking)}<div class="bar-decision-actions">
+      <button class="primary confirm-booking" data-id="${booking.id}" type="button">Conferma + WhatsApp</button>
+      <button class="danger reject-booking" data-id="${booking.id}" type="button">Rifiuta + WhatsApp</button>
     </div>`;
   }
   if (booking.stato === "confermata") {
-    return `${contact}<button class="secondary cancel-booking" data-id="${booking.id}" type="button">Annulla</button>`;
+    return `${contactActions(booking, "conferma")}<button class="secondary cancel-booking" data-id="${booking.id}" type="button">Annulla + WhatsApp</button>`;
   }
-  return contact;
+  return contactActions(booking, "disdetta");
 }
 
 function renderPendingBookings(bookings) {
@@ -391,13 +419,30 @@ function stopBookingAutoRefresh() {
 
 async function updateBookingStatus(id, status) {
   const labels = { confermata: "confermare", rifiutata: "rifiutare", annullata: "annullare" };
-  if (!confirm(`Vuoi ${labels[status]} questa richiesta?`)) return;
+  const booking = loadedBookings.find(item => String(item.id) === String(id));
+  if (!booking) return message("Richiesta non trovata. Aggiorna l’elenco e riprova.", "error");
+
+  const messageType = status === "confermata" ? "conferma" : "disdetta";
+  const actionText = status === "confermata" ? "il messaggio di conferma" : "il messaggio di disdetta";
+  if (!confirm(`Vuoi ${labels[status]} questa richiesta? Dopo l’aggiornamento si aprirà WhatsApp con ${actionText} già pronto.`)) return;
+
+  const url = whatsappUrl(booking, messageType);
+  const whatsappTab = url ? window.open("about:blank", "_blank") : null;
+  if (whatsappTab) whatsappTab.opener = null;
+
   const { error } = await db.from("bar_prenotazioni").update({
     stato: status,
     aggiornato_il: new Date().toISOString()
   }).eq("id", id);
-  if (error) return message(`Aggiornamento non riuscito: ${error.message}`, "error");
+  if (error) {
+    if (whatsappTab) whatsappTab.close();
+    return message(`Aggiornamento non riuscito: ${error.message}`, "error");
+  }
+
   await loadBookings();
+  if (!url) return message("Stato aggiornato, ma il numero di telefono non è valido per WhatsApp.", "error");
+  if (whatsappTab) whatsappTab.location.replace(url);
+  else window.location.href = url;
 }
 
 function attachBookingActions() {

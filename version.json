@@ -1,10 +1,13 @@
 {
-  "latest": "6.2.3",
+  "latest": "6.2.4",
   "minimum": "6.0.0",
   "mandatory": false,
   "title": "Nuovo aggiornamento disponibile",
-  "message": "Nuovo riepilogo operativo nell’Area gestore per rispondere rapidamente alle richieste aperitivo.",
+  "message": "Messaggi WhatsApp di conferma e disdetta già pronti nell’Area gestore.",
   "notes": [
+    "Conferma, rifiuto e annullamento aprono WhatsApp con il messaggio corretto già compilato",
+    "Il testo riporta cliente, data, ora, persone, proposta e totale quando pertinenti",
+    "Il gestore può controllare e modificare il messaggio prima di inviarlo",
     "Le richieste da confermare compaiono in alto con il tempo di attesa e priorità crescente",
     "Dopo 10 minuti l’avviso diventa urgente e dopo 20 minuti diventa rosso",
     "Le prenotazioni confermate di oggi sono raccolte in un unico riquadro verde",

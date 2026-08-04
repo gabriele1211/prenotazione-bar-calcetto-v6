@@ -1,0 +1,20 @@
+PARCO EX VELODROMO - VERSIONE 6.2.4
+
+NOVITÀ MESSAGGI WHATSAPP
+
+- Il pulsante "Conferma + WhatsApp" aggiorna la richiesta e apre il messaggio di conferma già pronto.
+- Il pulsante "Rifiuta + WhatsApp" aggiorna la richiesta e apre il messaggio di disdetta già pronto.
+- Il pulsante "Annulla + WhatsApp" annulla una prenotazione confermata e prepara la disdetta.
+- I messaggi includono automaticamente nome, data, ora e numero di persone.
+- La conferma include anche proposta, quantità e totale.
+- Il testo può sempre essere controllato o modificato prima dell’invio.
+- Per le richieste già gestite rimangono disponibili "Invia conferma" o "Invia disdetta".
+- Il pulsante "Chiama" resta separato e invariato.
+
+INSTALLAZIONE
+
+Caricare su GitHub tutto il contenuto di questo pacchetto, sostituendo la versione precedente.
+Non è necessario eseguire nuovi script SQL.
+
+Dopo il caricamento verificare che nel piè di pagina compaia Versione 6.2.4.
+Provare poi una richiesta di test e verificare che WhatsApp mostri il testo corretto prima dell’invio.

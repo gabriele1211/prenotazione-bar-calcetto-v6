@@ -124,7 +124,7 @@
 .bar-action-link.phone { background: #2868a9; }
 .bar-decision-actions button, .bar-booking-row td > .secondary { padding: 7px 9px; font-size: .78rem; }
 
-/* V6.2.3 - priorità giornaliere nell'Area gestore */
+/* V6.2.4 - priorità giornaliere nell'Area gestore */
 .bar-priority-heading { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
 .bar-priority-heading h2 { margin: 5px 0 4px; }
 .bar-priority-heading p { margin: 0; }
@@ -176,6 +176,8 @@
 .bar-pending-card.critical .bar-wait-time { color: #aa241e; }
 .bar-pending-card .bar-contact-actions,
 .bar-pending-card .bar-decision-actions { justify-content: flex-end; margin: 0 0 7px; }
+.bar-pending-card .bar-decision-actions { flex-direction: column; align-items: stretch; }
+.bar-pending-card .bar-decision-actions button { width: 100%; }
 
 .bar-today-confirmed { border: 3px solid #3a9365; background: linear-gradient(135deg, #eaf8f0, #fff); box-shadow: 0 10px 28px rgba(20, 86, 55, .12); }
 .bar-today-confirmed .eyebrow { color: #14603b; }
