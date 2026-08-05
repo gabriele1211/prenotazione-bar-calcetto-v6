@@ -1,0 +1,17 @@
+PARCO EX VELODROMO - VERSIONE 6.3.7
+
+Questa versione rende immediatamente riconoscibile lo stato delle notifiche push
+nell'Area gestore del campo e del bar.
+
+COMPORTAMENTO DEL PULSANTE
+- notifiche non attive: pulsante verde "Attiva notifiche su questo dispositivo";
+- notifiche attive: pulsante grigio "Notifiche già attive su questo dispositivo";
+- dopo la disattivazione: il pulsante torna verde e può essere premuto nuovamente.
+
+AGGIORNAMENTO
+1. Carica su GitHub tutto il contenuto del pacchetto.
+2. Non eseguire nuovi script SQL.
+3. Non modificare la funzione Supabase, il webhook o le chiavi VAPID.
+4. Attendi la pubblicazione e verifica che nell'app compaia Versione 6.3.7.
+
+La configurazione delle notifiche già esistente rimane valida.

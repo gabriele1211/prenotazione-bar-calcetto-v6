@@ -86,9 +86,12 @@ security definer
 set search_path = ''
 as $$
 begin
-  -- Le prenotazioni inserite direttamente dal gestore non generano un avviso
-  -- sul suo stesso dispositivo. I clienti pubblici usano invece il ruolo anon.
-  if (select auth.uid()) is not null then
+  -- La pagina cliente può conservare nel browser una sessione del gestore:
+  -- auth.uid() non permette quindi di distinguere l'origine della richiesta.
+  -- Solo la prenotazione campo diretta contiene questa nota tecnica esplicita.
+  if tg_table_schema = 'public'
+     and tg_table_name = 'prenotazioni'
+     and coalesce(new.note, '') like 'Prenotazione inserita direttamente dal gestore%' then
     return new;
   end if;
 

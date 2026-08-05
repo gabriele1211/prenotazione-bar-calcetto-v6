@@ -1,0 +1,17 @@
+PARCO EX VELODROMO - VERSIONE 6.3.6
+
+CORREZIONE ORARI APERITIVO
+
+- Scegliendo una data futura, il menu Ora parte dall'apertura delle 09:00.
+- Per oggi, il menu parte dal primo orario disponibile con almeno 30 minuti di anticipo.
+- Gli orari sono proposti ogni 30 minuti.
+- Non compaiono orari precedenti alle 09:00 o successivi alle 21:00.
+- Quando per oggi non restano orari utili, il menu viene disabilitato e viene richiesto di scegliere un'altra data.
+
+AGGIORNAMENTO DALLA VERSIONE 6.3.5
+
+Non serve eseguire nuovi script SQL e non occorre modificare Supabase.
+Carica su GitHub tutto il contenuto di questo pacchetto, sostituendo i file della versione precedente.
+Attendi la pubblicazione e verifica che nell'app compaia Versione 6.3.6.
+
+Le notifiche push già configurate restano attive e non devono essere configurate di nuovo.

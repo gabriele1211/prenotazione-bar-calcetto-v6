@@ -10,7 +10,6 @@ let rejectedClosedDate = null;
 
 const BAR_FIRST_TIME = "09:00";
 const BAR_LAST_TIME = "21:00";
-const BAR_DEFAULT_FUTURE_TIME = "18:30";
 const BAR_NOTICE_MINUTES = 30;
 const BAR_SLOT_MINUTES = 30;
 const BAR_TIME_ZONE = window.APP_CONFIG?.WEATHER_TIMEZONE || "Europe/Rome";
@@ -68,6 +67,30 @@ function firstSameDayTime(referenceDate = new Date()) {
   return firstMinutes <= timeToMinutes(BAR_LAST_TIME) ? minutesToTime(firstMinutes) : null;
 }
 
+function fillAvailableTimes(timeInput, firstTime, { resetValue = false } = {}) {
+  const previousValue = timeInput.value;
+  const firstMinutes = timeToMinutes(firstTime);
+  const lastMinutes = timeToMinutes(BAR_LAST_TIME);
+  const availableTimes = [];
+
+  for (let minutes = firstMinutes; minutes <= lastMinutes; minutes += BAR_SLOT_MINUTES) {
+    availableTimes.push(minutesToTime(minutes));
+  }
+
+  timeInput.innerHTML = availableTimes
+    .map(time => `<option value="${time}">${time}</option>`)
+    .join("");
+
+  const previousMinutes = timeToMinutes(previousValue);
+  const previousIsAvailable = !resetValue
+    && previousValue
+    && previousMinutes >= firstMinutes
+    && previousMinutes <= lastMinutes
+    && (previousMinutes - firstMinutes) % BAR_SLOT_MINUTES === 0;
+
+  timeInput.value = previousIsAvailable ? previousValue : firstTime;
+}
+
 function updateTimeRules({ resetValue = false, announce = false, referenceDate = new Date() } = {}) {
   const dateInput = $("bar-data");
   const timeInput = $("bar-ora");
@@ -76,13 +99,11 @@ function updateTimeRules({ resetValue = false, announce = false, referenceDate =
 
   const today = todayIso(referenceDate);
   dateInput.min = today;
-  timeInput.max = BAR_LAST_TIME;
-  timeInput.step = String(BAR_SLOT_MINUTES * 60);
 
   if (dateInput.value === today) {
     const firstTime = firstSameDayTime(referenceDate);
     if (!firstTime) {
-      timeInput.min = BAR_FIRST_TIME;
+      timeInput.innerHTML = '<option value="">Nessun orario disponibile</option>';
       timeInput.value = "";
       timeInput.disabled = true;
       description.textContent = "Per oggi non ci sono più orari disponibili. Scegli una data successiva.";
@@ -92,21 +113,15 @@ function updateTimeRules({ resetValue = false, announce = false, referenceDate =
     }
 
     timeInput.disabled = false;
-    timeInput.min = firstTime;
-    if (resetValue || !timeInput.value || timeInput.value < firstTime || timeInput.value > BAR_LAST_TIME) {
-      timeInput.value = firstTime;
-    }
+    fillAvailableTimes(timeInput, firstTime, { resetValue });
     description.textContent = `Per oggi il primo orario disponibile è ${firstTime}, con almeno 30 minuti di anticipo.`;
     updateAvailability();
     return true;
   }
 
   timeInput.disabled = false;
-  timeInput.min = BAR_FIRST_TIME;
-  if (resetValue || !timeInput.value || timeInput.value < BAR_FIRST_TIME || timeInput.value > BAR_LAST_TIME) {
-    timeInput.value = BAR_DEFAULT_FUTURE_TIME;
-  }
-  description.textContent = "Prenotazioni disponibili dalle 09:00 alle 21:00.";
+  fillAvailableTimes(timeInput, BAR_FIRST_TIME, { resetValue });
+  description.textContent = "Orari disponibili dalle 09:00 alle 21:00, ogni 30 minuti.";
   updateAvailability();
   return true;
 }

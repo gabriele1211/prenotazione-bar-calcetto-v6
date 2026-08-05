@@ -1,7 +1,14 @@
-PARCO EX VELODROMO - VERSIONE 6.3.5
+PARCO EX VELODROMO - VERSIONE 6.3.7
 
 Questo è il pacchetto completo da caricare nel repository GitHub della Versione 6.
 Non copiare soltanto i file JavaScript: sostituisci tutto il contenuto mantenendo le cartelle.
+
+AGGIORNAMENTO DALLA VERSIONE 6.3.5 O 6.3.6
+1. Non eseguire alcun nuovo script SQL.
+2. Carica tutti i file del pacchetto su GitHub.
+3. Nella pagina aperitivi, cambiando data, l'orario deve partire dalle 09:00.
+4. Il menu Ora deve mostrare soltanto la fascia prenotabile 09:00-21:00.
+5. Nell'Area gestore il pulsante notifiche deve essere verde quando sono da attivare e grigio quando sono già attive.
 
 AGGIORNAMENTO DA VERSIONE 6.2.1, 6.2.2, 6.2.3, 6.2.4, 6.2.5, 6.2.6, 6.3.0, 6.3.1, 6.3.2, 6.3.3 O 6.3.4
 1. Esegui una sola volta sql/12_versione_6_3_5_notifiche_push.sql.
@@ -25,11 +32,13 @@ Esegui in ordine gli script SQL da 01 a 10 e poi lo script 12.
 CARICAMENTO SU GITHUB
 1. Carica tutto il contenuto del pacchetto nel repository della Versione 6.
 2. Attendi la pubblicazione di GitHub Pages.
-3. Apri l’app e verifica che compaia Versione 6.3.5.
+3. Apri l’app e verifica che compaia Versione 6.3.7.
 4. Se compare ancora una versione precedente, premi “Aggiorna ora” oppure chiudi e riapri l’app.
 
 NOVITÀ NOTIFICHE PUSH
 - il gestore può attivare le notifiche separatamente su telefono, tablet e PC;
+- il pulsante di attivazione è verde quando le notifiche sono spente e grigio quando sono già attive;
+- dopo la disattivazione il pulsante torna automaticamente verde;
 - una nuova prenotazione cliente del campo o del bar genera un avviso anche con l’app chiusa;
 - toccando l’avviso si apre direttamente l’Area gestore corretta;
 - è disponibile un pulsante per inviare una notifica di prova;
@@ -45,6 +54,8 @@ NOVITÀ INDICAZIONI
 - il pulsante "Indicazioni" è disponibile anche nelle pagine cliente del campo e del bar.
 
 NOVITÀ APERITIVI
+- per una data successiva a oggi il primo orario proposto è sempre 09:00;
+- il menu Ora mostra soltanto orari prenotabili, ogni 30 minuti, senza ore esterne alla fascia 09:00-21:00;
 - nel programma giornaliero le prenotazioni già trascorse diventano automaticamente grigie;
 - le prenotazioni ancora da svolgere restano bianche e verdi, quindi più evidenti;
 - nel giorno corrente viene proposto il primo orario disponibile con almeno 30 minuti di anticipo;

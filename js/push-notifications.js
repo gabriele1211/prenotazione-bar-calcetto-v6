@@ -41,10 +41,15 @@
     const test = element("push-notification-test");
     const disable = element("push-notification-disable");
     if (!enable || !test || !disable) return;
-    enable.hidden = active;
+    enable.hidden = false;
+    enable.textContent = active
+      ? "✓ Notifiche già attive su questo dispositivo"
+      : "🔔 Attiva notifiche su questo dispositivo";
+    enable.classList.toggle("push-enabled", active);
+    enable.setAttribute("aria-pressed", active ? "true" : "false");
     test.hidden = !active;
     disable.hidden = !active;
-    enable.disabled = disabled || busy;
+    enable.disabled = active || disabled || busy;
     test.disabled = disabled || busy;
     disable.disabled = disabled || busy;
   }

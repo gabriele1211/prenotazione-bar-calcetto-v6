@@ -186,6 +186,16 @@ button:disabled { opacity: .55; cursor: not-allowed; }
   flex-wrap: wrap;
 }
 
+#push-notification-enable.push-enabled,
+#push-notification-enable.push-enabled:hover,
+#push-notification-enable.push-enabled:disabled {
+  border-color: #b8c0c7;
+  background: #d9dee3;
+  color: #505b64;
+  cursor: default;
+  opacity: 1;
+}
+
 .push-notification-status {
   margin: 14px 0 0 !important;
   padding: 11px 13px;

@@ -1,10 +1,15 @@
 {
-  "latest": "6.3.5",
+  "latest": "6.3.7",
   "minimum": "6.0.0",
   "mandatory": false,
   "title": "Nuovo aggiornamento disponibile",
-  "message": "Il gestore può ricevere notifiche sul telefono o sul PC quando arriva una nuova prenotazione.",
+  "message": "Il pulsante delle notifiche mostra chiaramente se le push sono già attive sul dispositivo.",
   "notes": [
+    "Il pulsante delle notifiche è verde quando le push sono da attivare e grigio quando sono già attive",
+    "Dopo la disattivazione il pulsante torna automaticamente verde e utilizzabile",
+    "Per una data futura il primo orario proposto è 09:00, non più 18:30",
+    "Il menu Ora mostra soltanto gli orari prenotabili dalle 09:00 alle 21:00",
+    "Per oggi restano disponibili soltanto gli orari con almeno 30 minuti di anticipo",
     "Notifiche push per le nuove prenotazioni del campo e del bar anche quando l’app è chiusa",
     "Attivazione separata su telefono, tablet e PC dopo l’accesso del gestore",
     "Pulsante per inviare una notifica di prova su tutti i dispositivi attivi",
