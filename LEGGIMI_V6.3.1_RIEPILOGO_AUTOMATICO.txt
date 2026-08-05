@@ -1,0 +1,18 @@
+VERSIONE 6.3.1 — RIEPILOGO AUTOMATICO E CANCELLAZIONE PRIVACY
+
+- Nell'Area gestore bar il riepilogo di oggi compare automaticamente.
+- Non usa intelligenza artificiale, Edge Functions o credito OpenAI.
+- Mostra prenotazioni campo, aperitivi, persone, richieste in attesa e totale previsto.
+- Si aggiorna all'apertura, con il pulsante Aggiorna e automaticamente ogni 30 secondi.
+- Nell'elenco aperitivi è disponibile Cancella dati con doppia conferma.
+- Anche nell'elenco campo il pulsante è indicato chiaramente come Cancella dati.
+- La cancellazione elimina definitivamente tutti i dati della singola prenotazione.
+- L'icona dell'app ha uno sfondo verde più chiaro e leggibile.
+
+AGGIORNAMENTO
+
+1. Caricare su GitHub tutto il contenuto di questa cartella, sostituendo i file precedenti.
+2. Non è necessario eseguire nuovi script SQL.
+3. Non è necessario creare o pubblicare alcuna Edge Function.
+4. La vecchia funzione riepilogo-giornaliero e il secret OPENAI_API_KEY non sono più utilizzati dall'app. Possono essere eliminati da Supabase, ma non è obbligatorio.
+5. Verificare nel piè di pagina la scritta Versione 6.3.1.

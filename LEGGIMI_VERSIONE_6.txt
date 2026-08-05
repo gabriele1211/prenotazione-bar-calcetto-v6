@@ -1,4 +1,4 @@
-PARCO EX VELODROMO - VERSIONE 6.3.0
+PARCO EX VELODROMO - VERSIONE 6.3.1
 
 La Versione 6 riunisce:
 - prenotazione Campo Sportivo Parco Ex Velodromo;
@@ -15,6 +15,9 @@ La Versione 6 riunisce:
 - installazione dell'app proposta dalla pagina iniziale come nella Versione 5.
 - messaggi WhatsApp già pronti e distinti per conferma e disdetta nell'Area gestore.
 - elenchi gestore in ordine crescente e stampe giornaliere, per periodo o dell'archivio completo.
+- riepilogo automatico gratuito della giornata, senza IA o chiavi API.
+- cancellazione definitiva dei dati della singola prenotazione con doppia conferma.
+- icona dell'app più luminosa e leggibile.
 
 Per aggiornare un database che usa già la Versione 6.2.0 esegui soltanto:
 sql/10_versione_6_2_1_orari_ferie_aperitivi.sql

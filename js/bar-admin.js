@@ -97,76 +97,76 @@ async function checkSession() {
   $("bar-dashboard").classList.toggle("hidden", !authenticated);
   if (authenticated) {
     await Promise.all([loadProducts(), loadBookings(), loadClosureSummary()]);
-    await loadAiSummaryStatus();
     startBookingAutoRefresh();
   } else {
     stopBookingAutoRefresh();
   }
 }
 
-function formatNextAiSummary(value) {
-  return new Date(value).toLocaleString("it-IT", {
-    weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit"
-  });
+function summaryTimes(bookings, startField, endField = null) {
+  const times = bookings
+    .map(booking => {
+      const start = String(booking[startField] || "").slice(0, 5);
+      const end = endField ? String(booking[endField] || "").slice(0, 5) : "";
+      return end ? `${start}–${end}` : start;
+    })
+    .filter(Boolean)
+    .sort((a, b) => a.localeCompare(b));
+  return times.length ? times.join(", ") : "Nessun orario previsto";
 }
 
-function renderAiSummary(data) {
-  const result = $("ai-summary-result");
-  if (data.summary) {
-    result.textContent = data.summary;
-    result.hidden = false;
-  }
-  if (data.next_available_at) {
-    $("ai-summary-status").textContent = `Prossimo riepilogo disponibile: ${formatNextAiSummary(data.next_available_at)}.`;
-  } else {
-    $("ai-summary-status").textContent = "Il riepilogo gratuito di oggi è disponibile.";
-  }
-}
+async function loadAutomaticSummary() {
+  const today = localDateKey();
+  $("automatic-summary-date").textContent = fullLocalDate(today);
+  $("automatic-summary-updated").textContent = "Aggiornamento del riepilogo…";
 
-async function callAiSummary(action) {
-  const { data: sessionData } = await db.auth.getSession();
-  const token = sessionData.session?.access_token;
-  if (!token) throw new Error("Sessione scaduta. Accedi nuovamente.");
-  const response = await fetch(`${window.APP_CONFIG.SUPABASE_URL}/functions/v1/riepilogo-giornaliero`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
-      "apikey": window.APP_CONFIG.SUPABASE_PUBLISHABLE_KEY
-    },
-    body: JSON.stringify({ action })
-  });
-  const payload = await response.json().catch(() => ({}));
-  if (!response.ok && response.status !== 429) throw new Error(payload.error || "Riepilogo non disponibile.");
-  return payload;
-}
+  const { data: fieldData, error } = await db.from("prenotazioni")
+    .select("ora_inizio,ora_fine,settore,numero_bambini,costo_applicato,stato")
+    .eq("data", today);
 
-async function loadAiSummaryStatus() {
-  try {
-    const data = await callAiSummary("status");
-    renderAiSummary(data);
-    $("generate-ai-summary").disabled = !data.available;
-  } catch (error) {
-    $("ai-summary-status").textContent = "Assistente IA non ancora configurato.";
-    $("generate-ai-summary").disabled = false;
+  if (error) {
+    $("automatic-summary-alert").textContent = "Riepilogo parziale";
+    $("automatic-summary-alert").classList.add("needs-attention");
+    $("automatic-summary-metrics").innerHTML = "";
+    $("automatic-summary-details").innerHTML = `<p class="automatic-summary-error">Impossibile leggere le prenotazioni del campo: ${esc(error.message)}</p>`;
+    $("automatic-summary-updated").textContent = "Le richieste aperitivo continuano ad aggiornarsi normalmente.";
+    return;
   }
-}
 
-async function generateAiSummary() {
-  const button = $("generate-ai-summary");
-  button.disabled = true;
-  button.textContent = "Generazione…";
-  $("ai-summary-status").textContent = "Sto preparando il riepilogo delle prenotazioni di oggi…";
-  try {
-    const data = await callAiSummary("generate");
-    renderAiSummary(data);
-    button.disabled = !data.available;
-  } catch (error) {
-    $("ai-summary-status").textContent = error.message;
-    button.disabled = false;
-  } finally {
-    button.textContent = "✨ Genera riepilogo";
-  }
+  const fields = (fieldData || []).filter(booking => booking.stato === "confermata");
+  const confirmedBars = loadedBookings.filter(booking => booking.data === today && booking.stato === "confermata");
+  const pendingBars = loadedBookings.filter(booking => booking.stato === "da_confermare");
+  const fieldRevenue = fields.reduce((total, booking) => total + Number(booking.costo_applicato || 0), 0);
+  const barRevenue = confirmedBars.reduce((total, booking) => total + Number(booking.costo_totale || 0), 0);
+  const barPeople = confirmedBars.reduce((total, booking) => total + Number(booking.persone || 0), 0);
+  const children = fields.reduce((total, booking) => total + Number(booking.numero_bambini || 0), 0);
+  const combinedRevenue = fieldRevenue + barRevenue;
+  const alertBox = $("automatic-summary-alert");
+
+  alertBox.classList.toggle("needs-attention", pendingBars.length > 0);
+  alertBox.textContent = pendingBars.length
+    ? `⚠ ${pendingBars.length} ${pendingBars.length === 1 ? "richiesta da confermare" : "richieste da confermare"}`
+    : "✓ Nessuna richiesta in attesa";
+
+  $("automatic-summary-metrics").innerHTML = `
+    <article><strong>${fields.length}</strong><span>${fields.length === 1 ? "prenotazione campo" : "prenotazioni campo"}</span></article>
+    <article><strong>${confirmedBars.length}</strong><span>${confirmedBars.length === 1 ? "aperitivo confermato" : "aperitivi confermati"}</span></article>
+    <article><strong>${barPeople}</strong><span>${barPeople === 1 ? "persona al bar" : "persone al bar"}</span></article>
+    <article><strong>${euro(combinedRevenue)}</strong><span>totale previsto</span></article>`;
+
+  $("automatic-summary-details").innerHTML = `
+    <article>
+      <h3>⚽ Campo</h3>
+      <p>${esc(summaryTimes(fields, "ora_inizio", "ora_fine"))}</p>
+      <small>${children} ${children === 1 ? "bambino" : "bambini"} indicati · ${euro(fieldRevenue)}</small>
+    </article>
+    <article>
+      <h3>🥂 Aperitivi</h3>
+      <p>${esc(summaryTimes(confirmedBars, "ora"))}</p>
+      <small>${barPeople} ${barPeople === 1 ? "persona" : "persone"} · ${euro(barRevenue)}</small>
+    </article>`;
+
+  $("automatic-summary-updated").textContent = `Aggiornato automaticamente alle ${new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}.`;
 }
 
 async function login() {
@@ -392,16 +392,21 @@ function contactActions(booking, type = null) {
 }
 
 function bookingActions(booking) {
+  const deleteAction = `<button class="danger delete-booking" data-id="${booking.id}" type="button" title="Cancella definitivamente i dati di questa prenotazione">Cancella dati</button>`;
   if (booking.stato === "da_confermare") {
     return `${contactActions(booking)}<div class="bar-decision-actions">
       <button class="primary confirm-booking" data-id="${booking.id}" type="button">Conferma + WhatsApp</button>
       <button class="danger reject-booking" data-id="${booking.id}" type="button">Rifiuta + WhatsApp</button>
+      ${deleteAction}
     </div>`;
   }
   if (booking.stato === "confermata") {
-    return `${contactActions(booking, "conferma")}<button class="secondary cancel-booking" data-id="${booking.id}" type="button">Annulla + WhatsApp</button>`;
+    return `${contactActions(booking, "conferma")}<div class="bar-decision-actions">
+      <button class="secondary cancel-booking" data-id="${booking.id}" type="button">Annulla + WhatsApp</button>
+      ${deleteAction}
+    </div>`;
   }
-  return contactActions(booking, "disdetta");
+  return `${contactActions(booking, "disdetta")}<div class="bar-decision-actions">${deleteAction}</div>`;
 }
 
 function renderPendingBookings(bookings) {
@@ -606,7 +611,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
   <thead><tr><th>N.</th><th>Data e ora</th><th>Proposta</th><th>Cliente e telefono</th><th>Persone</th><th>Totale</th><th>Note</th><th>Stato</th></tr></thead>
   <tbody>${rows}</tbody>
 </table>
-<div class="footer">Generato ${esc(generatedAt)} · Documento ad uso gestionale contenente dati personali · Versione 6.3.0</div>
+<div class="footer">Generato ${esc(generatedAt)} · Documento ad uso gestionale contenente dati personali · Versione 6.3.1</div>
 <script>window.addEventListener("load", () => setTimeout(() => { window.focus(); window.print(); }, 500));<\/script>
 </body></html>`);
   printWindow.document.close();
@@ -685,10 +690,42 @@ async function updateBookingStatus(id, status) {
   else window.location.href = url;
 }
 
+async function deleteBookingData(id, button) {
+  const booking = loadedBookings.find(item => String(item.id) === String(id));
+  if (!booking) return alert("Prenotazione non trovata. Aggiorna l’elenco e riprova.");
+
+  const firstConfirm = confirm(`Cancellare definitivamente la prenotazione aperitivo di ${booking.nome_cliente} del ${localDate(booking.data)} alle ${String(booking.ora).slice(0, 5)}?`);
+  if (!firstConfirm) return;
+  const secondConfirm = confirm("Conferma finale per la privacy: nome, telefono, note e tutti i dati di questa prenotazione saranno eliminati e non potranno essere recuperati.");
+  if (!secondConfirm) return;
+
+  button.disabled = true;
+  button.textContent = "Cancellazione…";
+  const { data, error } = await db.from("bar_prenotazioni")
+    .delete()
+    .eq("id", id)
+    .select("id");
+
+  if (error) {
+    button.disabled = false;
+    button.textContent = "Cancella dati";
+    return alert(`Cancellazione non riuscita: ${error.message}`);
+  }
+  if (!data?.length) {
+    button.disabled = false;
+    button.textContent = "Cancella dati";
+    return alert("La prenotazione era già stata eliminata oppure non è stata trovata.");
+  }
+
+  await loadBookings();
+  alert("I dati della prenotazione sono stati cancellati definitivamente.");
+}
+
 function attachBookingActions() {
   document.querySelectorAll(".confirm-booking").forEach(button => { button.onclick = () => updateBookingStatus(button.dataset.id, "confermata"); });
   document.querySelectorAll(".reject-booking").forEach(button => { button.onclick = () => updateBookingStatus(button.dataset.id, "rifiutata"); });
   document.querySelectorAll(".cancel-booking").forEach(button => { button.onclick = () => updateBookingStatus(button.dataset.id, "annullata"); });
+  document.querySelectorAll(".delete-booking").forEach(button => { button.onclick = () => deleteBookingData(button.dataset.id, button); });
 }
 
 async function loadBookings() {
@@ -727,6 +764,7 @@ async function loadBookings() {
   }).join("") || '<tr><td colspan="8">Nessuna richiesta aperitivo.</td></tr>';
   attachBookingActions();
   bookingsLoading = false;
+  await loadAutomaticSummary();
 }
 
 function printPrivacyNotice() {
@@ -741,7 +779,6 @@ document.addEventListener("DOMContentLoaded", () => {
   $("bar-product-reset").onclick = resetForm;
   $("bar-refresh-bookings").onclick = loadBookings;
   $("bar-print-privacy").onclick = printPrivacyNotice;
-  $("generate-ai-summary").onclick = generateAiSummary;
   initializePrintControls();
   checkSession();
 });

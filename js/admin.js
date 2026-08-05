@@ -183,7 +183,7 @@ tr:nth-child(even) td { background:#f8fafc; }
 </div>
 <div class="print-header"><div><h1>Campo Ex Velodromo</h1><p class="meta">Prenotazione campo</p></div><img src="${logoUrl}" alt="GF"></div>
 ${bodyHtml}
-<div class="print-footer"><span>Documento generato il ${new Date().toLocaleString("it-IT")}</span><span>Versione 6.3.0</span></div>
+<div class="print-footer"><span>Documento generato il ${new Date().toLocaleString("it-IT")}</span><span>Versione 6.3.1</span></div>
 <script>
 window.addEventListener('load', () => {
   setTimeout(() => {
@@ -856,7 +856,7 @@ function renderBookings() {
     deleteButton.dataset.id = item.id;
     deleteButton.dataset.customer = item.nome_cliente || "cliente";
     deleteButton.dataset.booking = `${localDate(item.data)} ${cleanTime(item.ora_inizio)}`;
-    deleteButton.textContent = "Elimina";
+    deleteButton.textContent = "Cancella dati";
 
     if (!timeState.concluded) {
       actionBox.appendChild(statusButton);
@@ -891,7 +891,7 @@ function renderBookings() {
     const { data, error } = await db.rpc("elimina_prenotazione_gestore", { p_prenotazione_id: button.dataset.id });
     if (error) {
       button.disabled = false;
-      button.textContent = "Elimina";
+      button.textContent = "Cancella dati";
       return alert("Eliminazione non riuscita: " + error.message);
     }
     if (!data) alert("La prenotazione era già stata eliminata o non è stata trovata.");

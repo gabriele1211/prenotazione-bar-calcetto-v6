@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Gestione Bar Parco Ex Velodromo</title>
-  <link rel="stylesheet" href="./css/style.css?v=6.3.0release1">
-  <link rel="stylesheet" href="./css/bar.css?v=6.3.0release1">
+  <link rel="stylesheet" href="./css/style.css?v=6.3.1release1">
+  <link rel="stylesheet" href="./css/bar.css?v=6.3.1release1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <meta name="theme-color" content="#145637">
   <meta name="mobile-web-app-capable" content="yes">
@@ -48,17 +48,18 @@
   </section>
 
   <div id="bar-dashboard" class="hidden">
-    <section class="panel ai-summary-panel" aria-labelledby="ai-summary-title">
-      <div class="ai-summary-heading">
+    <section class="panel automatic-summary-panel" aria-labelledby="automatic-summary-title">
+      <div class="automatic-summary-heading">
         <div>
-          <span class="eyebrow">ASSISTENTE IA</span>
-          <h2 id="ai-summary-title">Riepilogo intelligente di oggi</h2>
-          <p>Una generazione gratuita ogni 24 ore, riservata al gestore.</p>
+          <span class="eyebrow">RIEPILOGO AUTOMATICO</span>
+          <h2 id="automatic-summary-title">Situazione di oggi</h2>
+          <p id="automatic-summary-date">Caricamento giornata…</p>
         </div>
-        <button id="generate-ai-summary" class="primary" type="button">✨ Genera riepilogo</button>
+        <span id="automatic-summary-alert" class="automatic-summary-alert">Aggiornamento…</span>
       </div>
-      <div id="ai-summary-status" class="ai-summary-status" aria-live="polite"></div>
-      <div id="ai-summary-result" class="ai-summary-result" hidden></div>
+      <div id="automatic-summary-metrics" class="automatic-summary-metrics" aria-live="polite"></div>
+      <div id="automatic-summary-details" class="automatic-summary-details"></div>
+      <p id="automatic-summary-updated" class="automatic-summary-updated" aria-live="polite"></p>
     </section>
 
     <section id="bar-pending-alert" class="panel bar-pending-alert" role="alert" aria-live="assertive" hidden>
@@ -144,7 +145,7 @@
       <div class="slots-header">
         <div>
           <h2>Tutte le richieste aperitivo</h2>
-          <p>Prima le prenotazioni imminenti; in fondo, in grigio, quelle già trascorse.</p>
+          <p>Prima le prenotazioni imminenti; in fondo, in grigio, quelle già trascorse. “Cancella dati” elimina definitivamente la singola prenotazione.</p>
         </div>
         <button id="bar-refresh-bookings" class="secondary" type="button">Aggiorna</button>
       </div>
@@ -206,15 +207,15 @@
 <footer class="site-footer admin-site-footer">
   <div class="footer-inline" aria-label="Firma del progetto">
     <img src="./assets/gf-logo.png" alt="Logo GF" class="gf-logo-inline">
-    <span><strong>Bar Parco Ex Velodromo</strong> · Versione <strong data-app-version>6.3.0</strong> · © 2026 Gabriele Facchini</span>
+    <span><strong>Bar Parco Ex Velodromo</strong> · Versione <strong data-app-version>6.3.1</strong> · © 2026 Gabriele Facchini</span>
   </div>
 </footer>
 
-<script src="./js/config.js?v=6.3.0release1"></script>
-<script src="./js/supabase-client.js?v=6.3.0release1"></script>
-<script src="./js/bar-admin.js?v=6.3.0release1"></script>
-<script src="./js/footer.js?v=6.3.0release1"></script>
-<script src="./js/pwa.js?v=6.3.0release1"></script>
-<script src="./js/update-manager.js?v=6.3.0"></script>
+<script src="./js/config.js?v=6.3.1release1"></script>
+<script src="./js/supabase-client.js?v=6.3.1release1"></script>
+<script src="./js/bar-admin.js?v=6.3.1release1"></script>
+<script src="./js/footer.js?v=6.3.1release1"></script>
+<script src="./js/pwa.js?v=6.3.1release1"></script>
+<script src="./js/update-manager.js?v=6.3.1"></script>
 </body>
 </html>

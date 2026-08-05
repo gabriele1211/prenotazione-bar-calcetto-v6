@@ -96,7 +96,7 @@
 
   window.addEventListener("load", async () => {
     try {
-      const registration = await navigator.serviceWorker.register("./service-worker.js?v=6.3.0release1", { scope: "./" });
+      const registration = await navigator.serviceWorker.register("./service-worker.js?v=6.3.1release1", { scope: "./" });
 
       const showUpdate = worker => {
         waitingWorker = worker;
