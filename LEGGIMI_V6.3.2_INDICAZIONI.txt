@@ -1,0 +1,13 @@
+PARCO EX VELODROMO - VERSIONE 6.3.2
+
+NOVITÀ
+- Nella pagina iniziale è presente il riquadro "Non sai dove siamo?".
+- Il pulsante apre direttamente le indicazioni stradali per il punto esatto del Parco del Velodromo.
+- L'indirizzo mostrato è Via Don Luigi Orione 9, Bologna.
+- Un pulsante compatto "Indicazioni" è disponibile anche nelle pagine cliente del campo e del bar.
+- Il collegamento si apre in una nuova scheda e dal telefono può avviare Google Maps.
+
+AGGIORNAMENTO
+- Caricare su GitHub tutto il contenuto del pacchetto.
+- Non servono nuovi script SQL.
+- Verificare che nell'app compaia Versione 6.3.2.

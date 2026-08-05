@@ -1,9 +1,9 @@
-PARCO EX VELODROMO - VERSIONE 6.3.1
+PARCO EX VELODROMO - VERSIONE 6.3.2
 
 Questo è il pacchetto completo da caricare nel repository GitHub della Versione 6.
 Non copiare soltanto i file JavaScript: sostituisci tutto il contenuto mantenendo le cartelle.
 
-AGGIORNAMENTO DA VERSIONE 6.2.1, 6.2.2, 6.2.3, 6.2.4, 6.2.5, 6.2.6 O 6.3.0
+AGGIORNAMENTO DA VERSIONE 6.2.1, 6.2.2, 6.2.3, 6.2.4, 6.2.5, 6.2.6, 6.3.0 O 6.3.1
 Non eseguire alcun nuovo script SQL. Carica direttamente tutti i file del pacchetto su GitHub.
 
 AGGIORNAMENTO DA VERSIONE 6.2.0
@@ -22,8 +22,14 @@ Esegui in ordine gli script SQL da 01 a 10.
 CARICAMENTO SU GITHUB
 1. Carica tutto il contenuto del pacchetto nel repository della Versione 6.
 2. Attendi la pubblicazione di GitHub Pages.
-3. Apri l’app e verifica che compaia Versione 6.3.1.
+3. Apri l’app e verifica che compaia Versione 6.3.2.
 4. Se compare ancora una versione precedente, premi “Aggiorna ora” oppure chiudi e riapri l’app.
+
+NOVITÀ INDICAZIONI
+- nella pagina iniziale compare il riquadro "Non sai dove siamo?";
+- il pulsante apre il punto esatto del Parco del Velodromo in Via Don Luigi Orione 9, Bologna;
+- il collegamento avvia le indicazioni stradali in Google Maps;
+- il pulsante "Indicazioni" è disponibile anche nelle pagine cliente del campo e del bar.
 
 NOVITÀ APERITIVI
 - riepilogo giornaliero automatico di campo e aperitivi, senza IA e senza costi API;

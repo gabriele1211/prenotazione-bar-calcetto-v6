@@ -1178,6 +1178,91 @@ input:invalid:not(:placeholder-shown) { border-color: #d98b84; }
   white-space: nowrap;
 }
 
+/* Versione 6.3.2 - punto esatto e indicazioni per i clienti */
+.location-card {
+  width: 100%;
+  margin-top: 24px;
+  padding: 20px 22px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  border: 2px solid #9bc6e9;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #eef8ff, #ffffff);
+  box-shadow: 0 10px 26px rgba(26, 91, 145, .1);
+}
+
+.location-card-icon {
+  font-size: 2.35rem;
+  line-height: 1;
+}
+
+.location-card-content h2,
+.location-card-content p {
+  margin: 0;
+}
+
+.location-card-content h2 {
+  color: #164f7d;
+  font-size: 1.22rem;
+}
+
+.location-card-content p {
+  margin-top: 5px;
+  color: #263c4c;
+  line-height: 1.4;
+}
+
+.location-card-content small {
+  display: block;
+  margin-top: 4px;
+  color: #587080;
+  line-height: 1.35;
+}
+
+.directions-button,
+.directions-nav-button {
+  border: 1px solid #1769aa !important;
+  color: #fff !important;
+  background: #1769aa !important;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.directions-button {
+  min-height: 48px;
+  padding: 12px 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.directions-button:hover,
+.directions-button:focus-visible,
+.directions-nav-button:hover,
+.directions-nav-button:focus-visible {
+  background: #105585 !important;
+}
+
+@media (max-width: 700px) {
+  .location-card {
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: 18px;
+  }
+
+  .directions-button {
+    width: 100%;
+    grid-column: 1 / -1;
+  }
+
+  .manager-access-row .directions-nav-button {
+    flex: 1 1 145px;
+  }
+}
+
 .public-header .header-actions-row {
   position: static !important;
 }

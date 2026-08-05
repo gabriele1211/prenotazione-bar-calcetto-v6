@@ -1,10 +1,13 @@
 {
-  "latest": "6.3.1",
+  "latest": "6.3.2",
   "minimum": "6.0.0",
   "mandatory": false,
   "title": "Nuovo aggiornamento disponibile",
-  "message": "Riepilogo automatico gratuito, cancellazione privacy delle prenotazioni e icona più luminosa.",
+  "message": "Nuovo pulsante con il punto esatto del Parco e le indicazioni stradali.",
   "notes": [
+    "Pulsante Non sai dove siamo nella pagina iniziale",
+    "Punto esatto del Parco del Velodromo in Via Don Luigi Orione 9, Bologna",
+    "Indicazioni disponibili anche nelle pagine cliente del campo e del bar",
     "Riepilogo automatico di campo e aperitivi nell’Area gestore bar",
     "Aggiornamento automatico ogni 30 secondi senza intelligenza artificiale o costi API",
     "Il riepilogo mostra prenotazioni, persone, richieste in attesa e totale previsto",
