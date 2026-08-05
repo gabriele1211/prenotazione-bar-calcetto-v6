@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Gestione Bar Parco Ex Velodromo</title>
-  <link rel="stylesheet" href="./css/style.css?v=6.3.4release1">
-  <link rel="stylesheet" href="./css/bar.css?v=6.3.4release1">
+  <link rel="stylesheet" href="./css/style.css?v=6.3.5release1">
+  <link rel="stylesheet" href="./css/bar.css?v=6.3.5release1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <meta name="theme-color" content="#145637">
   <meta name="mobile-web-app-capable" content="yes">
@@ -48,6 +48,24 @@
   </section>
 
   <div id="bar-dashboard" class="hidden">
+    <section id="push-notification-panel" class="panel push-notification-panel" aria-labelledby="push-notification-title" hidden>
+      <div class="push-notification-heading">
+        <div>
+          <span class="eyebrow">AVVISI SUL DISPOSITIVO</span>
+          <h2 id="push-notification-title">Notifiche nuove prenotazioni</h2>
+          <p>Ricevi un avviso sul telefono o sul PC anche quando l’app non è aperta.</p>
+        </div>
+        <span id="push-notification-badge" class="push-notification-badge">Da attivare</span>
+      </div>
+      <div class="push-notification-actions">
+        <button id="push-notification-enable" class="primary" type="button">🔔 Attiva notifiche su questo dispositivo</button>
+        <button id="push-notification-test" class="secondary" type="button" hidden>Invia notifica di prova</button>
+        <button id="push-notification-disable" class="danger-outline" type="button" hidden>Disattiva su questo dispositivo</button>
+      </div>
+      <p id="push-notification-status" class="push-notification-status" role="status" aria-live="polite">Controllo disponibilità…</p>
+      <small class="push-notification-privacy">La notifica mostra soltanto tipo, data e orario: nessun nome, telefono o documento compare nella schermata bloccata.</small>
+    </section>
+
     <section class="panel automatic-summary-panel" aria-labelledby="automatic-summary-title">
       <div class="automatic-summary-heading">
         <div>
@@ -207,15 +225,16 @@
 <footer class="site-footer admin-site-footer">
   <div class="footer-inline" aria-label="Firma del progetto">
     <img src="./assets/gf-logo.png" alt="Logo GF" class="gf-logo-inline">
-    <span><strong>Bar Parco Ex Velodromo</strong> · Versione <strong data-app-version>6.3.4</strong> · © 2026 Gabriele Facchini</span>
+    <span><strong>Bar Parco Ex Velodromo</strong> · Versione <strong data-app-version>6.3.5</strong> · © 2026 Gabriele Facchini</span>
   </div>
 </footer>
 
-<script src="./js/config.js?v=6.3.4release1"></script>
-<script src="./js/supabase-client.js?v=6.3.4release1"></script>
-<script src="./js/bar-admin.js?v=6.3.4release1"></script>
-<script src="./js/footer.js?v=6.3.4release1"></script>
-<script src="./js/pwa.js?v=6.3.4release1"></script>
-<script src="./js/update-manager.js?v=6.3.4"></script>
+<script src="./js/config.js?v=6.3.5release1"></script>
+<script src="./js/supabase-client.js?v=6.3.5release1"></script>
+<script src="./js/bar-admin.js?v=6.3.5release1"></script>
+<script src="./js/footer.js?v=6.3.5release1"></script>
+<script src="./js/pwa.js?v=6.3.5release1"></script>
+<script src="./js/push-notifications.js?v=6.3.5release1"></script>
+<script src="./js/update-manager.js?v=6.3.5"></script>
 </body>
 </html>

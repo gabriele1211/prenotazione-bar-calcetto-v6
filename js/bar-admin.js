@@ -612,7 +612,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
   <thead><tr><th>N.</th><th>Data e ora</th><th>Proposta</th><th>Cliente e telefono</th><th>Persone</th><th>Totale</th><th>Note</th><th>Stato</th></tr></thead>
   <tbody>${rows}</tbody>
 </table>
-<div class="footer">Generato ${esc(generatedAt)} · Documento ad uso gestionale contenente dati personali · Versione 6.3.4</div>
+<div class="footer">Generato ${esc(generatedAt)} · Documento ad uso gestionale contenente dati personali · Versione 6.3.5</div>
 <script>window.addEventListener("load", () => setTimeout(() => { window.focus(); window.print(); }, 500));<\/script>
 </body></html>`);
   printWindow.document.close();

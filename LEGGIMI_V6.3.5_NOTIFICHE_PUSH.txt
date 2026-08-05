@@ -1,0 +1,102 @@
+VERSIONE 6.3.5 - NOTIFICHE PUSH NUOVE PRENOTAZIONI
+
+Questa configurazione si esegue una sola volta. Dopo, ogni nuova prenotazione
+inserita da un cliente genera una notifica sui dispositivi attivati dal gestore.
+Nella notifica non compaiono nome, telefono o documento.
+
+1. AGGIORNA IL DATABASE
+
+Apri Supabase > SQL Editor ed esegui una sola volta:
+
+sql/12_versione_6_3_5_notifiche_push.sql
+
+Lo script non cancella e non modifica le prenotazioni esistenti.
+
+2. GENERA LE DUE CHIAVI VAPID
+
+Apri nel browser il file:
+
+strumenti/genera-chiavi-notifiche.html
+
+Premi “Genera le chiavi”. Verranno mostrati due valori:
+
+- VAPID_PUBLIC_KEY
+- VAPID_PRIVATE_JWK
+
+Non chiudere la pagina finché non li hai copiati in Supabase. La chiave privata
+non deve essere incollata nel sito, nel codice, su GitHub o in una chat.
+
+3. SALVA LE CHIAVI NEI SECRETS DI SUPABASE
+
+Apri Supabase > Edge Functions > Secrets e crea:
+
+Nome: VAPID_PUBLIC_KEY
+Valore: la chiave pubblica generata
+
+Nome: VAPID_PRIVATE_JWK
+Valore: tutta la chiave privata JSON generata, comprese le parentesi { }
+
+4. CREA LA EDGE FUNCTION
+
+Apri Supabase > Edge Functions > Deploy a new function > Via Editor.
+
+Nome funzione:
+notifiche-push
+
+Elimina il codice di esempio e incolla tutto il contenuto di:
+
+supabase/functions/notifiche-push/index.ts
+
+Distribuisci la funzione. Per questa funzione disattiva la verifica JWT automatica
+(verify_jwt = false): il codice controlla autonomamente sia l’accesso del gestore
+sia la chiave segreta usata dal webhook.
+
+5. CREA IL DATABASE WEBHOOK
+
+Apri Supabase > Database > Webhooks e crea un nuovo webhook:
+
+Nome: nuove-prenotazioni-push
+Tabella: push_notification_events
+Evento: Insert
+Tipo: Supabase Edge Functions
+Edge Function: notifiche-push
+Metodo: POST
+Timeout: 5000 ms
+
+Nelle intestazioni premi “Add auth header with service key”. Lascia anche
+Content-Type: application/json e salva il webhook.
+
+6. CARICA LA VERSIONE 6.3.5 SU GITHUB
+
+Carica tutto il contenuto del pacchetto, incluse le nuove cartelle supabase e
+strumenti. Il generatore non contiene chiavi: le crea soltanto quando viene aperto.
+
+7. ATTIVA LE NOTIFICHE SUI DISPOSITIVI
+
+Apri l’Area gestore e accedi. Nel riquadro “Notifiche nuove prenotazioni” premi:
+
+“Attiva notifiche su questo dispositivo”
+
+Accetta la richiesta del browser e poi premi “Invia notifica di prova”. Ripeti
+l’attivazione su ogni telefono, tablet o PC che deve ricevere gli avvisi.
+
+ANDROID E PC
+
+Usa Chrome o Edge e consenti le notifiche quando richiesto.
+
+IPHONE E IPAD
+
+Da Safari aggiungi prima l’app alla schermata Home. Apri quindi l’app dalla sua
+icona, accedi come gestore e attiva le notifiche.
+
+DISATTIVAZIONE
+
+Il pulsante “Disattiva su questo dispositivo” rimuove soltanto il telefono o PC
+in uso. Gli altri dispositivi restano attivi.
+
+PRIVACY E COSTI
+
+- nessun nome, telefono o documento viene copiato nell’evento di notifica;
+- la schermata bloccata mostra soltanto campo/bar, data e orario;
+- non usa OpenAI, email, WhatsApp, Firebase o servizi a pagamento;
+- utilizza Web Push, la PWA e Supabase già presenti.

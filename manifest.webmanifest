@@ -3,7 +3,7 @@
   "short_name": "Ex Velodromo",
   "description": "Prenotazione campo e Bar Parco Ex Velodromo",
   "id": "./index.html",
-  "start_url": "./index.html?source=pwa&v=6.3.4release1",
+  "start_url": "./index.html?source=pwa&v=6.3.5release1",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",

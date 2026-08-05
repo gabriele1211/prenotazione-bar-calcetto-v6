@@ -148,6 +148,78 @@ button:disabled { opacity: .55; cursor: not-allowed; }
   color: var(--danger);
   background: white;
 }
+
+/* Versione 6.3.5 - notifiche push riservate al gestore */
+.push-notification-panel {
+  border: 2px solid #8bb8df;
+  background: linear-gradient(135deg, #eef7ff, #fff);
+  box-shadow: 0 10px 28px rgba(35, 103, 157, .12);
+}
+
+.push-notification-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.push-notification-heading h2 { margin: 5px 0 5px; color: #15578a; }
+.push-notification-heading p { margin: 0; }
+
+.push-notification-badge {
+  padding: 9px 13px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  color: #425463;
+  background: #e4e9ed;
+  font-size: .86rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.push-notification-badge.active { color: #075d35; background: #d7f3e4; }
+
+.push-notification-actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.push-notification-status {
+  margin: 14px 0 0 !important;
+  padding: 11px 13px;
+  border-radius: 10px;
+  color: #425463 !important;
+  background: rgba(255, 255, 255, .8);
+  font-weight: 800;
+}
+
+.push-notification-status.success { color: #075d35 !important; background: #dff5e9; }
+.push-notification-status.warning { color: #7a4a00 !important; background: #fff2cf; }
+.push-notification-status.error { color: #8d1d16 !important; background: #ffe7e5; }
+
+.push-notification-privacy {
+  margin-top: 10px;
+  display: block;
+  color: #5f6d78;
+  line-height: 1.45;
+}
+
+@media (max-width: 700px) {
+  .push-notification-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .push-notification-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .push-notification-actions button { width: 100%; }
+}
 .full { width: 100%; }
 
 .slots-header, .table-header, .actions {

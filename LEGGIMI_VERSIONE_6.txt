@@ -1,4 +1,4 @@
-PARCO EX VELODROMO - VERSIONE 6.3.4
+PARCO EX VELODROMO - VERSIONE 6.3.5
 
 La Versione 6 riunisce:
 - prenotazione Campo Sportivo Parco Ex Velodromo;
@@ -22,13 +22,20 @@ La Versione 6 riunisce:
 - orario aperitivo proposto automaticamente con almeno 30 minuti di anticipo per la giornata corrente.
 - blocco degli orari già trascorsi e avviso quando per oggi non restano fasce prenotabili.
 - prenotazioni concluse del programma giornaliero mostrate in grigio e aggiornate automaticamente.
+- notifiche push per le nuove prenotazioni cliente, attivabili su più dispositivi del gestore.
+- avvisi privi di nome, telefono e documento, con apertura diretta dell'Area gestore.
 
 Per aggiornare un database che usa già la Versione 6.2.0 esegui soltanto:
 sql/10_versione_6_2_1_orari_ferie_aperitivi.sql
+sql/12_versione_6_3_5_notifiche_push.sql
 
 Se il database usa ancora la Versione 6.0/6.1, esegui nell’ordine:
 sql/09_versione_6_2_aperitivi_conferma.sql
 sql/10_versione_6_2_1_orari_ferie_aperitivi.sql
+sql/12_versione_6_3_5_notifiche_push.sql
+
+La configurazione della funzione e del webhook è descritta in:
+LEGGIMI_V6.3.5_NOTIFICHE_PUSH.txt
 
 Il sito ufficiale previsto dal progetto è:
 https://gabriele1211.github.io/prenotazione-bar-calc/
