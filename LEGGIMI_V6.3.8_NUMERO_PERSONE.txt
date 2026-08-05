@@ -1,0 +1,16 @@
+PARCO EX VELODROMO - VERSIONE 6.3.8
+
+MODIFICA NUMERO DI PERSONE
+
+- Il campo Numero di persone parte da 0.
+- Sotto al campo compare l'indicazione "Inserisci il numero di persone".
+- Se il valore resta 0, la richiesta non viene inviata.
+- Sono accettati soltanto numeri interi da 1 a 30.
+- Dopo una richiesta inviata correttamente, il campo torna a 0.
+
+PER AGGIORNARE GITHUB
+
+1. Carica tutto il contenuto di questa cartella nel repository.
+2. Sostituisci i file esistenti quando richiesto.
+3. Non eseguire altri script SQL su Supabase.
+4. Attendi la pubblicazione e verifica che nell'app compaia Versione 6.3.8.

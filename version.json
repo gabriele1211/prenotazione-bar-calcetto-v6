@@ -1,10 +1,13 @@
 {
-  "latest": "6.3.7",
+  "latest": "6.3.8",
   "minimum": "6.0.0",
   "mandatory": false,
   "title": "Nuovo aggiornamento disponibile",
-  "message": "Il pulsante delle notifiche mostra chiaramente se le push sono già attive sul dispositivo.",
+  "message": "Il numero di persone parte da 0 e la richiesta viene bloccata finché non viene indicato un valore valido.",
   "notes": [
+    "Il campo Numero di persone parte da 0 e mostra l'indicazione di inserire il numero corretto",
+    "Se il numero di persone resta 0, la richiesta aperitivo non viene inviata",
+    "Sono accettati soltanto numeri interi da 1 a 30 e dopo l'invio il campo torna a 0",
     "Il pulsante delle notifiche è verde quando le push sono da attivare e grigio quando sono già attive",
     "Dopo la disattivazione il pulsante torna automaticamente verde e utilizzabile",
     "Per una data futura il primo orario proposto è 09:00, non più 18:30",

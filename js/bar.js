@@ -200,7 +200,8 @@ function enforceOpenDate(announce = false) {
 
 function selectedCalculation() {
   if (!selectedProduct) return null;
-  const people = Math.max(1, Math.min(30, Number($("bar-persone").value || 1)));
+  const enteredPeople = Number($("bar-persone").value);
+  const people = Number.isInteger(enteredPeople) ? Math.max(0, Math.min(30, enteredPeople)) : 0;
   const peopleIncluded = Math.max(1, Number(selectedProduct.persone_incluse || 1));
   const quantity = Math.ceil(people / peopleIncluded);
   const unitPrice = Number(selectedProduct.prezzo || 0);
@@ -217,12 +218,18 @@ function updateCalculation() {
 
   const calculation = selectedCalculation();
   const groupLabel = calculation.peopleIncluded === 1 ? "1 persona" : `${calculation.peopleIncluded} persone`;
-  const quantityLabel = calculation.quantity === 1 ? "1 proposta" : `${calculation.quantity} proposte`;
 
   $("bar-selected-product").innerHTML = `
     <strong>${esc(selectedProduct.nome)}</strong>
     <span>${euro(calculation.unitPrice)} per ${groupLabel}</span>
   `;
+
+  if (calculation.people === 0) {
+    summary.textContent = "Inserisci il numero di persone per visualizzare il costo.";
+    return;
+  }
+
+  const quantityLabel = calculation.quantity === 1 ? "1 proposta" : `${calculation.quantity} proposte`;
   summary.innerHTML = `
     <span>Per <strong>${calculation.people} ${calculation.people === 1 ? "persona" : "persone"}</strong> servono ${quantityLabel}.</span>
     <strong class="bar-total-price">Totale previsto: ${euro(calculation.total)}</strong>
@@ -330,6 +337,12 @@ async function book() {
   if (isDateClosed($("bar-data").value)) return showMessage(closureMessage || "La data scelta non è disponibile per chiusura.", "warning");
   if (!updateTimeRules()) return;
 
+  const enteredPeople = Number($("bar-persone").value);
+  if (!Number.isInteger(enteredPeople) || enteredPeople < 1 || enteredPeople > 30) {
+    $("bar-persone").focus();
+    return showMessage("Inserisci il numero di persone, da 1 a 30.", "error");
+  }
+
   const calculation = selectedCalculation();
   const phone = formatPhone($("bar-telefono").value);
   $("bar-telefono").value = phone;
@@ -379,10 +392,12 @@ async function book() {
   const channel = payload.canale_contatto === "telefono" ? "telefonata" : "WhatsApp";
   showMessage(`Richiesta inviata: ${calculation.quantity} ${calculation.quantity === 1 ? "proposta" : "proposte"}, totale previsto ${euro(calculation.total)}. Il gestore ti contatterà tramite ${channel} al ${payload.telefono} per confermarla.`, "success");
   ["bar-nome", "bar-telefono", "bar-note"].forEach(id => { $(id).value = ""; });
+  $("bar-persone").value = "0";
   $("bar-privacy").checked = false;
   $("bar-data").value = todayIso();
   updateTimeRules({ resetValue: true });
   updateDateDescription();
+  updateCalculation();
   updateAvailability();
 }
 
