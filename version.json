@@ -1,10 +1,13 @@
 {
-  "latest": "6.3.3",
+  "latest": "6.3.4",
   "minimum": "6.0.0",
   "mandatory": false,
   "title": "Nuovo aggiornamento disponibile",
-  "message": "L’orario della richiesta aperitivo parte automaticamente dalla prima mezz’ora disponibile.",
+  "message": "Nel programma di oggi le prenotazioni già trascorse sono mostrate automaticamente in grigio.",
   "notes": [
+    "Le prenotazioni aperitivo già trascorse nel programma di oggi sono mostrate in grigio",
+    "Le prenotazioni ancora da svolgere restano bianche e verdi, quindi più evidenti",
+    "Lo stato del programma giornaliero si aggiorna automaticamente ogni 30 secondi",
     "Per oggi viene proposto il primo orario disponibile con almeno 30 minuti di anticipo",
     "Gli orari già trascorsi non possono essere selezionati nel giorno corrente",
     "Se oggi non restano orari utili viene richiesto di scegliere una data successiva",

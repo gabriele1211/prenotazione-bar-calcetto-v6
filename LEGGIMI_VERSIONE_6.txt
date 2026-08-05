@@ -1,4 +1,4 @@
-PARCO EX VELODROMO - VERSIONE 6.3.3
+PARCO EX VELODROMO - VERSIONE 6.3.4
 
 La Versione 6 riunisce:
 - prenotazione Campo Sportivo Parco Ex Velodromo;
@@ -21,6 +21,7 @@ La Versione 6 riunisce:
 - pulsante cliente con punto esatto e indicazioni stradali per Via Don Luigi Orione 9.
 - orario aperitivo proposto automaticamente con almeno 30 minuti di anticipo per la giornata corrente.
 - blocco degli orari già trascorsi e avviso quando per oggi non restano fasce prenotabili.
+- prenotazioni concluse del programma giornaliero mostrate in grigio e aggiornate automaticamente.
 
 Per aggiornare un database che usa già la Versione 6.2.0 esegui soltanto:
 sql/10_versione_6_2_1_orari_ferie_aperitivi.sql

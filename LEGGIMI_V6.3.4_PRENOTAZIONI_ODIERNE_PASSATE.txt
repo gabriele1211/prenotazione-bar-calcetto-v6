@@ -1,0 +1,11 @@
+PARCO EX VELODROMO - VERSIONE 6.3.4
+
+NOVITÀ
+- nel riquadro "Prenotazioni confermate di oggi" le prenotazioni già trascorse diventano automaticamente grigie;
+- le prenotazioni ancora da svolgere restano bianche e verdi, quindi più evidenti;
+- lo stato si aggiorna automaticamente mentre l'Area gestore rimane aperta;
+- la stessa regola temporale già usata nell'elenco generale viene applicata anche al programma giornaliero.
+
+AGGIORNAMENTO
+- carica su GitHub tutto il contenuto del pacchetto;
+- non serve eseguire alcun nuovo script SQL.

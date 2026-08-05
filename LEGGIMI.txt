@@ -1,9 +1,9 @@
-PARCO EX VELODROMO - VERSIONE 6.3.3
+PARCO EX VELODROMO - VERSIONE 6.3.4
 
 Questo è il pacchetto completo da caricare nel repository GitHub della Versione 6.
 Non copiare soltanto i file JavaScript: sostituisci tutto il contenuto mantenendo le cartelle.
 
-AGGIORNAMENTO DA VERSIONE 6.2.1, 6.2.2, 6.2.3, 6.2.4, 6.2.5, 6.2.6, 6.3.0, 6.3.1 O 6.3.2
+AGGIORNAMENTO DA VERSIONE 6.2.1, 6.2.2, 6.2.3, 6.2.4, 6.2.5, 6.2.6, 6.3.0, 6.3.1, 6.3.2 O 6.3.3
 Non eseguire alcun nuovo script SQL. Carica direttamente tutti i file del pacchetto su GitHub.
 
 AGGIORNAMENTO DA VERSIONE 6.2.0
@@ -22,7 +22,7 @@ Esegui in ordine gli script SQL da 01 a 10.
 CARICAMENTO SU GITHUB
 1. Carica tutto il contenuto del pacchetto nel repository della Versione 6.
 2. Attendi la pubblicazione di GitHub Pages.
-3. Apri l’app e verifica che compaia Versione 6.3.3.
+3. Apri l’app e verifica che compaia Versione 6.3.4.
 4. Se compare ancora una versione precedente, premi “Aggiorna ora” oppure chiudi e riapri l’app.
 
 NOVITÀ INDICAZIONI
@@ -32,6 +32,8 @@ NOVITÀ INDICAZIONI
 - il pulsante "Indicazioni" è disponibile anche nelle pagine cliente del campo e del bar.
 
 NOVITÀ APERITIVI
+- nel programma giornaliero le prenotazioni già trascorse diventano automaticamente grigie;
+- le prenotazioni ancora da svolgere restano bianche e verdi, quindi più evidenti;
 - nel giorno corrente viene proposto il primo orario disponibile con almeno 30 minuti di anticipo;
 - non è possibile selezionare o inviare un orario già trascorso;
 - se per oggi non restano orari entro le 21:00, viene chiesto di scegliere una data successiva;
