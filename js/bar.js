@@ -10,6 +10,10 @@ let rejectedClosedDate = null;
 
 const BAR_FIRST_TIME = "09:00";
 const BAR_LAST_TIME = "21:00";
+const BAR_DEFAULT_FUTURE_TIME = "18:30";
+const BAR_NOTICE_MINUTES = 30;
+const BAR_SLOT_MINUTES = 30;
+const BAR_TIME_ZONE = window.APP_CONFIG?.WEATHER_TIMEZONE || "Europe/Rome";
 
 function esc(value) {
   return String(value ?? "").replace(/[&<>"']/g, character => ({
@@ -21,10 +25,90 @@ function euro(value) {
   return new Intl.NumberFormat("it-IT", { style: "currency", currency: "EUR" }).format(Number(value || 0));
 }
 
-function todayIso() {
-  const date = new Date();
-  date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-  return date.toISOString().slice(0, 10);
+function barClock(referenceDate = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: BAR_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23"
+  }).formatToParts(referenceDate).reduce((values, part) => {
+    if (part.type !== "literal") values[part.type] = part.value;
+    return values;
+  }, {});
+
+  return {
+    date: `${parts.year}-${parts.month}-${parts.day}`,
+    minutes: Number(parts.hour) * 60 + Number(parts.minute)
+  };
+}
+
+function todayIso(referenceDate = new Date()) {
+  return barClock(referenceDate).date;
+}
+
+function minutesToTime(totalMinutes) {
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+}
+
+function timeToMinutes(value) {
+  const [hours, minutes] = String(value || "").split(":").map(Number);
+  if (!Number.isFinite(hours) || !Number.isFinite(minutes)) return null;
+  return hours * 60 + minutes;
+}
+
+function firstSameDayTime(referenceDate = new Date()) {
+  const currentMinutes = barClock(referenceDate).minutes;
+  const requestedMinutes = Math.ceil((currentMinutes + BAR_NOTICE_MINUTES) / BAR_SLOT_MINUTES) * BAR_SLOT_MINUTES;
+  const firstMinutes = Math.max(timeToMinutes(BAR_FIRST_TIME), requestedMinutes);
+  return firstMinutes <= timeToMinutes(BAR_LAST_TIME) ? minutesToTime(firstMinutes) : null;
+}
+
+function updateTimeRules({ resetValue = false, announce = false, referenceDate = new Date() } = {}) {
+  const dateInput = $("bar-data");
+  const timeInput = $("bar-ora");
+  const description = $("bar-ora-description");
+  if (!dateInput || !timeInput || !description) return true;
+
+  const today = todayIso(referenceDate);
+  dateInput.min = today;
+  timeInput.max = BAR_LAST_TIME;
+  timeInput.step = String(BAR_SLOT_MINUTES * 60);
+
+  if (dateInput.value === today) {
+    const firstTime = firstSameDayTime(referenceDate);
+    if (!firstTime) {
+      timeInput.min = BAR_FIRST_TIME;
+      timeInput.value = "";
+      timeInput.disabled = true;
+      description.textContent = "Per oggi non ci sono più orari disponibili. Scegli una data successiva.";
+      if (announce) showMessage("Per oggi non ci sono più orari disponibili. Scegli una data successiva.", "warning");
+      updateAvailability();
+      return false;
+    }
+
+    timeInput.disabled = false;
+    timeInput.min = firstTime;
+    if (resetValue || !timeInput.value || timeInput.value < firstTime || timeInput.value > BAR_LAST_TIME) {
+      timeInput.value = firstTime;
+    }
+    description.textContent = `Per oggi il primo orario disponibile è ${firstTime}, con almeno 30 minuti di anticipo.`;
+    updateAvailability();
+    return true;
+  }
+
+  timeInput.disabled = false;
+  timeInput.min = BAR_FIRST_TIME;
+  if (resetValue || !timeInput.value || timeInput.value < BAR_FIRST_TIME || timeInput.value > BAR_LAST_TIME) {
+    timeInput.value = BAR_DEFAULT_FUTURE_TIME;
+  }
+  description.textContent = "Prenotazioni disponibili dalle 09:00 alle 21:00.";
+  updateAvailability();
+  return true;
 }
 
 function localDate(value) {
@@ -134,7 +218,8 @@ function updateCalculation() {
 function updateAvailability() {
   const date = $("bar-data").value;
   const dateUnavailable = Boolean(rejectedClosedDate) || isDateClosed(date);
-  const closed = !settingsLoaded || !bookingsEnabled || !date || dateUnavailable;
+  const noTimeAvailable = date === todayIso() && !firstSameDayTime();
+  const closed = !settingsLoaded || !bookingsEnabled || !date || dateUnavailable || noTimeAvailable;
   const closureBox = $("bar-closure-box");
   const closureText = $("bar-closure-message");
 
@@ -228,6 +313,7 @@ async function book() {
   if (!selectedProduct) return showMessage("Seleziona prima un aperitivo o un tagliere.", "error");
   if (!settingsLoaded || !bookingsEnabled) return showMessage(closureMessage || "Le richieste sono temporaneamente sospese.", "warning");
   if (isDateClosed($("bar-data").value)) return showMessage(closureMessage || "La data scelta non è disponibile per chiusura.", "warning");
+  if (!updateTimeRules()) return;
 
   const calculation = selectedCalculation();
   const phone = formatPhone($("bar-telefono").value);
@@ -247,6 +333,14 @@ async function book() {
   if (payload.ora < BAR_FIRST_TIME || payload.ora > BAR_LAST_TIME) return showMessage("Scegli un orario compreso tra le 09:00 e le 21:00.", "error");
   if (!/^3\d{2} \d{3} \d{4}$/.test(payload.telefono)) return showMessage("Inserisci un cellulare italiano valido, ad esempio 328 673 9425.", "error");
   if (payload.data < todayIso()) return showMessage("Non puoi scegliere una data già trascorsa.", "error");
+  if (payload.data === todayIso()) {
+    const firstTime = firstSameDayTime();
+    if (!firstTime) return showMessage("Per oggi non ci sono più orari disponibili. Scegli una data successiva.", "warning");
+    if (payload.ora < firstTime) {
+      $("bar-ora").value = firstTime;
+      return showMessage(`Per oggi non puoi scegliere un orario precedente alle ${firstTime}.`, "warning");
+    }
+  }
   if (!$("bar-privacy").checked) return showMessage("Devi leggere e accettare l’informativa privacy.", "error");
 
   const button = $("bar-prenota");
@@ -272,13 +366,14 @@ async function book() {
   ["bar-nome", "bar-telefono", "bar-note"].forEach(id => { $(id).value = ""; });
   $("bar-privacy").checked = false;
   $("bar-data").value = todayIso();
+  updateTimeRules({ resetValue: true });
   updateDateDescription();
   updateAvailability();
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  $("bar-data").min = todayIso();
   $("bar-data").value = todayIso();
+  updateTimeRules({ resetValue: true });
   updateDateDescription();
   updateCalculation();
   updateAvailability();
@@ -286,8 +381,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   $("bar-data").addEventListener("change", () => {
     clearMessage();
     enforceOpenDate(true);
+    updateTimeRules({ resetValue: true, announce: true });
     updateAvailability();
   });
+  $("bar-ora").addEventListener("change", () => updateTimeRules());
   $("bar-persone").addEventListener("input", updateCalculation);
   $("bar-telefono").addEventListener("blur", event => { event.target.value = formatPhone(event.target.value); });
   $("bar-prenota").addEventListener("click", book);
@@ -296,4 +393,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   $("bar-torna-prenotazione").addEventListener("click", closePrivacy);
 
   await Promise.all([loadSettings(), loadProducts()]);
+
+  window.setInterval(() => {
+    const previousToday = $("bar-data").min;
+    const currentToday = todayIso();
+    if ($("bar-data").value === previousToday && previousToday !== currentToday) {
+      $("bar-data").value = currentToday;
+    }
+    updateTimeRules();
+  }, 60_000);
 });

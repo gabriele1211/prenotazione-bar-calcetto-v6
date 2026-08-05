@@ -1,0 +1,16 @@
+PARCO EX VELODROMO - VERSIONE 6.3.3
+
+NOVITÀ ORARIO APERITIVO
+
+- Nella giornata corrente il campo Ora non mostra più sempre 18:30.
+- Viene proposto il primo orario disponibile con almeno 30 minuti di anticipo.
+- Gli orari sono presentati a intervalli di mezz’ora.
+- Non è possibile inviare una richiesta per un orario precedente al limite mostrato.
+- Se per oggi non resta alcun orario entro le 21:00, la pagina chiede di scegliere una data successiva.
+- Per le date future resta proposto l’orario abituale delle 18:30.
+- Il limite viene aggiornato automaticamente anche se la pagina rimane aperta.
+
+INSTALLAZIONE
+
+Caricare su GitHub tutto il contenuto della cartella o dello ZIP.
+Non è necessario eseguire nuovi script SQL.

@@ -1,10 +1,13 @@
 {
-  "latest": "6.3.2",
+  "latest": "6.3.3",
   "minimum": "6.0.0",
   "mandatory": false,
   "title": "Nuovo aggiornamento disponibile",
-  "message": "Nuovo pulsante con il punto esatto del Parco e le indicazioni stradali.",
+  "message": "L’orario della richiesta aperitivo parte automaticamente dalla prima mezz’ora disponibile.",
   "notes": [
+    "Per oggi viene proposto il primo orario disponibile con almeno 30 minuti di anticipo",
+    "Gli orari già trascorsi non possono essere selezionati nel giorno corrente",
+    "Se oggi non restano orari utili viene richiesto di scegliere una data successiva",
     "Pulsante Non sai dove siamo nella pagina iniziale",
     "Punto esatto del Parco del Velodromo in Via Don Luigi Orione 9, Bologna",
     "Indicazioni disponibili anche nelle pagine cliente del campo e del bar",
