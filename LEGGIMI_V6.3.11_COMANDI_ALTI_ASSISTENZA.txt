@@ -1,4 +1,4 @@
-VERSIONE 6.3.11 - COMANDI IN ALTO E ASSISTENZA
+VERSIONE 6.3.12 - COMANDI IN ALTO E ASSISTENZA
 
 - Il pulsante "Aggiorna prenotazioni" è stato spostato all'inizio della gestione bar.
 - Accanto al comando resta visibile l'ora dell'ultimo aggiornamento riuscito.
@@ -7,6 +7,6 @@ VERSIONE 6.3.11 - COMANDI IN ALTO E ASSISTENZA
 - Il comando apre WhatsApp con area, versione e tipo di richiesta già predisposti.
 - Il gestore completa la descrizione e sceglie il contatto a cui inviare il messaggio.
 - La richiesta di assistenza non inserisce nomi, telefoni, documenti o altri dati dei clienti.
-- Il manuale istruzioni è aggiornato alla Versione 6.3.11.
+- Il manuale istruzioni è aggiornato alla Versione 6.3.12.
 
 Non sono necessarie modifiche o nuovi script su Supabase.

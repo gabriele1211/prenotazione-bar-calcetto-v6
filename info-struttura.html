@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Info struttura e dati - Parco Ex Velodromo</title>
+  <meta name="description" content="Dove si trovano l'app e i dati, limiti gratuiti di Supabase e GitHub Pages e controlli consigliati.">
+  <link rel="stylesheet" href="./css/style.css?v=6.3.12release1">
+  <link rel="stylesheet" href="./css/info-struttura.css?v=6.3.12release1">
+  <meta name="theme-color" content="#145637">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Ex Velodromo">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
+  <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+</head>
+<body>
+<div id="pwa-update-box" class="pwa-update-box" hidden>
+  <span>È disponibile un aggiornamento dell’app.</span>
+  <button id="pwa-update-now" type="button">Aggiorna ora</button>
+</div>
+
+<header class="site-header centered-header info-hero">
+  <span class="eyebrow">SCHEDA TECNICA SEMPLIFICATA</span>
+  <h1>Info struttura e dati</h1>
+  <p>Come funziona davvero l’app, dove si trovano i dati e quali limiti controllare.</p>
+  <div class="header-actions-row">
+    <a class="link-button" href="./admin.html">Gestione campo</a>
+    <a class="link-button" href="./bar-admin.html">Gestione bar</a>
+    <a class="link-button" href="./manuale-istruzioni.pdf" target="_blank" rel="noopener">📘 Manuale istruzioni</a>
+  </div>
+</header>
+
+<main class="page admin-page info-page">
+  <section class="panel info-intro">
+    <div>
+      <span class="eyebrow">RISPOSTA RAPIDA</span>
+      <h2>Le prenotazioni non sono salvate su GitHub</h2>
+      <p><strong>GitHub Pages</strong> pubblica il programma dell’app. <strong>Supabase</strong> conserva prenotazioni, impostazioni, accessi gestore, proposte e immagini del bar. Il dispositivo mantiene soltanto ciò che serve per usare l’app, comprese cache, sessione e una bozza temporanea del modulo campo.</p>
+    </div>
+    <div class="info-status-card" aria-label="Stato dell'architettura attuale">
+      <span>Configurazione attuale</span>
+      <strong>GitHub + Supabase</strong>
+      <small>Aggiornata al 7 agosto 2026</small>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="flow-title">
+    <span class="eyebrow">PERCORSO DEI DATI</span>
+    <h2 id="flow-title">Cosa succede quando si usa l’app</h2>
+    <div class="data-flow" role="list">
+      <article class="flow-card device" role="listitem">
+        <span class="flow-icon" aria-hidden="true">📱</span>
+        <h3>1. Telefono o PC</h3>
+        <p>Mostra l’app e invia la richiesta tramite connessione HTTPS.</p>
+        <small>Bozza campo locale: massimo 12 ore.</small>
+      </article>
+      <div class="flow-arrow" aria-hidden="true">→</div>
+      <article class="flow-card github" role="listitem">
+        <span class="flow-icon" aria-hidden="true">🌐</span>
+        <h3>2. GitHub Pages</h3>
+        <p>Fornisce pagine, codice, icone e manuale.</p>
+        <small>Non contiene le prenotazioni.</small>
+      </article>
+      <div class="flow-arrow" aria-hidden="true">→</div>
+      <article class="flow-card supabase" role="listitem">
+        <span class="flow-icon" aria-hidden="true">🗄️</span>
+        <h3>3. Supabase</h3>
+        <p>Salva dati, controlla accessi e prepara gli eventi di notifica.</p>
+        <small>È il centro operativo dell’app.</small>
+      </article>
+      <div class="flow-arrow" aria-hidden="true">→</div>
+      <article class="flow-card notification" role="listitem">
+        <span class="flow-icon" aria-hidden="true">🔔</span>
+        <h3>4. Notifica gestore</h3>
+        <p>Il servizio push del browser consegna l’avviso ai dispositivi attivi.</p>
+        <small>Nell’avviso: solo tipo, data e ora.</small>
+      </article>
+    </div>
+  </section>
+
+  <section class="info-grid two-columns">
+    <article class="panel info-card">
+      <div class="info-card-heading"><span class="provider-logo github-logo" aria-hidden="true">GH</span><div><span class="eyebrow">PARTE PUBBLICA</span><h2>GitHub Pages</h2></div></div>
+      <ul class="check-list">
+        <li>File HTML, CSS e JavaScript dell’app</li>
+        <li>Icone, immagini fisse e manuale PDF</li>
+        <li>Versione e meccanismo di aggiornamento</li>
+        <li>Codice visibile perché il repository Free è pubblico</li>
+      </ul>
+      <p class="not-stored"><strong>Non contiene:</strong> nomi clienti, telefoni, documenti o archivio prenotazioni.</p>
+    </article>
+
+    <article class="panel info-card">
+      <div class="info-card-heading"><span class="provider-logo supabase-logo" aria-hidden="true">SB</span><div><span class="eyebrow">DATI E SERVIZI</span><h2>Supabase</h2></div></div>
+      <ul class="check-list">
+        <li>Database di campo, bar, prezzi, orari e chiusure</li>
+        <li>Accesso gestore con email e password</li>
+        <li>Immagini caricate per le proposte del bar</li>
+        <li>Dispositivi abilitati alle notifiche push</li>
+        <li>Funzioni tecniche che inviano gli avvisi</li>
+      </ul>
+      <p class="secure-note">La chiave pubblicabile presente nell’app non è una password: i permessi effettivi sono stabiliti da autenticazione e regole RLS di Supabase.</p>
+    </article>
+  </section>
+
+  <section class="panel" aria-labelledby="where-title">
+    <span class="eyebrow">MAPPA DEI CONTENUTI</span>
+    <h2 id="where-title">Dove si trova ogni informazione</h2>
+    <div class="info-table-wrap">
+      <table class="info-table">
+        <thead><tr><th>Informazione</th><th>Dove si trova</th><th>Durata o comportamento</th></tr></thead>
+        <tbody>
+          <tr><td>Prenotazioni campo e bar</td><td><strong>Database Supabase</strong></td><td>Eliminazione automatica 30 giorni dopo la data prenotata; il gestore può cancellarle prima.</td></tr>
+          <tr><td>Bozza non ancora inviata del campo</td><td><strong>Browser del cliente</strong></td><td>Massimo 12 ore; viene eliminata dopo la prenotazione o alla scadenza.</td></tr>
+          <tr><td>Account e sessione gestore</td><td><strong>Supabase Auth</strong> e dispositivo</td><td>L’account resta fino alla rimozione; la sessione locale termina con l’uscita o la scadenza.</td></tr>
+          <tr><td>Foto delle proposte bar</td><td><strong>Supabase Storage</strong></td><td>Restano finché il gestore non le sostituisce o elimina.</td></tr>
+          <tr><td>Pagine, icone e manuale</td><td><strong>GitHub Pages</strong> e cache dispositivo</td><td>Si aggiornano con una nuova versione dell’app.</td></tr>
+          <tr><td>Registrazione notifiche</td><td><strong>Supabase</strong> e servizio push del browser</td><td>Resta finché il dispositivo viene disattivato o la registrazione non è più valida.</td></tr>
+          <tr><td>Messaggio WhatsApp</td><td><strong>WhatsApp</strong>, solo dopo il comando del gestore</td><td>Prima dell’invio il testo può essere controllato e modificato.</td></tr>
+          <tr><td>Previsioni meteo</td><td><strong>Open-Meteo</strong></td><td>Riceve posizione, data e ora necessarie alla previsione, non i dati identificativi del cliente.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="plain-note"><strong>ChatGPT non partecipa al funzionamento quotidiano dell’app</strong> e non riceve automaticamente le prenotazioni. È stato usato come strumento di sviluppo e assistenza.</p>
+  </section>
+
+  <section class="panel limits-section" aria-labelledby="supabase-limits-title">
+    <div class="section-title-row">
+      <div><span class="eyebrow">PIANO GRATUITO</span><h2 id="supabase-limits-title">Limiti principali di Supabase</h2></div>
+      <span class="date-badge">Verificati 07/08/2026</span>
+    </div>
+    <div class="limit-cards">
+      <article><strong>2</strong><span>progetti Free attivi</span></article>
+      <article><strong>500 MB</strong><span>database per progetto</span></article>
+      <article><strong>1 GB</strong><span>archiviazione file</span></article>
+      <article><strong>5 + 5 GB</strong><span>traffico standard + cache/mese</span></article>
+      <article><strong>500.000</strong><span>funzioni Edge/mese</span></article>
+      <article><strong>50.000</strong><span>utenti autenticati attivi/mese</span></article>
+      <article><strong>2 milioni</strong><span>messaggi Realtime/mese</span></article>
+      <article><strong>200</strong><span>connessioni Realtime simultanee</span></article>
+    </div>
+    <div class="warning-grid">
+      <div class="warning-box amber"><h3>Possibile pausa per scarsa attività</h3><p>Un progetto Free con attività troppo bassa nell’arco di 7 giorni può essere messo in pausa. Supabase invia prima un’email di avviso. Il progetto può essere ripristinato dal pannello entro 90 giorni.</p></div>
+      <div class="warning-box red"><h3>Se si supera un limite</h3><p>Il piano Free non genera automaticamente un addebito. Arriva un avviso e, se il superamento continua, possono essere applicate limitazioni: progetto in pausa, database in sola lettura o richieste bloccate.</p></div>
+    </div>
+    <p class="fit-note"><strong>Per l’uso attuale:</strong> prenotazioni e notifiche consumano pochissime risorse rispetto a questi limiti. Il punto da sorvegliare è soprattutto la continuità del progetto gratuito e l’aumento futuro di strutture, immagini o traffico.</p>
+    <div class="official-links">
+      <a href="https://supabase.com/docs/guides/platform/billing-on-supabase" target="_blank" rel="noopener">Limiti e fatturazione Supabase ↗</a>
+      <a href="https://supabase.com/docs/guides/platform/free-project-pausing" target="_blank" rel="noopener">Pausa dei progetti Free ↗</a>
+      <a href="https://supabase.com/docs/guides/platform/billing-faq" target="_blank" rel="noopener">Domande su quote e restrizioni ↗</a>
+    </div>
+  </section>
+
+  <section class="panel limits-section" aria-labelledby="github-limits-title">
+    <div class="section-title-row">
+      <div><span class="eyebrow">PUBBLICAZIONE GRATUITA</span><h2 id="github-limits-title">Limiti principali di GitHub Pages</h2></div>
+      <span class="date-badge github-date">Verificati 07/08/2026</span>
+    </div>
+    <div class="limit-cards github-limits">
+      <article><strong>1 GB</strong><span>dimensione massima del sito pubblicato</span></article>
+      <article><strong>1 GB</strong><span>limite raccomandato del repository sorgente</span></article>
+      <article><strong>100 GB</strong><span>traffico mensile, limite non rigido</span></article>
+      <article><strong>10/ora</strong><span>pubblicazioni, limite non rigido</span></article>
+      <article><strong>10 min</strong><span>tempo massimo di pubblicazione</span></article>
+      <article><strong>100 MiB</strong><span>file singolo bloccato da GitHub</span></article>
+    </div>
+    <div class="warning-grid">
+      <div class="warning-box amber"><h3>Repository pubblico</h3><p>Con GitHub Free, Pages pubblica da un repository pubblico: il codice dell’app è visibile. Questo non rende pubbliche le prenotazioni, che rimangono su Supabase e sono protette dalle regole di accesso.</p></div>
+      <div class="warning-box red"><h3>Limite per un futuro servizio commerciale</h3><p>GitHub dichiara che Pages non è destinato a ospitare gratuitamente e-commerce, transazioni online o software commerciale fornito come servizio. Se l’app diventerà una piattaforma venduta a più strutture, sarà opportuno trasferire la parte web su un hosting adatto.</p></div>
+    </div>
+    <p class="fit-note"><strong>Per l’uso attuale:</strong> l’app è molto più piccola di 1 GB e il traffico è modesto. Evitare comunque video e fotografie molto pesanti nel repository; le foto modificabili del bar restano correttamente in Supabase Storage.</p>
+    <div class="official-links">
+      <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits" target="_blank" rel="noopener">Limiti ufficiali GitHub Pages ↗</a>
+      <a href="https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github" target="_blank" rel="noopener">Limiti di file e repository ↗</a>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="problems-title">
+    <span class="eyebrow">COSA PUÒ SUCCEDERE</span>
+    <h2 id="problems-title">Problemi possibili e conseguenze reali</h2>
+    <div class="problem-list">
+      <article><span aria-hidden="true">🌐</span><div><h3>GitHub Pages non disponibile</h3><p>Il sito può non aprirsi o non aggiornarsi. L’app già installata può mostrare alcune pagine dalla cache, ma per prenotare serve comunque Supabase raggiungibile.</p></div></article>
+      <article><span aria-hidden="true">🗄️</span><div><h3>Supabase in pausa o non raggiungibile</h3><p>Le pagine possono aprirsi, ma accesso, lettura, invio e modifica delle prenotazioni non funzionano finché il progetto non torna attivo.</p></div></article>
+      <article><span aria-hidden="true">🔕</span><div><h3>Notifica non consegnata</h3><p>La prenotazione può essere stata salvata correttamente anche se l’avviso non compare. Controllare l’Area gestore, i permessi del dispositivo e il tasto di prova.</p></div></article>
+      <article><span aria-hidden="true">♻️</span><div><h3>Versione vecchia nella cache</h3><p>Premere “Aggiorna ora”, poi chiudere e riaprire l’app. Il nuovo numero di versione deve comparire nel piè di pagina.</p></div></article>
+      <article><span aria-hidden="true">⚠️</span><div><h3>Superamento dei limiti gratuiti</h3><p>Non parte un pagamento automatico: arrivano avvisi e possono essere limitati i servizi. Occorre ridurre l’uso o scegliere volontariamente un piano superiore.</p></div></article>
+    </div>
+  </section>
+
+  <section class="panel monitoring-panel" aria-labelledby="controls-title">
+    <div><span class="eyebrow">CONTROLLO CONSIGLIATO</span><h2 id="controls-title">Cinque verifiche semplici</h2></div>
+    <ol class="monitoring-list">
+      <li><span>1</span><p>Controllare una volta al mese la pagina <strong>Usage</strong> di Supabase.</p></li>
+      <li><span>2</span><p>Non ignorare le email di Supabase su pausa, quota o sicurezza.</p></li>
+      <li><span>3</span><p>Provare periodicamente una prenotazione e una notifica da un secondo dispositivo.</p></li>
+      <li><span>4</span><p>Conservare una copia esportata dei dati importanti e del pacchetto dell’app.</p></li>
+      <li><span>5</span><p>Prima di usare l’app per più strutture, introdurre separazione dei dati, accessi dedicati e un hosting adatto al servizio.</p></li>
+    </ol>
+  </section>
+
+  <section class="panel final-summary">
+    <span class="summary-icon" aria-hidden="true">✓</span>
+    <div><h2>Situazione attuale</h2><p>Per il Parco Ex Velodromo la soluzione gratuita ha margini molto ampi. I rischi concreti non sono lo spazio occupato oggi, ma una futura pausa per attività troppo bassa, un’interruzione temporanea dei fornitori o l’uso di GitHub Pages oltre lo scopo previsto se l’app diventasse un prodotto commerciale multi-struttura.</p></div>
+  </section>
+</main>
+
+<footer class="site-footer admin-site-footer">
+  <div class="footer-inline" aria-label="Firma del progetto">
+    <img src="./assets/gf-logo.png" alt="Logo GF" class="gf-logo-inline">
+    <span><strong>Parco Ex Velodromo</strong> · Versione <strong data-app-version>6.3.12</strong> · © 2026 Gabriele Facchini</span>
+  </div>
+</footer>
+
+<script src="./js/config.js?v=6.3.12release1"></script>
+<script src="./js/footer.js?v=6.3.12release1"></script>
+<script src="./js/pwa.js?v=6.3.12release1"></script>
+<script src="./js/update-manager.js?v=6.3.12"></script>
+</body>
+</html>

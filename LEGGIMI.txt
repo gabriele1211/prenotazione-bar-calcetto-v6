@@ -1,9 +1,9 @@
-PARCO EX VELODROMO - VERSIONE 6.3.11
+PARCO EX VELODROMO - VERSIONE 6.3.12
 
 Questo è il pacchetto completo da caricare nel repository GitHub della Versione 6.
 Non copiare soltanto i file JavaScript: sostituisci tutto il contenuto mantenendo le cartelle.
 
-NOVITA VERSIONE 6.3.11
+NOVITA VERSIONE 6.3.12
 - quando arriva una notifica con la gestione bar aperta, l'elenco delle richieste si aggiorna automaticamente;
 - il pulsante ora indica chiaramente "Aggiorna prenotazioni";
 - sotto al pulsante compare l'ora dell'ultimo aggiornamento riuscito;
@@ -40,7 +40,7 @@ Esegui in ordine gli script SQL da 01 a 10 e poi lo script 12.
 CARICAMENTO SU GITHUB
 1. Carica tutto il contenuto del pacchetto nel repository della Versione 6.
 2. Attendi la pubblicazione di GitHub Pages.
-3. Apri l’app e verifica che compaia Versione 6.3.11.
+3. Apri l’app e verifica che compaia Versione 6.3.12.
 4. Se compare ancora una versione precedente, premi “Aggiorna ora” oppure chiudi e riapri l’app.
 
 NOVITÀ NOTIFICHE PUSH

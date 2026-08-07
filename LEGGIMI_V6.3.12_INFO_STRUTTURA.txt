@@ -1,0 +1,12 @@
+VERSIONE 6.3.12 - INFO STRUTTURA E DATI
+
+Novità:
+- nuovo pulsante "Info struttura" nella gestione campo e nella gestione bar;
+- pagina grafica che mostra il percorso dispositivo - GitHub Pages - Supabase - notifiche;
+- indicazione precisa di dove si trovano prenotazioni, bozze, immagini, accessi e cache;
+- limiti gratuiti principali di Supabase e GitHub Pages verificati il 7 agosto 2026;
+- spiegazione dei possibili problemi e delle conseguenze operative;
+- controlli periodici consigliati e collegamenti alla documentazione ufficiale.
+
+La pagina non contiene chiavi segrete, password o dati dei clienti.
+Non sono richiesti nuovi script SQL e non cambia il funzionamento delle notifiche.

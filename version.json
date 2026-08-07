@@ -1,10 +1,15 @@
 {
-  "latest": "6.3.11",
+  "latest": "6.3.12",
   "minimum": "6.0.0",
   "mandatory": false,
   "title": "Nuovo aggiornamento disponibile",
-  "message": "Il comando per aggiornare le prenotazioni è ora in alto ed è disponibile il nuovo pulsante Richiedi assistenza.",
+  "message": "È disponibile la nuova pagina Info struttura, con la posizione effettiva dei dati e i limiti dei servizi gratuiti.",
   "notes": [
+    "Nuovo pulsante Info struttura nella gestione campo e nella gestione bar",
+    "Schema grafico di dispositivo, GitHub Pages, Supabase e servizi di notifica",
+    "Indicazione chiara che GitHub contiene l'app ma non l'archivio delle prenotazioni",
+    "Riepilogo dei limiti gratuiti Supabase e GitHub aggiornato al 7 agosto 2026",
+    "Descrizione dei possibili problemi, delle conseguenze e dei controlli consigliati",
     "Il pulsante Aggiorna prenotazioni è stato spostato all'inizio della gestione bar",
     "Il nuovo pulsante Richiedi assistenza prepara un messaggio WhatsApp per chiarimenti, modifiche o malfunzionamenti",
     "La richiesta di assistenza indica automaticamente area e versione dell'app senza includere dati dei clienti",
