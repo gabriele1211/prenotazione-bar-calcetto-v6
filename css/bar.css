@@ -130,10 +130,19 @@
 .danger { padding: 10px 14px; border: 0; border-radius: 8px; color: #fff; background: #a32626; font-weight: 700; cursor: pointer; }
 .danger:disabled { opacity: .55; cursor: not-allowed; }
 
+.bar-quick-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  border: 2px solid #8bb8df;
+  background: linear-gradient(135deg, #eef7ff, #fff);
+}
+.bar-quick-toolbar h2 { margin: 5px 0 5px; color: #15578a; }
+.bar-quick-toolbar small { color: var(--muted); font-size: .82rem; font-weight: 700; }
+.bar-quick-toolbar button { min-width: 225px; }
+.bar-quick-toolbar button:disabled { opacity: .7; cursor: wait; }
 .bar-status-legend { margin: 12px 0 16px; display: flex; gap: 8px; flex-wrap: wrap; }
-.bar-refresh-controls { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-.bar-refresh-controls small { color: var(--muted); font-size: .78rem; font-weight: 700; text-align: right; }
-.bar-refresh-controls button:disabled { opacity: .7; cursor: wait; }
 .status-pill { padding: 5px 9px; display: inline-block; border-radius: 999px; font-size: .78rem; font-weight: 800; white-space: nowrap; }
 .status-pending { color: #734300; background: #fff0c7; }
 .status-confirmed { color: #07562f; background: #dff5e9; }
@@ -164,8 +173,8 @@
 .bar-decision-actions button, .bar-booking-row td > .secondary { padding: 7px 9px; font-size: .78rem; }
 
 @media (max-width: 720px) {
-  .bar-refresh-controls { width: 100%; align-items: stretch; }
-  .bar-refresh-controls small { text-align: left; }
+  .bar-quick-toolbar { align-items: stretch; flex-direction: column; }
+  .bar-quick-toolbar button { width: 100%; min-width: 0; }
 }
 
 .bar-print-panel {

@@ -1,4 +1,4 @@
-const CACHE_NAME = "parco-ex-velodromo-v6.3.10-release1";
+const CACHE_NAME = "parco-ex-velodromo-v6.3.11-release1";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -9,19 +9,19 @@ const APP_SHELL = [
   "./privacy.html",
   "./offline.html",
   "./manifest.webmanifest",
-  "./css/style.css?v=6.3.10release1",
-  "./css/bar.css?v=6.3.10release1",
-  "./js/config.js?v=6.3.10release1",
-  "./js/weather.js?v=6.3.10release1",
-  "./js/supabase-client.js?v=6.3.10release1",
-  "./js/cliente.js?v=6.3.10release1",
-  "./js/admin.js?v=6.3.10release1",
-  "./js/bar.js?v=6.3.10release1",
-  "./js/bar-admin.js?v=6.3.10release1",
-  "./js/footer.js?v=6.3.10release1",
-  "./js/pwa.js?v=6.3.10release1",
-  "./js/push-notifications.js?v=6.3.10release1",
-  "./js/update-manager.js?v=6.3.10",
+  "./css/style.css?v=6.3.11release1",
+  "./css/bar.css?v=6.3.11release1",
+  "./js/config.js?v=6.3.11release1",
+  "./js/weather.js?v=6.3.11release1",
+  "./js/supabase-client.js?v=6.3.11release1",
+  "./js/cliente.js?v=6.3.11release1",
+  "./js/admin.js?v=6.3.11release1",
+  "./js/bar.js?v=6.3.11release1",
+  "./js/bar-admin.js?v=6.3.11release1",
+  "./js/footer.js?v=6.3.11release1",
+  "./js/pwa.js?v=6.3.11release1",
+  "./js/push-notifications.js?v=6.3.11release1",
+  "./js/update-manager.js?v=6.3.11",
   "./version.json",
   "./assets/gf-logo.png",
   "./assets/icon-192.png",
@@ -141,7 +141,8 @@ self.addEventListener("fetch", event => {
     const appCode =
       url.pathname.endsWith(".js") ||
       url.pathname.endsWith(".css") ||
-      url.pathname.endsWith(".webmanifest");
+      url.pathname.endsWith(".webmanifest") ||
+      url.pathname.endsWith(".pdf");
 
     if (appCode) {
       event.respondWith(
