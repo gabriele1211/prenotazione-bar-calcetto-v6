@@ -1,5 +1,5 @@
 
-(()=>{const CUR=window.APP_CONFIG?.APP_VERSION||'6.3.9';
+(()=>{const CUR=window.APP_CONFIG?.APP_VERSION||'6.3.10';
 const cmp=(a,b)=>{a=a.split('.').map(Number);b=b.split('.').map(Number);for(let i=0;i<3;i++){if((a[i]||0)!=(b[i]||0))return(a[i]||0)-(b[i]||0);}return 0;};
 document.addEventListener('DOMContentLoaded',async()=>{
 try{

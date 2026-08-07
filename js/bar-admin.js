@@ -2,6 +2,7 @@ const $ = id => document.getElementById(id);
 let products = [];
 let loadedBookings = [];
 let bookingRefreshTimer = null;
+let bookingRefreshRetryTimer = null;
 let bookingsLoading = false;
 const ORIGINAL_PAGE_TITLE = document.title;
 const BOOKING_REFRESH_MS = 30 * 1000;
@@ -612,7 +613,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
   <thead><tr><th>N.</th><th>Data e ora</th><th>Proposta</th><th>Cliente e telefono</th><th>Persone</th><th>Totale</th><th>Note</th><th>Stato</th></tr></thead>
   <tbody>${rows}</tbody>
 </table>
-<div class="footer">Generato ${esc(generatedAt)} · Documento ad uso gestionale contenente dati personali · Versione 6.3.9</div>
+<div class="footer">Generato ${esc(generatedAt)} · Documento ad uso gestionale contenente dati personali · Versione 6.3.10</div>
 <script>window.addEventListener("load", () => setTimeout(() => { window.focus(); window.print(); }, 500));<\/script>
 </body></html>`);
   printWindow.document.close();
@@ -657,9 +658,32 @@ function startBookingAutoRefresh() {
   }, BOOKING_REFRESH_MS);
 }
 
+function refreshTimeLabel(date = new Date()) {
+  return date.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+}
+
+function setBookingRefreshState(loading, text = "") {
+  const button = $("bar-refresh-bookings");
+  const status = $("bar-bookings-updated");
+  if (button) {
+    button.disabled = loading;
+    button.textContent = loading ? "Aggiornamento…" : "🔄 Aggiorna prenotazioni";
+  }
+  if (status && text) status.textContent = text;
+}
+
+function refreshBookingsImmediately() {
+  if (document.hidden || $("bar-dashboard")?.classList.contains("hidden")) return;
+  loadBookings();
+  if (bookingRefreshRetryTimer) window.clearTimeout(bookingRefreshRetryTimer);
+  bookingRefreshRetryTimer = window.setTimeout(() => loadBookings(), 1500);
+}
+
 function stopBookingAutoRefresh() {
   if (bookingRefreshTimer) window.clearInterval(bookingRefreshTimer);
+  if (bookingRefreshRetryTimer) window.clearTimeout(bookingRefreshRetryTimer);
   bookingRefreshTimer = null;
+  bookingRefreshRetryTimer = null;
   document.title = ORIGINAL_PAGE_TITLE;
 }
 
@@ -732,6 +756,7 @@ function attachBookingActions() {
 async function loadBookings() {
   if (bookingsLoading) return;
   bookingsLoading = true;
+  setBookingRefreshState(true, "Controllo nuove prenotazioni…");
   const { data, error } = await db.from("bar_prenotazioni")
     .select("*,bar_prodotti(nome)")
     .order("data", { ascending: true })
@@ -740,6 +765,7 @@ async function loadBookings() {
   if (error) {
     $("bar-bookings-body").innerHTML = `<tr><td colspan="8">${esc(error.message)}. Esegui lo script SQL 09 della Versione 6.2.</td></tr>`;
     bookingsLoading = false;
+    setBookingRefreshState(false, "Aggiornamento non riuscito. Riprova.");
     return;
   }
 
@@ -765,6 +791,7 @@ async function loadBookings() {
   }).join("") || '<tr><td colspan="8">Nessuna richiesta aperitivo.</td></tr>';
   attachBookingActions();
   bookingsLoading = false;
+  setBookingRefreshState(false, `Ultimo aggiornamento: ${refreshTimeLabel()}`);
   await loadAutomaticSummary();
 }
 
@@ -785,5 +812,14 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("visibilitychange", () => {
-  if (!document.hidden && !$("bar-dashboard").classList.contains("hidden")) loadBookings();
+  if (!document.hidden) refreshBookingsImmediately();
 });
+
+window.addEventListener("focus", refreshBookingsImmediately);
+window.addEventListener("pageshow", refreshBookingsImmediately);
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.addEventListener("message", event => {
+    if (event.data?.type === "BOOKING_NOTIFICATION_RECEIVED") refreshBookingsImmediately();
+  });
+}

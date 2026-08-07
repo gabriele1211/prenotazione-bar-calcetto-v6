@@ -1,10 +1,15 @@
 {
-  "latest": "6.3.9",
+  "latest": "6.3.10",
   "minimum": "6.0.0",
   "mandatory": false,
   "title": "Nuovo aggiornamento disponibile",
-  "message": "Nell’Area gestore è disponibile il manuale aggiornabile e il messaggio WhatsApp di conferma non riporta più il prezzo.",
+  "message": "Nella gestione bar le nuove richieste compaiono automaticamente quando arriva la notifica ed è disponibile un pulsante di aggiornamento più chiaro.",
   "notes": [
+    "La gestione bar aggiorna subito l'elenco quando arriva una notifica push con la pagina aperta",
+    "Il pulsante Aggiorna prenotazioni permette anche il controllo manuale",
+    "Sotto al pulsante compare l'orario dell'ultimo aggiornamento riuscito",
+    "Tornando sulla pagina o riportando la finestra in primo piano l'elenco viene riletto automaticamente",
+    "Resta attivo l'aggiornamento automatico di sicurezza ogni 30 secondi",
     "Pulsante Manuale istruzioni disponibile nella gestione campo e nella gestione bar",
     "Il manuale usa un collegamento stabile e mostra automaticamente il PDF più recente pubblicato",
     "Il messaggio WhatsApp di conferma dell’aperitivo non riporta più il prezzo",

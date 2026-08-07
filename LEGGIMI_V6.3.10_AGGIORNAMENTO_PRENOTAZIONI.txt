@@ -1,0 +1,14 @@
+PARCO EX VELODROMO - VERSIONE 6.3.10
+
+NOVITA
+
+- Nella gestione bar il pulsante ora si chiama "Aggiorna prenotazioni" ed e piu evidente.
+- Quando arriva una notifica push con la pagina gestore aperta, l'elenco viene aggiornato automaticamente.
+- L'elenco si aggiorna anche tornando sulla pagina o riportando la finestra in primo piano.
+- Resta attivo il controllo automatico ogni 30 secondi come sicurezza.
+- Sotto al pulsante compare l'orario dell'ultimo aggiornamento riuscito.
+
+INSTALLAZIONE
+
+Caricare su GitHub tutto il contenuto del pacchetto, sostituendo i file precedenti.
+Non occorre eseguire alcuno script SQL e non occorre modificare Supabase.

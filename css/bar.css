@@ -131,6 +131,9 @@
 .danger:disabled { opacity: .55; cursor: not-allowed; }
 
 .bar-status-legend { margin: 12px 0 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+.bar-refresh-controls { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.bar-refresh-controls small { color: var(--muted); font-size: .78rem; font-weight: 700; text-align: right; }
+.bar-refresh-controls button:disabled { opacity: .7; cursor: wait; }
 .status-pill { padding: 5px 9px; display: inline-block; border-radius: 999px; font-size: .78rem; font-weight: 800; white-space: nowrap; }
 .status-pending { color: #734300; background: #fff0c7; }
 .status-confirmed { color: #07562f; background: #dff5e9; }
@@ -159,6 +162,11 @@
 .bar-action-link.whatsapp { background: #178c4e; }
 .bar-action-link.phone { background: #2868a9; }
 .bar-decision-actions button, .bar-booking-row td > .secondary { padding: 7px 9px; font-size: .78rem; }
+
+@media (max-width: 720px) {
+  .bar-refresh-controls { width: 100%; align-items: stretch; }
+  .bar-refresh-controls small { text-align: left; }
+}
 
 .bar-print-panel {
   margin: 18px 0;

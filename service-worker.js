@@ -1,4 +1,4 @@
-const CACHE_NAME = "parco-ex-velodromo-v6.3.9-release1";
+const CACHE_NAME = "parco-ex-velodromo-v6.3.10-release1";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -9,19 +9,19 @@ const APP_SHELL = [
   "./privacy.html",
   "./offline.html",
   "./manifest.webmanifest",
-  "./css/style.css?v=6.3.9release1",
-  "./css/bar.css?v=6.3.9release1",
-  "./js/config.js?v=6.3.9release1",
-  "./js/weather.js?v=6.3.9release1",
-  "./js/supabase-client.js?v=6.3.9release1",
-  "./js/cliente.js?v=6.3.9release1",
-  "./js/admin.js?v=6.3.9release1",
-  "./js/bar.js?v=6.3.9release1",
-  "./js/bar-admin.js?v=6.3.9release1",
-  "./js/footer.js?v=6.3.9release1",
-  "./js/pwa.js?v=6.3.9release1",
-  "./js/push-notifications.js?v=6.3.9release1",
-  "./js/update-manager.js?v=6.3.9",
+  "./css/style.css?v=6.3.10release1",
+  "./css/bar.css?v=6.3.10release1",
+  "./js/config.js?v=6.3.10release1",
+  "./js/weather.js?v=6.3.10release1",
+  "./js/supabase-client.js?v=6.3.10release1",
+  "./js/cliente.js?v=6.3.10release1",
+  "./js/admin.js?v=6.3.10release1",
+  "./js/bar.js?v=6.3.10release1",
+  "./js/bar-admin.js?v=6.3.10release1",
+  "./js/footer.js?v=6.3.10release1",
+  "./js/pwa.js?v=6.3.10release1",
+  "./js/push-notifications.js?v=6.3.10release1",
+  "./js/update-manager.js?v=6.3.10",
   "./version.json",
   "./assets/gf-logo.png",
   "./assets/icon-192.png",
@@ -67,7 +67,7 @@ self.addEventListener("push", event => {
   const badge = new URL(payload.badge || "./assets/favicon-32.png", self.registration.scope).href;
   const url = new URL(payload.url || "./admin.html", self.registration.scope).href;
 
-  event.waitUntil(self.registration.showNotification(payload.title || "Parco Ex Velodromo", {
+  const showNotification = self.registration.showNotification(payload.title || "Parco Ex Velodromo", {
     body: payload.body || "È arrivata una nuova prenotazione.",
     icon,
     badge,
@@ -76,7 +76,17 @@ self.addEventListener("push", event => {
     requireInteraction: Boolean(payload.requireInteraction),
     vibrate: [180, 90, 180],
     data: { url }
-  }));
+  });
+
+  const refreshOpenPages = self.clients
+    .matchAll({ type: "window", includeUncontrolled: true })
+    .then(clients => Promise.all(clients.map(client => client.postMessage({
+      type: "BOOKING_NOTIFICATION_RECEIVED",
+      url,
+      receivedAt: Date.now()
+    }))));
+
+  event.waitUntil(Promise.all([showNotification, refreshOpenPages]));
 });
 
 self.addEventListener("notificationclick", event => {

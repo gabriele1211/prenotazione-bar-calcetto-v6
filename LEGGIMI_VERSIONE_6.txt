@@ -1,4 +1,4 @@
-PARCO EX VELODROMO - VERSIONE 6.3.9
+PARCO EX VELODROMO - VERSIONE 6.3.10
 
 La Versione 6 riunisce:
 - prenotazione Campo Sportivo Parco Ex Velodromo;
@@ -27,6 +27,8 @@ La Versione 6 riunisce:
 - pulsante notifiche verde quando sono da attivare e grigio quando sono già attive sul dispositivo.
 - per le date future l'orario aperitivo parte dalle 09:00.
 - il menu Ora propone esclusivamente gli orari prenotabili dalle 09:00 alle 21:00, ogni 30 minuti.
+- la gestione bar aggiorna subito l'elenco quando riceve una notifica push con la pagina aperta.
+- il pulsante "Aggiorna prenotazioni" mostra l'ora dell'ultimo controllo riuscito.
 
 Per aggiornare un database che usa già la Versione 6.2.0 esegui soltanto:
 sql/10_versione_6_2_1_orari_ferie_aperitivi.sql
