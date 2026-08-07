@@ -1,4 +1,4 @@
-PARCO EX VELODROMO - VERSIONE 6.3.8
+PARCO EX VELODROMO - VERSIONE 6.3.9
 
 MODIFICA NUMERO DI PERSONE
 
@@ -13,4 +13,4 @@ PER AGGIORNARE GITHUB
 1. Carica tutto il contenuto di questa cartella nel repository.
 2. Sostituisci i file esistenti quando richiesto.
 3. Non eseguire altri script SQL su Supabase.
-4. Attendi la pubblicazione e verifica che nell'app compaia Versione 6.3.8.
+4. Attendi la pubblicazione e verifica che nell'app compaia Versione 6.3.9.

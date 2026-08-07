@@ -1,10 +1,13 @@
 {
-  "latest": "6.3.8",
+  "latest": "6.3.9",
   "minimum": "6.0.0",
   "mandatory": false,
   "title": "Nuovo aggiornamento disponibile",
-  "message": "Il numero di persone parte da 0 e la richiesta viene bloccata finché non viene indicato un valore valido.",
+  "message": "Nell’Area gestore è disponibile il manuale aggiornabile e il messaggio WhatsApp di conferma non riporta più il prezzo.",
   "notes": [
+    "Pulsante Manuale istruzioni disponibile nella gestione campo e nella gestione bar",
+    "Il manuale usa un collegamento stabile e mostra automaticamente il PDF più recente pubblicato",
+    "Il messaggio WhatsApp di conferma dell’aperitivo non riporta più il prezzo",
     "Il campo Numero di persone parte da 0 e mostra l'indicazione di inserire il numero corretto",
     "Se il numero di persone resta 0, la richiesta aperitivo non viene inviata",
     "Sono accettati soltanto numeri interi da 1 a 30 e dopo l'invio il campo torna a 0",

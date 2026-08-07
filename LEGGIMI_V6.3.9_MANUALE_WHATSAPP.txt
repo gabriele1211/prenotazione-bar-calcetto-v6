@@ -1,0 +1,22 @@
+PARCO EX VELODROMO - VERSIONE 6.3.9
+
+NOVITA
+
+1. Nella gestione campo e nella gestione bar e presente il pulsante
+   "Manuale istruzioni".
+
+2. Il pulsante apre il file stabile "manuale-istruzioni.pdf".
+   Per aggiornare il manuale in futuro basta sostituire su GitHub quel file
+   mantenendo esattamente lo stesso nome.
+
+3. Il manuale viene richiesto nuovamente dalla rete quando viene aperto.
+   Se la rete non e disponibile, l'app puo usare l'ultima copia gia aperta.
+
+4. Il testo WhatsApp di conferma dell'aperitivo continua a riportare cliente,
+   data, ora, numero di persone e proposta, ma non mostra piu il prezzo.
+
+CARICAMENTO
+
+Carica su GitHub tutto il contenuto di questa cartella, compreso il file
+"manuale-istruzioni.pdf". Non e necessario eseguire script SQL o modificare
+Supabase.

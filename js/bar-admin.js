@@ -361,7 +361,7 @@ function preparedWhatsappText(booking, type) {
   const peopleLabel = people === 1 ? "persona" : "persone";
 
   if (type === "conferma") {
-    return `Ciao ${booking.nome_cliente}, la tua prenotazione aperitivo presso il Bar Parco Ex Velodromo è confermata per il ${localDate(booking.data)} alle ${time}, per ${people} ${peopleLabel}. Proposta: ${quantity} ${proposalLabel} ${product}. Totale: ${euro(booking.costo_totale)}. Ti aspettiamo!`;
+    return `Ciao ${booking.nome_cliente}, la tua prenotazione aperitivo presso il Bar Parco Ex Velodromo è confermata per il ${localDate(booking.data)} alle ${time}, per ${people} ${peopleLabel}. Proposta: ${quantity} ${proposalLabel} ${product}. Ti aspettiamo!`;
   }
 
   return `Ciao ${booking.nome_cliente}, ci dispiace, la prenotazione aperitivo richiesta per il ${localDate(booking.data)} alle ${time}, per ${people} ${peopleLabel}, non può essere confermata ed è stata annullata. Se desideri concordare un altro giorno o orario, contattaci. Bar Parco Ex Velodromo.`;
@@ -612,7 +612,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
   <thead><tr><th>N.</th><th>Data e ora</th><th>Proposta</th><th>Cliente e telefono</th><th>Persone</th><th>Totale</th><th>Note</th><th>Stato</th></tr></thead>
   <tbody>${rows}</tbody>
 </table>
-<div class="footer">Generato ${esc(generatedAt)} · Documento ad uso gestionale contenente dati personali · Versione 6.3.8</div>
+<div class="footer">Generato ${esc(generatedAt)} · Documento ad uso gestionale contenente dati personali · Versione 6.3.9</div>
 <script>window.addEventListener("load", () => setTimeout(() => { window.focus(); window.print(); }, 500));<\/script>
 </body></html>`);
   printWindow.document.close();
